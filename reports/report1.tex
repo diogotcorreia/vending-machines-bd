@@ -8,6 +8,8 @@
 \usepackage{blindtext}
 \usepackage{hyperref}
 \usepackage{biblatex}
+\usepackage{pdflscape}
+\usepackage{svg}
 
 \graphicspath{ {./} }
 \hypersetup{
@@ -40,11 +42,11 @@
     
       \Huge
       \textbf{Projeto BD - Parte 1}
-      
+
       \vspace{0.5cm}
       \LARGE
       Grupo 008 | Turno L20 | LEIC-A
-      
+
       \vspace{0.5cm}
       \large
       Prof. João Aparício | Prof. Leonardo Alexandre
@@ -58,5 +60,10 @@
       \item[] \textbf{Tomás Esteves} (99341) - 33\% - Xh
     \end{itemize}
   \end{titlepage}
+
+  \begin{landscape}
+    \includesvg[width=\textwidth]{er_model}
+  \end{landscape}
+
   // TODO
 \end{document}
