@@ -60,8 +60,35 @@
   \end{titlepage}
 
   \begin{landscape}
-    \includesvg[width=1.8\textwidth]{er_model}
+    \includesvg[width=1.6\textwidth]{er_model}
   \end{landscape}
 
-  // TODO
+  \section*{Restrições de Integridade}
+  \begin{itemize}
+    \item[\textbf{(IC-1)}] Every shelf where the category is presentable
+      \textbf{must have} the same temperature.
+    \item // TODO
+  \end{itemize}
+
+  \section*{Justificações de Desenho}
+  \begin{itemize}
+    \item Interpretámos \textit{"Os produtos [...] têm [...] marca ou nome"}
+      como não exclusivo, ou seja, permitir que um produto tenha \textbf{apenas marca},
+      \textbf{apenas nome} ou ainda \textbf{marca e nome}, mas sem nunca
+      permitir que o produto não tenha nenhum deles.
+    \item Não incluímos no diagrama nada relativo a
+      \textit{"O sistema deve determinar, para uma super categoria, quantas sub categorias existem."},
+      visto que se trata de uma propriedade que é calculável através de
+      atributos já existentes na entidade \textbf{Category}.
+    \item Considerámos que a frase
+      \textit{"O pessoal reabastecedor deve assegurar que a prateleira esteja limpa e organizada."}
+      não constitui um requisito de desenho mas sim um requisito de funcionalidade,
+      pelo que não foi incluido no diagrama.
+    \item Considerámos que um evento de reabastecimento (\textbf{Restock Event}) é
+      identificado pelo momento em que ocorre (\textbf{timestamp}) e pela associação
+      prateleira/produto (\textbf{Shelf}/\textbf{Product}).
+    \item Embora não seja relevante para a correção do modelo, decidimos criar uma
+      entidade para a morada (\textbf{Address}) para discriminar os campos que a constituem.
+    \item porquê da ligação category <-> shelf
+  \end{itemize}
 \end{document}
