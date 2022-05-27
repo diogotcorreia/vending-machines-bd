@@ -1,0 +1,126 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[legalpaper, portrait, margin=3cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{blindtext}
+\usepackage{hyperref}
+\usepackage{pdflscape}
+\usepackage{svg}
+
+\graphicspath{ {./} }
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,
+  urlcolor=blue,
+  citecolor=blue,
+  pdftitle={Relatório BD - Entrega 1 - 2021/2022},
+  pdfpagemode=FullScreen,
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Grupo \textbf{8}}
+\lhead{Relatório Entrega 1 BD 2021/2022 LEIC-A}
+\cfoot{Diogo Gaspar (99207), Diogo Correia (99211) e Tomás Esteves (99341)}
+
+\renewcommand{\footrulewidth}{0.2pt}
+
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\labelitemiii}{$\diamond$}
+
+
+\begin{document}
+  \begin{titlepage}
+    \begin{center}
+      \vspace*{5cm}
+    
+      \Huge
+      \textbf{Projeto BD - Parte 1}
+
+      \vspace{0.5cm}
+      \LARGE
+      Grupo 008 | Turno L20 | LEIC-A
+
+      \vspace{0.5cm}
+      \large
+      Prof. João Aparício | Prof. Leonardo Alexandre
+
+      \vfill
+    \end{center}
+    \large
+    \begin{itemize}
+      \item[] \textbf{Diogo Gaspar} (99207) - 34\% - 12h
+      \item[] \textbf{Diogo Correia} (99211) - 33\% - 12h
+      \item[] \textbf{Tomás Esteves} (99341) - 33\% - 12h
+    \end{itemize}
+  \end{titlepage}
+
+  \begin{landscape}
+    \includesvg[width=1.6\textwidth]{er_model}
+  \end{landscape}
+
+  \section*{Restrições de Integridade}
+  \footnotesize
+  \begin{itemize}
+    \item[\textbf{(IC-1)}] Todas as prateleiras em que se possa apresentar uma dada categoria
+      \textbf{têm de ter} a mesma temperatura.
+		\item[\textbf{(IC-2)}] Uma categoria \textbf{não pode} ser sucessora direta
+			ou indireta de si própria.
+		\item[\textbf{(IC-3)}] Todo o retalhista tem um nome \textbf{único}.
+		\item[\textbf{(IC-4)}] Um retalhista \textbf{é obrigatoriamente} responsável por
+			reabastecer a categoria do produto a ser reabastecido na IVM.
+		\item[\textbf{(IC-5)}] Um produto \textbf{só pode ser colocado} numa prateleira
+			caso a respetiva categoria possa ser colocada nessa prateleira.
+		\item[\textbf{(IC-6)}] O total de unidades do produto a ser reabastecido
+			\textbf{não pode exceder} a quantidade máxima de produtos que podem ser apresentados nessa prateleira.
+		\item[\textbf{(IC-7)}] O EAN tem comprimento de \textbf{exatamente 13 dígitos}.
+		\item[\textbf{(IC-8)}] Uma categoria numa dada IVM tem \textbf{no máximo}
+			um retalhista a seu cargo.
+  \end{itemize}
+
+  \section*{Justificações de Desenho}
+  \normalsize
+  \begin{itemize}
+    \item Interpretámos \textit{"Os produtos [...] têm [...] marca ou nome"}
+      como não exclusivo, ou seja, permitimos que um produto tenha \textbf{apenas marca},
+      \textbf{apenas nome} ou ainda \textbf{marca e nome}, mas sem nunca
+      permitir que o produto não tenha nenhum deles.
+    \item Não incluímos no diagrama nada relativo a
+      \textit{"O sistema deve determinar, para uma super categoria, quantas sub categorias existem."},
+      visto que se trata de uma propriedade que é calculável através de
+      atributos já existentes na entidade \textbf{Category}.
+    \item Considerámos que a frase
+      \textit{"O pessoal reabastecedor deve assegurar que a prateleira esteja limpa e organizada."}
+      não constitui um requisito de desenho mas sim um requisito de funcionalidade,
+      pelo que não foi incluido no diagrama.
+    \item Considerámos que um evento de reabastecimento (\textbf{Restock Event}) é
+      identificado pelo momento em que ocorre (\textbf{timestamp}) e pela associação
+      prateleira/produto (\textbf{Shelf}/\textbf{Product}).
+    \begin{itemize}
+      \item Observámos que era necessário garantir que o retalhista responsável pelo
+        reabastecimento no par IVM/Categoria teria de ser o mesmo a efetuar o
+        reabastecimento do produto dessa mesma categoria na prateleira dessa mesma IVM.
+    \end{itemize}
+    \item Embora não seja relevante para a correção do modelo, decidimos criar uma
+      entidade para a morada (\textbf{Address}) para discriminar os campos que a constituem.
+    \item De forma a satisfazer a afirmação
+      \textit{"Cada categoria tem um tipo de prateleira pré-determinada."}
+      criámos uma associação categoria/prateleira (\textbf{Category}/\textbf{Shelf}),
+      juntamente com restrições de integridade, que garantem que uma todos os produtos
+      de uma categoria têm de estar numa prateleira com a mesma temperatura, isto é,
+      a mesma especialização.
+    \item Decidimos modelar o tipo de prateleira como uma especialização da mesma.
+      Evitámos usar um atributo "tipo de prateleira" visto que isso não é boa prática,
+      dado o número limitado de especializações. Evitámos também criar uma entidade
+      para o tipo de prateleira, visto que esta não tem uma chave única e porque
+      apenas existiriam 5 exemplares desta entidade (um por cada especialização).
+    \item Para assegurar que existe um retalhista (\textbf{Retailer}) responsável
+      pelo reabastecimento de um par IVM/Categoria, utilizámos uma associação ternária
+      em vez de uma associação, visto que não existe uma relação entre IVM e Categoria
+      fora deste contexto.
+  \end{itemize}
+\end{document}
