@@ -64,6 +64,7 @@
   \end{landscape}
 
   \section*{Restrições de Integridade}
+  \footnotesize
   \begin{itemize}
     \item[\textbf{(IC-1)}] Todas as prateleiras em que se possam apresentar uma dada categoria
       \textbf{têm de ter} a mesma temperatura.
@@ -82,9 +83,10 @@
   \end{itemize}
 
   \section*{Justificações de Desenho}
+  \normalsize
   \begin{itemize}
     \item Interpretámos \textit{"Os produtos [...] têm [...] marca ou nome"}
-      como não exclusivo, ou seja, permitir que um produto tenha \textbf{apenas marca},
+      como não exclusivo, ou seja, permitimos que um produto tenha \textbf{apenas marca},
       \textbf{apenas nome} ou ainda \textbf{marca e nome}, mas sem nunca
       permitir que o produto não tenha nenhum deles.
     \item Não incluímos no diagrama nada relativo a
@@ -98,8 +100,27 @@
     \item Considerámos que um evento de reabastecimento (\textbf{Restock Event}) é
       identificado pelo momento em que ocorre (\textbf{timestamp}) e pela associação
       prateleira/produto (\textbf{Shelf}/\textbf{Product}).
+    \begin{itemize}
+      \item Observámos que era necessário garantir que o retalhista responsável pelo
+        reabastecimento no par IVM/Categoria teria de ser o mesmo a efetuar o
+        reabastecimento do produto dessa mesma categoria na prateleira dessa mesma IVM.
+    \end{itemize}
     \item Embora não seja relevante para a correção do modelo, decidimos criar uma
       entidade para a morada (\textbf{Address}) para discriminar os campos que a constituem.
-    \item porquê da ligação category <-> shelf
+    \item De forma a satisfazer a afirmação
+      \textit{"Cada categoria tem um tipo de prateleira pré-determinada."}
+      criámos uma associação categoria/prateleira (\textbf{Category}/\textbf{Shelf}),
+      juntamente com restrições de integridade, que garantem que uma todos os produtos
+      de uma categoria têm de estar numa prateleira com a mesma temperatura, isto é,
+      a mesma especialização.
+    \item Decidimos modelar o tipo de prateleira como uma especialização da mesma.
+      Evitámos usar um atributo "tipo de prateleira" visto que isso não é boa prática,
+      dado o número limitado de especializações. Evitámos também criar uma entidade
+      para o tipo de prateleira, visto que esta não tem uma chave única e porque
+      apenas existiriam 5 exemplares desta entidade (um por cada especialização).
+    \item Para assegurar que existe um retalhista (\textbf{Retailer}) responsável
+      pelo reabastecimento de um par IVM/Categoria, utilizámos uma associação ternária
+      em vez de uma associação, visto que não existe uma relação entre IVM e Categoria
+      fora deste contexto.
   \end{itemize}
 \end{document}
