@@ -2,6 +2,6 @@
 
 2.  π serial_number(σ EAN = "9002490100070" ( Product ⨝ Category ⨝ IVM))
 
-3.  σSuper_Category = "Sopas Take-Away" (super_Category G count(has-other) )
+3.  σSuper_Category = "Sopas Take-Away" (Super_Category G count(has-other) )
 
 4.  π EAN, desc (EAN Gmax(units) ((Product ⨝ Replenishment Event))

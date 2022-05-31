@@ -1,0 +1,30 @@
+1)
+
+(Preciso de dar INNER JOIN com Shelf?)
+(SUM(units) está bem?, ou precisa de ser especifico para um produto)
+
+SELECT Product.EAN, Product.descr FROM Product
+    INNER JOIN has ON has.EAN = Product.EAN
+    INNER JOIN Replenishment Event ON Replenishment Event.EAN = Product.EAN
+    WHERE Category = 'Barras Energéticas' AND Date > '2021/12/31' AND SUM(units) > 10
+
+(I really don't know if this correct)
+
+2) 
+SELECT IVM.serial_number FROM IVM
+    INNER JOIN Shelf ON IVM.serial_number = Shelf.serial_number
+    INNER JOIN planogram ON Shelf.nr = planogram.nr
+    WHERE Product.EAN = '9002490100070'
+
+(Confusão com nomenculatura)
+
+3)
+    SELECT COUNT(category_name) FROM Super_Category
+    WHERE Super_Category = 'Sopas Take-Away'
+
+(Wrong)
+
+4) SELECT Product.EAN FROM Product 
+    HAVING count(*) >= ALL ( SELECT count(*) FROM
+    Replenishment Event
+     )
