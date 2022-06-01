@@ -10,6 +10,8 @@
 \usepackage{enumitem}
 \usepackage{pdflscape}
 \usepackage{svg}
+\usepackage{listings}
+\usepackage{xcolor}
 
 \graphicspath{ {./} }
 \hypersetup{
@@ -37,6 +39,64 @@
 \newlist{constraintsList}{itemize}{4}
 \setlist[constraintsList]{itemsep=1pt, topsep=1pt, label=\protect\mpbullet}
 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+% https://stackoverflow.com/questions/1116266/listings-in-latex-with-utf-8-or-at-least-german-umlauts
+\lstset{%
+        inputencoding=utf8,
+        extendedchars=true,
+        literate=%
+        {é}{{\'{e}}}1
+        {è}{{\`{e}}}1
+        {ê}{{\^{e}}}1
+        {ë}{{\¨{e}}}1
+        {É}{{\'{E}}}1
+        {Ê}{{\^{E}}}1
+        {û}{{\^{u}}}1
+        {ù}{{\`{u}}}1
+        {ú}{{\'{u}}}1
+        {â}{{\^{a}}}1
+        {à}{{\`{a}}}1
+        {á}{{\'{a}}}1
+        {ã}{{\~{a}}}1
+        {Á}{{\'{A}}}1
+        {Â}{{\^{A}}}1
+        {Ã}{{\~{A}}}1
+        {ç}{{\c{c}}}1
+        {Ç}{{\c{C}}}1
+        {õ}{{\~{o}}}1
+        {ó}{{\'{o}}}1
+        {ô}{{\^{o}}}1
+        {Õ}{{\~{O}}}1
+        {Ó}{{\'{O}}}1
+        {Ô}{{\^{O}}}1
+        {î}{{\^{i}}}1
+        {Î}{{\^{I}}}1
+        {í}{{\'{i}}}1
+        {Í}{{\~{Í}}}1
+}
 
 \begin{document}
   \begin{titlepage}
@@ -255,6 +315,28 @@
     \[
     \]
   \end{enumerate}
+  
+  \section*{SQL}
+  
+  \begin{enumerate}
+    \item Para uma dada Categoria (e.g., "Barras Energéticas"), liste todos os produtos (EAN e designação) que foram repostos em mais de 10 unidades após uma determinada data (e.g., 2021/12/31)
+    
+    % TODO acho que não dá para usar natural join aqui
+    \lstinputlisting[language=SQL]{sql/query1.sql}
 
-  // TODO
+    \item Para um dado Produto identificado pelo EAN (e.g., 9002490100070), liste todas as IVMs onde este produto poderá ser apresentado (i.e., números de série das IVMs)
+
+    \lstinputlisting[language=SQL]{sql/query2.sql}
+
+    \item Para uma dada categoria (e.g., "Sopas Take-Away"), apresente o seu número de subcategorias considerando apenas os seus descendentes diretos
+
+    \lstinputlisting[language=SQL]{sql/query3.sql}
+
+    \item Indique o EAN e a designação do produto mais reposto
+
+    % TODO can we skip join with planogram?
+    % TODO do we need aliases?
+    \lstinputlisting[language=SQL]{sql/query4.sql}
+  \end{enumerate}
+
 \end{document}
