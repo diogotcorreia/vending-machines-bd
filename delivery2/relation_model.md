@@ -4,14 +4,14 @@ Relations:
 
 - IVM (s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲)
 
-- intalled-at(address,s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲, nr)
+- installed-at(a̲d̲d̲r̲e̲s̲s̲,s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲, nr)
 
   - address: FK(Point of Retail)
   - serial_number, manuf: FK(IVM.serial_number, IVM.manuf)
 
 - Retailer(T̲I̲N̲, name)
 
-  - unique(name)
+  - UNIQUE(name)
 
 - Category(n̲a̲m̲e̲)
 
@@ -23,12 +23,11 @@ Relations:
 
   - name: FK (Category)
 
-(Please check if name and order is correct, and also improve names pls ;-;)
-
 - has-other(c̲a̲t̲e̲g̲o̲r̲y̲_n̲a̲m̲e̲, s̲u̲p̲e̲r̲_c̲a̲t̲e̲g̲o̲r̲y̲_n̲a̲m̲e̲)
 
-  - category_name: FK(Super Category.name)
-  - super_category_name: FK(Category.name)
+  - category_name: FK(Category.name)
+  - super_category_name: FK(Super Category.name)
+	- UNIQUE(category_name)
 
 - Product(E͟A͟N͟, descr)
 
@@ -40,39 +39,29 @@ Relations:
 (Atributo name, derivado da relação M:1
 Ver slide 47 de BD S02 - Hora 04 - Modelo Relacional e Conversão - Parte I)
 
-- Shelf(s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲, n̲r̲, height, width, name)
+- Shelf(s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲, n̲r̲, height, width, category_name)
 
   - serial number: FK(IVM)
   - manuf: FK(IVM)
-  - name: FK(Category)
+  - category_name: FK(Category.name)
 
-- Warm Shelf(n̲r̲)
+// missing IC's
 
-  - nr: FK (Shelf)
+- Warm Shelf(n̲r̲, s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲)
 
-- Ambient Temperature Shelf(n̲r̲)
+  - nr, serial_number, manuf: FK (Shelf.nr, Shelf.serial_number, Shelf.manuf)
 
-  - nr: FK (Shelf)
+- Ambient Temperature Shelf(n̲r̲, s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲)
 
-- Cold Shelf(n̲r̲)
+  - nr, serial_number, manuf: FK (Shelf.nr, Shelf.serial_number, Shelf.manuf)
 
-  - nr: FK (Shelf)
+- Cold Shelf(n̲r̲, s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲)
 
-- Positive Cold Shelf(n̲r̲)
-
-  - nr: FK (Cold Shelf.nr)
-
-- Negatie Cold Shelf(n̲r̲)
-
-  - nr: FK (Cold Shelf.nr)
-
-- displayed()
-
-(Tanta coisa para descrever o planograma (?))
-(Penso q da para remover Shelf.\* (ignorar \ ) pelo slide 7 da solução do lab5 da Eden box )
+  - nr, serial_number, manuf: FK (Shelf.nr, Shelf.serial_number, Shelf.manuf)
 
 - planogram(s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲, n̲r̲, E͟A͟N͟, faces, units, loc)
-  - serial_number, manuf, nr: FK(Shelf.serial_number, Shelf.manuf, Shelf.nr)
+  - nr, serial_number, manuf: FK(Shelf.nr, Shelf.serial_number, Shelf.manuf)
+	// podemos meter só Shelf em vez de tudo?
   - EAN: FK(Product)
 
 (Dúvidas neste do evento)
