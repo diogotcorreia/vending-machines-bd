@@ -32,6 +32,7 @@
 
 \renewcommand{\labelitemii}{$\circ$}
 \renewcommand{\labelitemiii}{$\diamond$}
+\newcommand{\op}{\text}
 
 \newlist{constraintsList}{itemize}{4}
 \setlist[constraintsList]{itemsep=1pt, topsep=1pt, label=\protect\mpbullet}
@@ -219,6 +220,41 @@
 
   \sffamily
   \section*{Álgebra Relacional}
+
+  \begin{enumerate}
+    \item Para uma dada Categoria (e.g., "Barras Energéticas"), liste todos os produtos (EAN e designação) que foram repostos em mais de 10 unidades após uma determinada data (e.g., 2021/12/31)
+
+    % TODO use group by + sum
+    \[
+      \begin{aligned}
+      &r \leftarrow \rho_{\op{name}\mapsto\op{category\_name}}(\op{category}) \bowtie \op{has} \bowtie \op{product} \bowtie\\
+      & \quad\quad\pi_{\op{serial\_number},\op{manuf},\op{nr},\op{ean}}(\op{planogram}) \bowtie \op{replenishment\_event}\\
+      &\pi_{\op{ean},~\op{descr}} \left(
+        \sigma_{\op{units} > 10~\land~\op{instant} > \text{2021/12/31}~\land~\op{name} = \text{'Barras Energéticas'}} (r)
+      \right)
+      \end{aligned}
+    \]
+
+    \item Para um dado Produto identificado pelo EAN (e.g., 9002490100070), liste todas as IVMs onde este produto poderá ser apresentado (i.e., números de série das IVMs)
+
+    % TODO precisamos de mais relações além do planogram?
+    \[
+      \begin{aligned}
+        \pi_{\op{serial\_number}}\left(\sigma_{\op{ean}='9002490100070'}\left(\op{product} \bowtie \op{planogram} \bowtie \op{ivm}\right)\right)
+      \end{aligned}
+    \]
+
+    \item Para uma dada categoria (e.g., "Sopas Take-Away"), apresente o seu número de subcategorias considerando apenas os seus descendentes diretos
+
+    \[
+      _{\op{super\_category\_name}}G_{\op{count}()\mapsto \op{count}}\left(\sigma_{\op{super\_category\_name}=\text{'Sopas Take-Away'}}(\op{has\_other})\right)
+    \]
+
+    \item Indique o EAN e a designação do produto mais reposto
+
+    \[
+    \]
+  \end{enumerate}
 
   // TODO
 \end{document}
