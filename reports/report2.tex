@@ -253,6 +253,13 @@
     \item Indique o EAN e a designação do produto mais reposto
 
     \[
+      \begin{aligned}
+        &r \leftarrow \op{product} \bowtie \quad\quad\pi_{\op{serial\_number},\op{manuf},\op{nr},\op{ean}}(\op{planogram}) \bowtie \op{replenishment\_event}\\
+        &l \leftarrow \rho_{(1->\op{serial\_number})} (_{\op{ean,descr}} G_{sum(units)}(r))\\
+        &\pi_{\op{ean},~\op{descr}}\left(
+          \sigma_{\op{max} = \op{total\_sum}}(L \times (\rho_{(1->\op{max})} ( G_{max(total\_sum)}(L)) ))
+        \right)
+        \end{aligned}
     \]
   \end{enumerate}
 
