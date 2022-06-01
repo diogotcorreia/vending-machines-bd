@@ -15,6 +15,9 @@ Relations:
 
 - Category(n̲a̲m̲e̲)
 
+	- name must exist in Simple Category or Super Category
+	- name never exists in both Simple Category and Super Category simultaneously
+
 - Simple Category(n̲a̲m̲e̲)
 
   - name: FK (Category)
@@ -29,12 +32,17 @@ Relations:
   - super_category_name: FK(Super Category.name)
 	- UNIQUE(category_name)
 
+	- (IC-1): A category_name can't be the same as the super_category_name
+	- (IC-2): There can't be cycles in the categories' hierarchies
+
 - Product(E͟A͟N͟, descr)
 
 - has(E͟A͟N͟, n̲a̲m̲e̲)
 
   - EAN: FK(Product)
   - name: FK(Category)
+
+	- Every product(EAN) has a category
 
 (Atributo name, derivado da relação M:1
 Ver slide 47 de BD S02 - Hora 04 - Modelo Relacional e Conversão - Parte I)
@@ -45,7 +53,8 @@ Ver slide 47 de BD S02 - Hora 04 - Modelo Relacional e Conversão - Parte I)
   - manuf: FK(IVM)
   - category_name: FK(Category.name)
 
-// missing IC's
+	- nr must exist in Warm Shelf, Ambient Temperature Shelf or Cold Shelf
+	- nr never exists in Warm Shelf, Ambient Temperature Shelf and Cold Shelf simultaneously
 
 - Warm Shelf(n̲r̲, s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲)
 
@@ -72,27 +81,12 @@ slide 18 do BD S03 - Hora 01 - Modelo Relacional e Conversão - Parte II)
 (Atributo TIN, derivado da relação M:1
 Ver slide 47 de BD S02 - Hora 04 - Modelo Relacional e Conversão - Parte I)
 
-- Replenishment Event(s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲, n̲r̲, E͟A͟N͟, i̲n̲s̲t̲a̲n̲t̲, units,TIN)
+- Replenishment Event(s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲, n̲r̲, E͟A͟N͟, i̲n̲s̲t̲a̲n̲t̲, units,TIN) // TIN devia ser uma key
 
   - serial_number, manuf, nr, EAN: FK(planogram.serial_number(?) ,planogram.manuf(?) , planogram.nr, planogram.EAN)
   - TIN: FK(Retailer)
 
-- responsible-for(s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲, T̲I̲N̲, n̲a̲m̲e̲)
+- responsible-for(s̲e̲r̲i̲a̲l̲_n̲u̲m̲b̲e̲r̲, m̲a̲n̲u̲f̲, T̲I̲N̲, c̲a̲t̲e̲g̲o̲r̲y̲_n̲a̲m̲e̲)
   - serial_number, manuf: FK(IVM)
   - TIN: FK(Retailer)
-  - name: FK(Category)
-
-Constraints:
-
-- name must exist in Simple Category or Super Category
-- name never existes in both Simple Category and Super Category simultaneously
-
-- category_name is always different from super_category_name
-
-- Every product(EAN) has a category
-
-- nr must exist in Warm Shelf, Ambient Temperature Shelf or Cold Shelf
-- nr never existes in Warm Shelf, Ambient Temperature Shelf and Cold Shelf simultaneously
-
-- nr must exist in Positive Cold Shelf or Negative Cold Shelf(?)
-- nr never exists in Positive Cold Shelf and Negative Cold Shelf simultaneously (?)
+  - category_name: FK(Category.name)
