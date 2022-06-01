@@ -69,9 +69,6 @@
 
   \noindent
   point\_of\_retail(\underline{address}, name)
-  \begin{itemize}[nosep]
-    \item UNIQUE(address)
-  \end{itemize}
   
   \vspace*{10pt}
 
@@ -123,11 +120,10 @@
   \vspace*{10pt}
   
   \noindent
-  has\_other(\underline{category\_name, super\_category\_name})
+  has\_other(\underline{category\_name}, super\_category\_name)
   \begin{itemize}[nosep]
     \item category\_name: FK(category.name)
     \item super\_category\_name: FK(super\_category.name)
-    \item UNIQUE(category\_name)
     \item \textsf{\textbf{(IC-1)}} category\_name \textsf{can't be the same as the} super\_category\_name
     \item \textsf{\textbf{(IC-2)} There can't be cycles in the categories' hierarchies}
   \end{itemize}
