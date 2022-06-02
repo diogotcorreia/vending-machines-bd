@@ -187,7 +187,6 @@
     \item category\_name: FK(category.name)
     \item super\_category\_name: FK(super\_category.name)
     \item \textsf{\textbf{(IC-1)}} category\_name \textsf{can't be the same as the} super\_category\_name
-    % TODO is there a better way to say this?
     \item \textsf{\textbf{(IC-2)} There can't be cycles in the categories' hierarchies}
   \end{itemize}
 
@@ -195,17 +194,17 @@
 
   \noindent
   product(\underline{ean}, descr)
-  \begin{itemize}
+  \begin{itemize}[nosep]
     \item \textsf{\textbf{(IC-10)} Every} product \textsf{must participate in the} has \textsf{association}
   \end{itemize}
 
   \vspace*{10pt}
 
   \noindent
-  has(\underline{ean, category\_name})
+  has(\underline{ean, name})
   \begin{itemize}[nosep]
     \item ean: FK(product)
-    \item category\_name: FK(category.name)
+    \item name: FK(category)
   \end{itemize}
 
   % SHELVES
@@ -217,9 +216,8 @@
   \begin{itemize}[nosep]
     \item serial\_number, manuf: FK(ivm.serial\_number, ivm.manuf)
     \item category\_name: FK(category.name)
-    % TODO usar 'shelf' em vez da key?
-    \item \textsf{\textbf{(IC-11)}} serial\_number, manuf, nr \textsf{must exist in one of} warm\_shelf \textsf{or}\\ ambient\_temperature\_shelf \textsf{or} cold\_shelf
-    \item \textsf{\textbf{(IC-12)}} serial\_number, manuf, nr \textsf{never exists in more than one of} warm\_shelf \textsf{and}\\ ambient\_temperature\_shelf \textsf{or} cold\_shelf \textsf{simultaneously}
+    \item \textsf{\textbf{(IC-11)}} shelf \textsf{must exist in one of} warm\_shelf \textsf{or} ambient\_temperature\_shelf\\ \textsf{or} cold\_shelf
+    \item \textsf{\textbf{(IC-12)}} shelf \textsf{never exists in more than one of} warm\_shelf \textsf{and}\\ ambient\_temperature\_shelf \textsf{or} cold\_shelf \textsf{simultaneously}
   \end{itemize}
 
   \vspace*{10pt}
@@ -262,10 +260,9 @@
   \begin{itemize}[nosep]
     \item serial\_number, manuf, nr, ean: FK(planogram.serial\_number, planogram.manuf,\\ planogram.nr, planogram.ean)
     \item tin: FK(retailer)
-    % TODO is this right?
     \item \textsf{\textbf{(IC-4)}} units \textsf{must be less than or equal to} planogram.units \textsf{of the associated} planogram
     \item \textsf{\textbf{(IC-5)} The product with} ean \textsf{must have} (has) \textsf{the} category \textsf{with} shelf.category\_name \textsf{of the} shelf \textsf{identified by} serial\_number, manuf, nr
-    \item \textsf{\textbf{(IC-6)} The product with} ean \textsf{must have} (has) \textsf{one of the categories} (category) \textsf{that its} retailer \textsf{, identified by} tin\textsf{, is} responsible\_for
+    \item \textsf{\textbf{(IC-6)} The product with} ean \textsf{must have} (has) \textsf{one of the categories} (category) \textsf{that its} retailer \textsf{, identified by} tin\textsf{, is} responsible\_for \textsf{replenishing}
     \end{itemize}
 
   \vspace*{10pt}
@@ -284,40 +281,35 @@
   \begin{enumerate}
     \item Para uma dada Categoria (e.g., "Barras Energéticas"), liste todos os produtos (EAN e designação) que foram repostos em mais de 10 unidades após uma determinada data (e.g., 2021/12/31)
 
-    % TODO use group by + sum
     \[
       \begin{aligned}
-      &r \leftarrow \rho_{\op{name}\mapsto\op{category\_name}}(\op{category}) \bowtie \op{has} \bowtie \op{product} \bowtie\\
-      & \quad\quad\pi_{\op{serial\_number},\op{manuf},\op{nr},\op{ean}}(\op{planogram}) \bowtie \op{replenishment\_event}\\
-      &\pi_{\op{ean},~\op{descr}} \left(
-        \sigma_{\op{units} > 10~\land~\op{instant} > \text{2021/12/31}~\land~\op{name} = \text{'Barras Energéticas'}} (r)
-      \right)
+        &r \leftarrow \sigma_{\op{name}='\text{Barras Energéticas}'~\land~\op{instant} > '\text{2021/12/31}'}(\op{product} \bowtie \op{has} \bowtie \op{replenishment\_event})\\
+        &s \leftarrow _{\op{ean}, \op{descr}} G_{\op{sum}(\op{units}) \mapsto \op{total}}(r)\\
+        &\pi_{\op{ean}, \op{descr}} \left(\sigma_{\op{total} > 10}\left(s\right)\right)
       \end{aligned}
     \]
 
     \item Para um dado Produto identificado pelo EAN (e.g., 9002490100070), liste todas as IVMs onde este produto poderá ser apresentado (i.e., números de série das IVMs)
 
-    % TODO precisamos de mais relações além do planogram?
     \[
       \begin{aligned}
-        \pi_{\op{serial\_number}}\left(\sigma_{\op{ean}='9002490100070'}\left(\op{product} \bowtie \op{planogram} \bowtie \op{ivm}\right)\right)
+        \pi_{\op{serial\_number}}\left(\sigma_{\op{ean}='9002490100070'}\left(\op{planogram}\right)\right)
       \end{aligned}
     \]
 
     \item Para uma dada categoria (e.g., "Sopas Take-Away"), apresente o seu número de subcategorias considerando apenas os seus descendentes diretos
 
     \[
-      _{\op{super\_category\_name}}G_{\op{count}()\mapsto \op{count}}\left(\sigma_{\op{super\_category\_name}=\text{'Sopas Take-Away'}}(\op{has\_other})\right)
+      G_{\op{count}()\mapsto \op{subcategories\_count}}\left(\sigma_{\op{super\_category\_name}=\text{'Sopas Take-Away'}}(\op{has\_other})\right)
     \]
 
     \item Indique o EAN e a designação do produto mais reposto
 
     \[
       \begin{aligned}
-        &r \leftarrow \op{product} \bowtie \quad\quad\pi_{\op{serial\_number},\op{manuf},\op{nr},\op{ean}}(\op{planogram}) \bowtie \op{replenishment\_event}\\
-        &l \leftarrow \rho_{(1->\op{total\_sum})} (_{\op{ean,descr}} G_{sum(units)}(r))\\
+        &l \leftarrow _{\op{ean,descr}} G_{\op{sum}(\op{units})\mapsto \op{total\_sum}}(\op{product} \bowtie \op{replenishment\_event})\\
         &\pi_{\op{ean},~\op{descr}}\left(
-          l \bowtie (\rho_{(1->\op{max})} ( G_{max(total\_sum)}(l)) )
+          l \bowtie \left( G_{\op{max}(\op{total\_sum})\mapsto \op{total\_sum}}(l)\right)
         \right)
         \end{aligned}
     \]
@@ -328,7 +320,6 @@
   \begin{enumerate}
     \item Para uma dada Categoria (e.g., "Barras Energéticas"), liste todos os produtos (EAN e designação) que foram repostos em mais de 10 unidades após uma determinada data (e.g., 2021/12/31)
     
-    % TODO acho que não dá para usar natural join aqui
     \lstinputlisting[language=SQL]{sql/query1.sql}
 
     \item Para um dado Produto identificado pelo EAN (e.g., 9002490100070), liste todas as IVMs onde este produto poderá ser apresentado (i.e., números de série das IVMs)
@@ -341,7 +332,6 @@
 
     \item Indique o EAN e a designação do produto mais reposto
 
-    % TODO can we skip join with planogram?
     % TODO do we need aliases?
     \lstinputlisting[language=SQL]{sql/query4.sql}
   \end{enumerate}
