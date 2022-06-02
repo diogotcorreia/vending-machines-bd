@@ -315,9 +315,9 @@
     \[
       \begin{aligned}
         &r \leftarrow \op{product} \bowtie \quad\quad\pi_{\op{serial\_number},\op{manuf},\op{nr},\op{ean}}(\op{planogram}) \bowtie \op{replenishment\_event}\\
-        &l \leftarrow \rho_{(1->\op{serial\_number})} (_{\op{ean,descr}} G_{sum(units)}(r))\\
+        &l \leftarrow \rho_{(1->\op{total\_sum})} (_{\op{ean,descr}} G_{sum(units)}(r))\\
         &\pi_{\op{ean},~\op{descr}}\left(
-          \sigma_{\op{max} = \op{total\_sum}}(L \times (\rho_{(1->\op{max})} ( G_{max(total\_sum)}(L)) ))
+          l \bowtie (\rho_{(1->\op{max})} ( G_{max(total\_sum)}(l)) )
         \right)
         \end{aligned}
     \]
