@@ -158,8 +158,8 @@
   \noindent
   category(\underline{name})
   \begin{itemize}[nosep]
-    \item \textsf{\textbf{(IC-1)}} name \textsf{must exist in} simple\_category \textsf{or} super\_category
-    \item \textsf{\textbf{(IC-2)}} name \textsf{never exists in both} simple\_category \textsf{and} super\_category \textsf{simultaneously}
+    \item \textsf{\textbf{(IC-7)}} name \textsf{must exist in} simple\_category \textsf{or} super\_category
+    \item \textsf{\textbf{(IC-8)}} name \textsf{never exists in both} simple\_category \textsf{and} super\_category \textsf{simultaneously}
   \end{itemize}
 
   \vspace*{10pt}
@@ -176,7 +176,7 @@
   super\_category(\underline{name})
   \begin{itemize}[nosep]
     \item name: FK(category)
-    \item \textsf{\textbf{(IC-1)} Every} super\_category \textsf{must participate in the} has\_other \textsf{association}
+    \item \textsf{\textbf{(IC-9)} Every} super\_category \textsf{must participate in the} has\_other \textsf{association}
   \end{itemize}
 
   \vspace*{10pt}
@@ -196,7 +196,7 @@
   \noindent
   product(\underline{ean}, descr)
   \begin{itemize}
-    \item \textsf{\textbf{(IC-1)} Every} product \textsf{must participate in the} has \textsf{association}
+    \item \textsf{\textbf{(IC-10)} Every} product \textsf{must participate in the} has \textsf{association}
   \end{itemize}
 
   \vspace*{10pt}
@@ -218,8 +218,8 @@
     \item serial\_number, manuf: FK(ivm.serial\_number, ivm.manuf)
     \item category\_name: FK(category.name)
     % TODO usar 'shelf' em vez da key?
-    \item \textsf{\textbf{(IC-1)}} serial\_number, manuf, nr \textsf{must exist in one of} warm\_shelf \textsf{or}\\ ambient\_temperature\_shelf \textsf{or} cold\_shelf
-    \item \textsf{\textbf{(IC-2)}} serial\_number, manuf, nr \textsf{never exists in more than one of} warm\_shelf \textsf{and}\\ ambient\_temperature\_shelf \textsf{or} cold\_shelf \textsf{simultaneously}
+    \item \textsf{\textbf{(IC-11)}} serial\_number, manuf, nr \textsf{must exist in one of} warm\_shelf \textsf{or}\\ ambient\_temperature\_shelf \textsf{or} cold\_shelf
+    \item \textsf{\textbf{(IC-12)}} serial\_number, manuf, nr \textsf{never exists in more than one of} warm\_shelf \textsf{and}\\ ambient\_temperature\_shelf \textsf{or} cold\_shelf \textsf{simultaneously}
   \end{itemize}
 
   \vspace*{10pt}
@@ -263,9 +263,9 @@
     \item serial\_number, manuf, nr, ean: FK(planogram.serial\_number, planogram.manuf,\\ planogram.nr, planogram.ean)
     \item tin: FK(retailer)
     % TODO is this right?
-    \item \textsf{\textbf{(IC-1)}} units \textsf{must be less than or equal to} planogram.units \textsf{of the associated} planogram
-    \item \textsf{\textbf{(IC-2)} The product with} ean \textsf{must have} (has) \textsf{the} category \textsf{with} shelf.category\_name \textsf{of the} shelf \textsf{identified by} serial\_number, manuf, nr
-    \item \textsf{\textbf{(IC-3)} The product with} ean \textsf{must have} (has) \textsf{one of the categories} (category) \textsf{that its} retailer \textsf{, identified by} tin\textsf{, is} responsible\_for
+    \item \textsf{\textbf{(IC-4)}} units \textsf{must be less than or equal to} planogram.units \textsf{of the associated} planogram
+    \item \textsf{\textbf{(IC-5)} The product with} ean \textsf{must have} (has) \textsf{the} category \textsf{with} shelf.category\_name \textsf{of the} shelf \textsf{identified by} serial\_number, manuf, nr
+    \item \textsf{\textbf{(IC-6)} The product with} ean \textsf{must have} (has) \textsf{one of the categories} (category) \textsf{that its} retailer \textsf{, identified by} tin\textsf{, is} responsible\_for
     \end{itemize}
 
   \vspace*{10pt}
