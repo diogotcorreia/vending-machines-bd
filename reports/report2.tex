@@ -212,10 +212,10 @@
   \vspace*{10pt}
 
   \noindent
-  shelf(\underline{serial\_number, manuf, nr}, height, category\_name)
+  shelf(\underline{serial\_number, manuf, nr}, height, name)
   \begin{itemize}[nosep]
     \item serial\_number, manuf: FK(ivm.serial\_number, ivm.manuf)
-    \item category\_name: FK(category.name)
+    \item name: FK(category)
     \item \textsf{\textbf{(IC-11)}} shelf \textsf{must exist in one of} warm\_shelf \textsf{or} ambient\_temperature\_shelf\\ \textsf{or} cold\_shelf
     \item \textsf{\textbf{(IC-12)}} shelf \textsf{never exists in more than one of} warm\_shelf \textsf{and}\\ ambient\_temperature\_shelf \textsf{or} cold\_shelf \textsf{simultaneously}
   \end{itemize}
@@ -293,7 +293,7 @@
 
     \[
       \begin{aligned}
-        \pi_{\op{serial\_number, manuf}}\left(\sigma_{\op{ean}='9002490100070'}\left(\op{planogram}\right)\right)
+        \pi_{\op{serial\_number, manuf}}\left(\sigma_{\op{ean}='9002490100070'}\left(\op{product} \bowtie \op{has} \bowtie \op{shelf}\right)\right)
       \end{aligned}
     \]
 
