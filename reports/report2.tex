@@ -134,12 +134,12 @@
   \vspace*{10pt}
 
   \noindent
-  ivm(\underline{serial\_number, manuf})
+  ivm(\underline{serial\_number}, \underline{manuf})
 
   \vspace*{10pt}
 
   \noindent
-  installed\_at(\underline{address, serial\_number, manuf}, nr)
+  installed\_at(\underline{address}, \underline{serial\_number}, \underline{manuf}, nr)
   \begin{itemize}[nosep]
     \item address: FK(point\_of\_retail)
     \item serial\_number, manuf: FK(ivm.serial\_number, ivm.manuf)
@@ -201,7 +201,7 @@
   \vspace*{10pt}
 
   \noindent
-  has(\underline{ean, name})
+  has(\underline{ean}, \underline{name})
   \begin{itemize}[nosep]
     \item ean: FK(product)
     \item name: FK(category)
@@ -212,7 +212,7 @@
   \vspace*{10pt}
 
   \noindent
-  shelf(\underline{serial\_number, manuf, nr}, height, name)
+  shelf(\underline{serial\_number}, \underline{manuf}, \underline{nr}, height, name)
   \begin{itemize}[nosep]
     \item serial\_number, manuf: FK(ivm.serial\_number, ivm.manuf)
     \item name: FK(category)
@@ -223,7 +223,7 @@
   \vspace*{10pt}
 
   \noindent
-  warm\_shelf(\underline{serial\_number, manuf, nr})
+  warm\_shelf(\underline{serial\_number}, \underline{manuf}, \underline{nr})
   \begin{itemize}[nosep]
     \item serial\_number, manuf, nr: FK(shelf.serial\_number, shelf.manuf, shelf.nr)
   \end{itemize}
@@ -231,7 +231,7 @@
   \vspace*{10pt}
 
   \noindent
-  ambient\_temperature\_shelf(\underline{serial\_number, manuf, nr})
+  ambient\_temperature\_shelf(\underline{serial\_number}, \underline{manuf}, \underline{nr})
   \begin{itemize}[nosep]
     \item serial\_number, manuf, nr: FK(shelf.serial\_number, shelf.manuf, shelf.nr)
   \end{itemize}
@@ -239,7 +239,7 @@
   \vspace*{10pt}
 
   \noindent
-  cold\_shelf(\underline{serial\_number, manuf, nr})
+  cold\_shelf(\underline{serial\_number}, \underline{manuf}, \underline{nr})
   \begin{itemize}[nosep]
     \item serial\_number, manuf, nr: FK(shelf.serial\_number, shelf.manuf, shelf.nr)
   \end{itemize}
@@ -247,7 +247,7 @@
   \vspace*{10pt}
 
   \noindent
-  planogram(\underline{serial\_number, manuf, nr, ean}, faces, units, loc)
+  planogram(\underline{serial\_number}, \underline{manuf}, \underline{nr}, \underline{ean}, faces, units, loc)
   \begin{itemize}[nosep]
     \item serial\_number, manuf, nr: FK(shelf.serial\_number, shelf.manuf, shelf.nr)
     \item ean: FK(product)
@@ -256,7 +256,7 @@
   \vspace*{10pt}
 
   \noindent
-  replenishment\_event(\underline{serial\_number, manuf, nr, ean, instant}, units, tin)
+  replenishment\_event(\underline{serial\_number}, \underline{manuf}, \underline{nr}, \underline{ean}, \underline{instant}, units, tin)
   \begin{itemize}[nosep]
     \item serial\_number, manuf, nr, ean: FK(planogram.serial\_number, planogram.manuf,\\ planogram.nr, planogram.ean)
     \item tin: FK(retailer)
@@ -268,11 +268,11 @@
   \vspace*{10pt}
 
   \noindent
-  responsible\_for(\underline{serial\_number, manuf, tin, category\_name})
+  responsible\_for(\underline{serial\_number}, \underline{manuf}, \underline{tin}, \underline{name})
   \begin{itemize}[nosep]
     \item serial\_number, manuf: FK(ivm.serial\_number, ivm.manuf)
     \item tin: FK(retailer)
-    \item category\_name: FK(category.name)
+    \item name: FK(category)
   \end{itemize}
 
   \sffamily
