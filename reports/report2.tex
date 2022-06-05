@@ -276,7 +276,7 @@
   \end{itemize}
 
   \sffamily
-  \section*{Álgebra Relacional}
+  \section*{Álgebra Relacional e SQL}
 
   \begin{enumerate}
     \item Para uma dada Categoria (e.g., "Barras Energéticas"), liste todos os produtos (EAN e designação) que foram repostos em mais de 10 unidades após uma determinada data (e.g., 2021/12/31)
@@ -289,6 +289,8 @@
       \end{aligned}
     \]
 
+    \lstinputlisting[language=SQL]{sql/query1.sql}
+
     \item Para um dado Produto identificado pelo EAN (e.g., 9002490100070), liste todas as IVMs onde este produto poderá ser apresentado (i.e., números de série das IVMs)
 
     \[
@@ -297,11 +299,15 @@
       \end{aligned}
     \]
 
+    \lstinputlisting[language=SQL]{sql/query2.sql}
+
     \item Para uma dada categoria (e.g., "Sopas Take-Away"), apresente o seu número de subcategorias considerando apenas os seus descendentes diretos
 
     \[
       G_{\op{count}()\mapsto \op{subcategories\_count}}\left(\sigma_{\op{super\_category\_name}=\text{'Sopas Take-Away'}}(\op{has\_other})\right)
     \]
+
+    \lstinputlisting[language=SQL]{sql/query3.sql}
 
     \item Indique o EAN e a designação do produto mais reposto
 
@@ -313,27 +319,8 @@
         \right)
         \end{aligned}
     \]
-  \end{enumerate}
-  
-  \section*{SQL}
-  
-  \begin{enumerate}
-    \item Para uma dada Categoria (e.g., "Barras Energéticas"), liste todos os produtos (EAN e designação) que foram repostos em mais de 10 unidades após uma determinada data (e.g., 2021/12/31)
-    
-    \lstinputlisting[language=SQL]{sql/query1.sql}
 
-    \item Para um dado Produto identificado pelo EAN (e.g., 9002490100070), liste todas as IVMs onde este produto poderá ser apresentado (i.e., números de série das IVMs)
-
-    \lstinputlisting[language=SQL]{sql/query2.sql}
-
-    \item Para uma dada categoria (e.g., "Sopas Take-Away"), apresente o seu número de subcategorias considerando apenas os seus descendentes diretos
-
-    \lstinputlisting[language=SQL]{sql/query3.sql}
-
-    \item Indique o EAN e a designação do produto mais reposto
-
-    % TODO do we need aliases?
     \lstinputlisting[language=SQL]{sql/query4.sql}
   \end{enumerate}
-
+  
 \end{document}
