@@ -276,10 +276,16 @@
   \end{itemize}
 
   \sffamily
+  \vspace*{10pt}
+  \noindent
+  Mantivémos a númeração das \textit{Integrity Constraints} para corresponderem ao enunciado, iniciando a contagem a 7 para as \textit{IC}s adicionadas.
+
   \section*{Álgebra Relacional e SQL}
 
   \begin{enumerate}
-    \item Para uma dada Categoria (e.g., "Barras Energéticas"), liste todos os produtos (EAN e designação) que foram repostos em mais de 10 unidades após uma determinada data (e.g., 2021/12/31)
+    \item \textbf{Para uma dada Categoria (e.g., "Barras Energéticas"), liste todos os produtos (EAN e designação) que foram repostos em mais de 10 unidades após uma determinada data (e.g., 2021/12/31).}
+
+    Considerámos \textit{"repostos em mais de 10 unidades"} como o valor agregado, isto é, a soma entre vários eventos de reposição do mesmo produto.
 
     \[
       \begin{aligned}
@@ -291,7 +297,9 @@
 
     \lstinputlisting[language=SQL]{sql/query1.sql}
 
-    \item Para um dado Produto identificado pelo EAN (e.g., 9002490100070), liste todas as IVMs onde este produto poderá ser apresentado (i.e., números de série das IVMs)
+    \item \textbf{Para um dado Produto identificado pelo EAN (e.g., 9002490100070), liste todas as IVMs onde este produto poderá ser apresentado (i.e., números de série das IVMs).}
+      
+    Considerámos \textit{"todas as IVMs onde este produto poderá ser apresentado"} como as IVMs que têm prateleiras onde pode ser apresentada a categoria do produto.
 
     \[
       \begin{aligned}
@@ -301,7 +309,7 @@
 
     \lstinputlisting[language=SQL]{sql/query2.sql}
 
-    \item Para uma dada categoria (e.g., "Sopas Take-Away"), apresente o seu número de subcategorias considerando apenas os seus descendentes diretos
+    \item \textbf{Para uma dada categoria (e.g., "Sopas Take-Away"), apresente o seu número de subcategorias considerando apenas os seus descendentes diretos.}
 
     \[
       G_{\op{count}()\mapsto \op{subcategories\_count}}\left(\sigma_{\op{super\_category\_name}=\text{'Sopas Take-Away'}}(\op{has\_other})\right)
@@ -309,7 +317,9 @@
 
     \lstinputlisting[language=SQL]{sql/query3.sql}
 
-    \item Indique o EAN e a designação do produto mais reposto
+    \item \textbf{Indique o EAN e a designação do produto mais reposto.}
+      
+    Considerámos o \textit{"produto mais reposto"} como o produto com mais unidades repostas, independentemente do número de eventos de reposição.
 
     \[
       \begin{aligned}
