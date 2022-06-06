@@ -139,10 +139,10 @@
   \vspace*{10pt}
 
   \noindent
-  installed\_at(\underline{address}, \underline{serial\_number}, \underline{manuf}, nr)
+  installed\_at(\underline{serial\_number}, \underline{manuf}, address, nr)
   \begin{itemize}[nosep]
-    \item address: FK(point\_of\_retail)
     \item serial\_number, manuf: FK(ivm.serial\_number, ivm.manuf)
+    \item address: FK(point\_of\_retail)
   \end{itemize}
 
   \vspace*{10pt}
