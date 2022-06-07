@@ -1,0 +1,338 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[legalpaper, portrait, margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{blindtext}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{pdflscape}
+\usepackage{svg}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\graphicspath{ {./} }
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,
+  urlcolor=blue,
+  citecolor=blue,
+  pdftitle={Relatório BD - Entrega 2 - 2021/2022},
+  pdfpagemode=FullScreen,
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Grupo \textbf{8}}
+\lhead{Relatório Entrega 2 BD 2021/2022 LEIC-A}
+\cfoot{Diogo Gaspar (99207), Diogo Correia (99211) e Tomás Esteves (99341)}
+
+\renewcommand{\footrulewidth}{0.2pt}
+
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\labelitemiii}{$\diamond$}
+\newcommand{\op}{\text}
+
+\newlist{constraintsList}{itemize}{4}
+\setlist[constraintsList]{itemsep=1pt, topsep=1pt, label=\protect\mpbullet}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+% https://stackoverflow.com/questions/1116266/listings-in-latex-with-utf-8-or-at-least-german-umlauts
+\lstset{%
+        inputencoding=utf8,
+        extendedchars=true,
+        literate=%
+        {é}{{\'{e}}}1
+        {è}{{\`{e}}}1
+        {ê}{{\^{e}}}1
+        {ë}{{\¨{e}}}1
+        {É}{{\'{E}}}1
+        {Ê}{{\^{E}}}1
+        {û}{{\^{u}}}1
+        {ù}{{\`{u}}}1
+        {ú}{{\'{u}}}1
+        {â}{{\^{a}}}1
+        {à}{{\`{a}}}1
+        {á}{{\'{a}}}1
+        {ã}{{\~{a}}}1
+        {Á}{{\'{A}}}1
+        {Â}{{\^{A}}}1
+        {Ã}{{\~{A}}}1
+        {ç}{{\c{c}}}1
+        {Ç}{{\c{C}}}1
+        {õ}{{\~{o}}}1
+        {ó}{{\'{o}}}1
+        {ô}{{\^{o}}}1
+        {Õ}{{\~{O}}}1
+        {Ó}{{\'{O}}}1
+        {Ô}{{\^{O}}}1
+        {î}{{\^{i}}}1
+        {Î}{{\^{I}}}1
+        {í}{{\'{i}}}1
+        {Í}{{\~{Í}}}1
+}
+
+\begin{document}
+  \begin{titlepage}
+    \begin{center}
+      \vspace*{5cm}
+
+      \Huge
+      \textbf{Projeto BD - Parte 2}
+
+      \vspace{0.5cm}
+      \LARGE
+      Grupo 008 | Turno L20 | LEIC-A
+
+      \vspace{0.5cm}
+      \large
+      Prof. João Aparício | Prof. Leonardo Alexandre
+
+      \vfill
+    \end{center}
+    \large
+    \begin{itemize}
+      \item[] \textbf{Diogo Gaspar} (99207) - 33\% - 10h
+      \item[] \textbf{Diogo Correia} (99211) - 33\% - 10h
+      \item[] \textbf{Tomás Esteves} (99341) - 34\% - 10h
+    \end{itemize}
+  \end{titlepage}
+
+  \section*{Modelo Relacional}
+
+  \ttfamily
+
+  \noindent
+  point\_of\_retail(\underline{address}, name)
+  
+  \vspace*{10pt}
+
+  \noindent
+  ivm(\underline{serial\_number}, \underline{manuf})
+
+  \vspace*{10pt}
+
+  \noindent
+  installed\_at(\underline{serial\_number}, \underline{manuf}, address, nr)
+  \begin{itemize}[nosep]
+    \item serial\_number, manuf: FK(ivm.serial\_number, ivm.manuf)
+    \item address: FK(point\_of\_retail)
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  retailer(\underline{tin}, name)
+  \begin{itemize}[nosep]
+    \item UNIQUE(name)
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  category(\underline{name})
+  \begin{itemize}[nosep]
+    \item \textsf{\textbf{(IC-7)}} name \textsf{must exist in} simple\_category \textsf{or} super\_category
+    \item \textsf{\textbf{(IC-8)}} name \textsf{never exists in both} simple\_category \textsf{and} super\_category \textsf{simultaneously}
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  simple\_category(\underline{name})
+  \begin{itemize}[nosep]
+    \item name: FK(category)
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  super\_category(\underline{name})
+  \begin{itemize}[nosep]
+    \item name: FK(category)
+    \item \textsf{\textbf{(IC-9)} Every} super\_category \textsf{must participate in the} has\_other \textsf{association}
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  has\_other(\underline{category\_name}, super\_category\_name)
+  \begin{itemize}[nosep]
+    \item category\_name: FK(category.name)
+    \item super\_category\_name: FK(super\_category.name)
+    \item \textsf{\textbf{(IC-1)}} category\_name \textsf{can't be the same as the} super\_category\_name
+    \item \textsf{\textbf{(IC-2)} There can't be cycles in the categories' hierarchies}
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  product(\underline{ean}, descr)
+  \begin{itemize}[nosep]
+    \item \textsf{\textbf{(IC-10)} Every} product \textsf{must participate in the} has \textsf{association}
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  has(\underline{ean}, \underline{name})
+  \begin{itemize}[nosep]
+    \item ean: FK(product)
+    \item name: FK(category)
+  \end{itemize}
+
+  % SHELVES
+
+  \vspace*{10pt}
+
+  \noindent
+  shelf(\underline{serial\_number}, \underline{manuf}, \underline{nr}, height, name)
+  \begin{itemize}[nosep]
+    \item serial\_number, manuf: FK(ivm.serial\_number, ivm.manuf)
+    \item name: FK(category)
+    \item \textsf{\textbf{(IC-11)}} shelf \textsf{must exist in one of} warm\_shelf \textsf{or} ambient\_temperature\_shelf\\ \textsf{or} cold\_shelf
+    \item \textsf{\textbf{(IC-12)}} shelf \textsf{never exists in more than one of} warm\_shelf \textsf{and}\\ ambient\_temperature\_shelf \textsf{or} cold\_shelf \textsf{simultaneously}
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  warm\_shelf(\underline{serial\_number}, \underline{manuf}, \underline{nr})
+  \begin{itemize}[nosep]
+    \item serial\_number, manuf, nr: FK(shelf.serial\_number, shelf.manuf, shelf.nr)
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  ambient\_temperature\_shelf(\underline{serial\_number}, \underline{manuf}, \underline{nr})
+  \begin{itemize}[nosep]
+    \item serial\_number, manuf, nr: FK(shelf.serial\_number, shelf.manuf, shelf.nr)
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  cold\_shelf(\underline{serial\_number}, \underline{manuf}, \underline{nr})
+  \begin{itemize}[nosep]
+    \item serial\_number, manuf, nr: FK(shelf.serial\_number, shelf.manuf, shelf.nr)
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  planogram(\underline{serial\_number}, \underline{manuf}, \underline{nr}, \underline{ean}, faces, units, loc)
+  \begin{itemize}[nosep]
+    \item serial\_number, manuf, nr: FK(shelf.serial\_number, shelf.manuf, shelf.nr)
+    \item ean: FK(product)
+  \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  replenishment\_event(\underline{serial\_number}, \underline{manuf}, \underline{nr}, \underline{ean}, \underline{instant}, units, tin)
+  \begin{itemize}[nosep]
+    \item serial\_number, manuf, nr, ean: FK(planogram.serial\_number, planogram.manuf,\\ planogram.nr, planogram.ean)
+    \item tin: FK(retailer)
+    \item \textsf{\textbf{(IC-4)}} units \textsf{must be less than or equal to} planogram.units \textsf{of the associated} planogram
+    \item \textsf{\textbf{(IC-5)} The product with} ean \textsf{must have} (has) \textsf{the} category \textsf{with} shelf.category\_name \textsf{of the} shelf \textsf{identified by} serial\_number, manuf, nr
+    \item \textsf{\textbf{(IC-6)} The product with} ean \textsf{must have} (has) \textsf{one of the categories} (category) \textsf{that its} retailer\textsf{, identified by} tin\textsf{, is} responsible\_for \textsf{replenishing}
+    \end{itemize}
+
+  \vspace*{10pt}
+
+  \noindent
+  responsible\_for(\underline{serial\_number}, \underline{manuf}, \underline{tin}, \underline{name})
+  \begin{itemize}[nosep]
+    \item serial\_number, manuf: FK(ivm.serial\_number, ivm.manuf)
+    \item tin: FK(retailer)
+    \item name: FK(category)
+  \end{itemize}
+
+  \sffamily
+  \vspace*{10pt}
+  \noindent
+  Mantivemos a numeração das \textit{Integrity Constraints} para corresponderem ao enunciado, iniciando a contagem a 7 para as \textit{IC}s adicionadas.
+  A \textbf{(IC-3)} foi convertida para o modelo relacional, através da propriedade \texttt{UNIQUE(name)} da relação \texttt{retailer}.
+  As restantes \textit{IC}s não são passíveis de conversão para modelo relacional.
+
+  \section*{Álgebra Relacional e SQL}
+
+  \begin{enumerate}
+    \item \textbf{Para uma dada Categoria (e.g., "Barras Energéticas"), liste todos os produtos (EAN e designação) que foram repostos em mais de 10 unidades após uma determinada data (e.g., 2021/12/31).}
+
+    Considerámos \textit{"repostos em mais de 10 unidades"} como o valor agregado, isto é, a soma entre vários eventos de reposição do mesmo produto.
+
+    \[
+      \begin{aligned}
+        &r \leftarrow \sigma_{\op{name}='\text{Barras Energéticas}'~\land~\op{instant} > '\text{2021/12/31}'}(\op{product} \bowtie \op{has} \bowtie \op{replenishment\_event})\\
+        &s \leftarrow _{\op{ean}, \op{descr}} G_{\op{sum}(\op{units}) \mapsto \op{total}}(r)\\
+        &\pi_{\op{ean}, \op{descr}} \left(\sigma_{\op{total} > 10}\left(s\right)\right)
+      \end{aligned}
+    \]
+
+    \lstinputlisting[language=SQL]{sql/query1.sql}
+
+    \item \textbf{Para um dado Produto identificado pelo EAN (e.g., 9002490100070), liste todas as IVMs onde este produto poderá ser apresentado (i.e., números de série das IVMs).}
+      
+    Considerámos \textit{"todas as IVMs onde este produto poderá ser apresentado"} como as IVMs que têm prateleiras onde pode ser apresentada a categoria do produto.
+
+    \[
+      \begin{aligned}
+        \pi_{\op{serial\_number, manuf}}\left(\sigma_{\op{ean}='9002490100070'}\left(\op{product} \bowtie \op{has} \bowtie \op{shelf}\right)\right)
+      \end{aligned}
+    \]
+
+    \lstinputlisting[language=SQL]{sql/query2.sql}
+
+    \item \textbf{Para uma dada categoria (e.g., "Sopas Take-Away"), apresente o seu número de subcategorias considerando apenas os seus descendentes diretos.}
+
+    \[
+      G_{\op{count}()\mapsto \op{subcategories\_count}}\left(\sigma_{\op{super\_category\_name}=\text{'Sopas Take-Away'}}(\op{has\_other})\right)
+    \]
+
+    \lstinputlisting[language=SQL]{sql/query3.sql}
+
+    \item \textbf{Indique o EAN e a designação do produto mais reposto.}
+      
+    Considerámos o \textit{"produto mais reposto"} como o produto com mais unidades repostas, independentemente do número de eventos de reposição.
+
+    \[
+      \begin{aligned}
+        &l \leftarrow _{\op{ean,descr}} G_{\op{sum}(\op{units})\mapsto \op{total\_sum}}(\op{product} \bowtie \op{replenishment\_event})\\
+        &\pi_{\op{ean},~\op{descr}}\left(
+          l \bowtie \left( G_{\op{max}(\op{total\_sum})\mapsto \op{total\_sum}}(l)\right)
+        \right)
+        \end{aligned}
+    \]
+
+    \lstinputlisting[language=SQL]{sql/query4.sql}
+  \end{enumerate}
+  
+\end{document}
