@@ -1,0 +1,36 @@
+<html>
+  <title>List accounts - Flask</title>
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/main.css') }}"
+  />
+
+  <body style="padding: 20px">
+    {% if cursor %}
+    <table border="2px">
+      <thead>
+        <tr>
+          <th>Numero de Conta</th>
+          <th>Nome da Agência</th>
+          <th>Saldo</th>
+          <th>Alterar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in cursor %}
+        <tr>
+          <td>{{ record[0] }}</td>
+          <td>{{ record[1] }}</td>
+          <td>{{ record[2] }}</td>
+          <td>
+            <a href="balance?account_number={{ record[0] }}">Alterar saldo</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>Erro: ao obter dados da base de dados!</p>
+    {% endif %}
+  </body>
+</html>

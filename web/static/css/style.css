@@ -1,0 +1,49 @@
+a.button {
+  background-color: black; /* Green */
+  border: 2px solid #4caf50;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 25px;
+  transition-duration: 0.3s;
+  border-radius: 12px;
+}
+
+a.button:hover {
+  background-color: #4caf50; /* Green */
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-content: space-around;
+  flex-wrap: wrap;
+}
+
+.container > a {
+  flex: 1 0 20%;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  padding: 20px;
+  background-color: cadetblue;
+}
+
+tr:nth-child(even) {
+  background-color: #3a3a3a;
+}
+
+tr:hover {
+  background-color: orangered;
+}
+
+td {
+  padding: 12px;
+}
