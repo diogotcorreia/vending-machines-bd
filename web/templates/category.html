@@ -17,10 +17,13 @@
         {% for record in cursor %}
         <tr>
           <td>{{ record[0] }}</td>
+          <td><a href="">Remove Category e Sub-Categories</a></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+
+    <a class="button" href=""> Insert Category </a>
 
     <a class="button" href="../proj.cgi/"> Main Menu </a>
 
