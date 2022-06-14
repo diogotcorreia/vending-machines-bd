@@ -4,7 +4,7 @@ body {
 }
 
 a.button {
-  background-color: black; /* Green */
+  background-color: black;
   border: 2px solid #4caf50;
   color: white;
   padding: 15px 32px;
@@ -21,20 +21,32 @@ a.button:hover {
   background-color: #4caf50; /* Green */
 }
 
+a.list {
+  color: white !important;
+}
+
+a.remove {
+  color: white !important;
+}
+
 a:link {
   text-decoration: none;
+  color: white;
 }
 
 a:visited {
   text-decoration: none;
+  color: white;
 }
 
 a:hover {
   text-decoration: none;
+  color: white;
 }
 
 a:active {
   text-decoration: none;
+  color: white;
 }
 
 .container {
@@ -70,4 +82,25 @@ tr:hover {
 }
 td {
   padding: 12px;
+}
+
+td.remove {
+  text-align: center;
+  padding: 0;
+  background-color: red;
+  transition-duration: 0.3s;
+}
+
+td.remove:hover {
+  background-color: #790000;
+}
+
+td.list {
+  text-align: center;
+  background-color: rgb(12, 62, 63);
+  transition-duration: 0.3s;
+}
+
+td.list:hover {
+  background-color: rgb(7, 18, 18);
 }

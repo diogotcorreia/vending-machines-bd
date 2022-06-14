@@ -7,25 +7,29 @@
 
   <body style="padding: 20px">
     {% if cursor %}
+    <h1>Simple Category</h1>
     <table border="2px">
       <thead>
         <tr>
           <th>Name</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {% for record in cursor %}
         <tr>
           <td>{{ record[0] }}</td>
-          <td><a href="">Remove Category</a></td>
+          <td class="remove"><a class="button, remove" href="">Remove</a></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
 
-    <a class="button" href=""> Insert Category </a>
+    <div>
+      <a class="button" href=""> Insert Category </a>
 
-    <a class="button" href="../proj.cgi/"> Main Menu </a>
+      <a class="button" href="../proj.cgi/"> Main Menu </a>
+    </div>
 
     {% else %}
     <p>Erro: ao obter dados da base de dados!</p>

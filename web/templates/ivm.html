@@ -7,11 +7,13 @@
 
   <body style="padding: 20px">
     {% if cursor %}
+    <h1>IVM</h1>
     <table border="2px">
       <thead>
         <tr>
           <th>Serial Number</th>
           <th>Manufacturer</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -19,7 +21,9 @@
         <tr>
           <td>{{ record[0] }}</td>
           <td>{{ record[1] }}</td>
-          <td><a href="">List Replenishment Events</a></td>
+          <td class="list">
+            <a class="button, list" href="">List Replenishment Events</a>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
