@@ -93,7 +93,7 @@ def list_category():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT account_number FROM account;"
+        query = "SELECT name FROM category;"
         cursor.execute(query)
         return render_template("category.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -110,7 +110,7 @@ def list_simple_category():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT account_number FROM account;"
+        query = "SELECT name FROM simple_category;"
         cursor.execute(query)
         return render_template(
             "simple_category.html", cursor=cursor, params=request.args
@@ -129,7 +129,7 @@ def list_super_category():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT account_number FROM account;"
+        query = "SELECT name FROM super_category;"
         cursor.execute(query)
         return render_template(
             "super_category.html", cursor=cursor, params=request.args
@@ -148,7 +148,7 @@ def list_has_other():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT account_number, balance FROM account;"
+        query = "SELECT super_category, category FROM has_other;"
         cursor.execute(query)
         return render_template("has_other.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -165,7 +165,7 @@ def list_product():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT account_number,branch_name, balance  FROM account;"
+        query = "SELECT ean, category, description  FROM product;"
         cursor.execute(query)
         return render_template("product.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -182,7 +182,7 @@ def list_has_category():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT branch_name, balance  FROM account;"
+        query = "SELECT ean, name  FROM has_category;"
         cursor.execute(query)
         return render_template("has_category.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -199,7 +199,7 @@ def list_ivm():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT branch_name, balance  FROM account;"
+        query = "SELECT serial_num, manuf  FROM ivm;"
         cursor.execute(query)
         return render_template("ivm.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -216,7 +216,7 @@ def list_retail_point():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT branch_name, balance, account_number  FROM account;"
+        query = "SELECT name, district, county  FROM retail_point;"
         cursor.execute(query)
         return render_template("retail_point.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -233,7 +233,7 @@ def list_installed_on():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT branch_name, balance, account_number  FROM account;"
+        query = "SELECT serial_num, manuf, local  FROM installed_on;"
         cursor.execute(query)
         return render_template("installed_on.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -250,7 +250,7 @@ def list_shelf():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT branch_name, balance, account_number, branch_name, balance  FROM account;"
+        query = "SELECT number, serial_num, manuf, height, name  FROM shelf;"
         cursor.execute(query)
         return render_template("shelf.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -267,7 +267,9 @@ def list_planogram():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT branch_name, balance, account_number, balance, branch_name, balance, balance  FROM account;"
+        query = (
+            "SELECT ean, number, serial_num, manuf, face, units, loc  FROM planogram;"
+        )
         cursor.execute(query)
         return render_template("planogram.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -284,7 +286,7 @@ def list_retailer():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT branch_name, balance  FROM account;"
+        query = "SELECT tin, name  FROM retailer;"
         cursor.execute(query)
         return render_template("retailer.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -301,7 +303,7 @@ def list_responsible_for():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT branch_name, balance, branch_name, balance  FROM account;"
+        query = "SELECT cat_name, tin, serial_num, manuf  FROM responsible_for;"
         cursor.execute(query)
         return render_template(
             "responsible_for.html", cursor=cursor, params=request.args
@@ -320,7 +322,7 @@ def list_replenishment_event():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT branch_name, balance, branch_name, balance, branch_name, balance, branch_name  FROM account;"
+        query = "SELECT ean, number, serial_num, manuf, instant, units, tin  FROM replenishment_event;"
         cursor.execute(query)
         return render_template(
             "replenishment_event.html", cursor=cursor, params=request.args
