@@ -130,3 +130,23 @@ VALUES ('1', 'Diogo'),
     ('4', 'Rafael'),
     ('5', 'Tiago'),
     ('6', 'Jesus');
+---------------------
+-- Responsible For
+---------------------
+INSERT INTO responsible_for
+VALUES ('Bolachas', '3', 'ivm-1', 'fizz'),
+    ('Bolachas de Chocolate', '3', 'ivm-1', 'fizz'),
+    ('Fruta', '1', 'ivm-1', 'fizz');
+----------------------
+-- Replenishment Event
+----------------------
+INSERT INTO replenishment_event
+VALUES (
+        '1111111111111',
+        '1',
+        'ivm-1',
+        'fizz',
+        '2022-06-09 18:34:21',
+        '6',
+        '3'
+    );

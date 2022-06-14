@@ -1,17 +1,17 @@
-drop table category cascade;
-drop table simple_category cascade;
-drop table super_category cascade;
-drop table has_other cascade;
-drop table product cascade;
-drop table has_category cascade;
-drop table ivm cascade;
-drop table retail_point cascade;
-drop table installed_on cascade;
-drop table shelf cascade;
-drop table planogram cascade;
-drop table retailer cascade;
-drop table responsible_for cascade;
-drop table replenishment_event cascade;
+DROP TABLE category CASCADE;
+DROP TABLE simple_category CASCADE;
+DROP TABLE super_category CASCADE;
+DROP TABLE has_other CASCADE;
+DROP TABLE product CASCADE;
+DROP TABLE has_category CASCADE;
+DROP TABLE ivm CASCADE;
+DROP TABLE retail_point CASCADE;
+DROP TABLE installed_on CASCADE;
+DROP TABLE shelf CASCADE;
+DROP TABLE planogram CASCADE;
+DROP TABLE retailer CASCADE;
+DROP TABLE responsible_for CASCADE;
+DROP TABLE replenishment_event CASCADE;
 ----------------------------------------
 -- Table Creation
 ----------------------------------------
@@ -110,7 +110,7 @@ CREATE TABLE responsible_for(
     tin VARCHAR(255) NOT NULL,
     serial_num VARCHAR(255) NOT NULL,
     manuf VARCHAR(255) NOT NULL,
-    CONSTRAINT pk_responsible_for PRIMARY KEY (serial_num, manuf),
+    CONSTRAINT pk_responsible_for PRIMARY KEY (cat_name, tin, serial_num, manuf),
     CONSTRAINT fk_responsible_for_ivm FOREIGN KEY(serial_num, manuf) REFERENCES ivm(serial_num, manuf),
     CONSTRAINT fk_responsible_for_retailer FOREIGN KEY(tin) REFERENCES retailer(tin),
     CONSTRAINT fk_responsible_for_category FOREIGN KEY(cat_name) REFERENCES category(name)
