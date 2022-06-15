@@ -75,6 +75,64 @@ def update_balance():
         dbConn.close()
 
 
+@app.route("/ask_simple")
+def ask_simple():
+    try:
+        return render_template("ask_simple.html")
+    except Exception as e:
+        return str(e)
+
+
+@app.route("/insert_simple", methods=["POST"])
+def insert_simple():
+    dbConn = None
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        name = request.form["name"]
+        query = """INSERT INTO category (name) VALUES (%s);
+                    INSERT INTO simple_category (name) VALUES (%s);"""
+        data = (name, name)
+        cursor.execute(query, data)
+        return query
+    except Exception as e:
+        return str(e)
+    finally:
+        dbConn.commit()
+        cursor.close()
+        dbConn.close()
+
+
+@app.route("/ask_super")
+def ask_super():
+    try:
+        return render_template("ask_super.html")
+    except Exception as e:
+        return str(e)
+
+
+@app.route("/insert_super", methods=["POST"])
+def insert_super():
+    dbConn = None
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        name = request.form["name"]
+        query = """INSERT INTO category (name) VALUES (%s);
+                    INSERT INTO super_category (name) VALUES (%s);"""
+        data = (name, name)
+        cursor.execute(query, data)
+        return query
+    except Exception as e:
+        return str(e)
+    finally:
+        dbConn.commit()
+        cursor.close()
+        dbConn.close()
+
+
 @app.route("/category")
 def list_category():
     dbConn = None
