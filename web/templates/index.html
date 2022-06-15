@@ -5,45 +5,42 @@
     href="{{ url_for('static', filename='css/style.css') }}"
   />
   <body style="padding: 20px">
-    {% if cursor %}
-
     <h1>Projeto de BD - 2021/2022</h1>
 
     <div class="container">
-      <a class="button" href="balance"> Balance </a>
+      <a class="button" href="/proj.cgi/balance"> Balance </a>
 
-      <a class="button" href="accounts"> Account </a>
+      <a class="button" href="/proj.cgi/accounts"> Account </a>
 
-      <a class="button" href="category"> Category </a>
+      <a class="button" href="/proj.cgi/category"> Category </a>
 
-      <a class="button" href="simple_category"> Simple Category </a>
+      <a class="button" href="/proj.cgi/simple_category"> Simple Category </a>
 
-      <a class="button" href="super_category"> Super Category </a>
+      <a class="button" href="/proj.cgi/super_category"> Super Category </a>
 
-      <a class="button" href="has_other"> Has Other </a>
+      <a class="button" href="/proj.cgi/has_other"> Has Other </a>
 
-      <a class="button" href="product"> Product </a>
+      <a class="button" href="/proj.cgi/product"> Product </a>
 
-      <a class="button" href="has_category"> Has Category </a>
+      <a class="button" href="/proj.cgi/has_category"> Has Category </a>
 
-      <a class="button" href="ivm"> IVM </a>
+      <a class="button" href="/proj.cgi/ivm"> IVM </a>
 
-      <a class="button" href="retail_point"> Retail Point </a>
+      <a class="button" href="/proj.cgi/retail_point"> Retail Point </a>
 
-      <a class="button" href="installed_on"> Installed On </a>
+      <a class="button" href="/proj.cgi/installed_on"> Installed On </a>
 
-      <a class="button" href="shelf"> Shelf </a>
+      <a class="button" href="/proj.cgi/shelf"> Shelf </a>
 
-      <a class="button" href="planogram"> Planogram </a>
+      <a class="button" href="/proj.cgi/planogram"> Planogram </a>
 
-      <a class="button" href="retailer"> Retailer </a>
+      <a class="button" href="/proj.cgi/retailer"> Retailer </a>
 
-      <a class="button" href="responsible_for"> Responsible For </a>
+      <a class="button" href="/proj.cgi/responsible_for"> Responsible For </a>
 
-      <a class="button" href="replenishment_event"> Replenishment Event </a>
+      <a class="button" href="/proj.cgi/replenishment_event">
+        Replenishment Event
+      </a>
     </div>
-    {% else %}
-    <p>Error: failed to retreive data from database!</p>
-    {% endif %}
   </body>
 </doctype>

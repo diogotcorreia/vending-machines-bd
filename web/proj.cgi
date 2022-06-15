@@ -13,7 +13,7 @@ app = Flask(__name__)
 ## SGBD configs
 DB_HOST = "db"
 DB_USER = "postgres"
-DB_DATABASE = DB_USER
+DB_DATABASE = "postgres"
 DB_PASSWORD = "postgres"
 DB_CONNECTION_STRING = "host=%s dbname=%s user=%s password=%s" % (
     DB_HOST,
@@ -26,20 +26,9 @@ DB_CONNECTION_STRING = "host=%s dbname=%s user=%s password=%s" % (
 ## Runs the function once the root page is requested.
 ## The request comes with the folder structure setting ~/web as the root
 @app.route("/")
-def list_accounts():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT * FROM account;"
-        cursor.execute(query)
-        return render_template("index.html", cursor=cursor)
-    except Exception as e:
-        return str(e)  # Renders a page with the error.
-    finally:
-        cursor.close()
-        dbConn.close()
+def list_entities():
+
+    return render_template("index.html")
 
 
 @app.route("/accounts")
@@ -325,7 +314,9 @@ def list_replenishment_event():
         query = "SELECT ean, number, serial_num, manuf, instant, units, tin  FROM replenishment_event;"
         cursor.execute(query)
         return render_template(
-            "replenishment_event.html", cursor=cursor, params=request.args
+            "replenishment_event.html",
+            cursor=cursor,
+            params=request.args,
         )
     except Exception as e:
         return str(e)
