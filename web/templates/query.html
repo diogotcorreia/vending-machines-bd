@@ -14,9 +14,7 @@
             <tbody>
                 {% for record in cursor %}
                     <tr>
-                        {% for i in range(0,cursor.rowcount -1) %}
-                            <td>{{ record[i] }}</td>
-                        {% endfor %}
+                        {% for value in record %}<td>{{ value }}</td>{% endfor %}
                     </tr>
                 {% endfor %}
             </tbody>
