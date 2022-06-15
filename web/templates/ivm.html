@@ -22,7 +22,11 @@
           <td>{{ record[0] }}</td>
           <td>{{ record[1] }}</td>
           <td class="list">
-            <a class="button, list" href="">List Replenishment Events</a>
+            <a
+              class="button, list"
+              href="./ivm_values?serial_num={{record[0]}}&manuf={{record[1]}}"
+              >List Replenishment Events</a
+            >
           </td>
         </tr>
         {% endfor %}

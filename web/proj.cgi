@@ -387,4 +387,34 @@ def list_replenishment_event():
         dbConn.close()
 
 
+@app.route("/ivm_values")
+def ivm_values():
+
+    return render_template("ivm_values.html", params=request.args)
+
+
+@app.route("/list_replenishment_event_ivm", methods=["POST"])
+def list_replenishment_event_ivm():
+    dbConn = None
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        serial_num = request.form["serial_num"]
+        manuf = request.form["manuf"]
+        query = "SELECT ean, number, serial_num, manuf, instant, units, tin  FROM replenishment_event WHERE serial_num = %s AND manuf = %s ;"
+        data = (serial_num, manuf)
+        cursor.execute(query, data)
+        return render_template(
+            "list_replenishment_event_ivm.html",
+            cursor=cursor,
+            params=request.args,
+        )
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+        dbConn.close()
+
+
 CGIHandler().run(app)
