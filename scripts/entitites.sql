@@ -1,17 +1,17 @@
-DROP TABLE category CASCADE;
-DROP TABLE simple_category CASCADE;
-DROP TABLE super_category CASCADE;
-DROP TABLE has_other CASCADE;
-DROP TABLE product CASCADE;
-DROP TABLE has_category CASCADE;
-DROP TABLE ivm CASCADE;
-DROP TABLE retail_point CASCADE;
-DROP TABLE installed_on CASCADE;
-DROP TABLE shelf CASCADE;
-DROP TABLE planogram CASCADE;
-DROP TABLE retailer CASCADE;
-DROP TABLE responsible_for CASCADE;
-DROP TABLE replenishment_event CASCADE;
+DROP TABLE IF EXISTS category CASCADE;
+DROP TABLE IF EXISTS simple_category CASCADE;
+DROP TABLE IF EXISTS super_category CASCADE;
+DROP TABLE IF EXISTS has_other CASCADE;
+DROP TABLE IF EXISTS product CASCADE;
+DROP TABLE IF EXISTS has_category CASCADE;
+DROP TABLE IF EXISTS ivm CASCADE;
+DROP TABLE IF EXISTS retail_point CASCADE;
+DROP TABLE IF EXISTS installed_on CASCADE;
+DROP TABLE IF EXISTS shelf CASCADE;
+DROP TABLE IF EXISTS planogram CASCADE;
+DROP TABLE IF EXISTS retailer CASCADE;
+DROP TABLE IF EXISTS responsible_for CASCADE;
+DROP TABLE IF EXISTS replenishment_event CASCADE;
 ----------------------------------------
 -- Table Creation
 ----------------------------------------
@@ -38,11 +38,9 @@ CREATE TABLE has_other (
     category VARCHAR(255) NOT NULL,
     CONSTRAINT fk_has_other_super_category FOREIGN KEY(super_category) REFERENCES super_category(name),
     CONSTRAINT pk_has_other PRIMARY KEY (category),
-    CONSTRAINT fk_has_other_category FOREIGN KEY(category) REFERENCES category(name) -- RI_RE1
-    -- RI_RE2
-    -- RI_RE3
-    -- RI_RE4
-    -- RI_RE5
+    CONSTRAINT fk_has_other_category FOREIGN KEY(category) REFERENCES category(name),
+    CHECK (super_category != category) -- RI_RE4(TRIGGER)
+    -- RI_RE5 (DONE)
 );
 CREATE TABLE product (
     ean VARCHAR(13) NOT NULL,
