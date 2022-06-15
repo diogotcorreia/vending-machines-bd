@@ -11,10 +11,10 @@ import psycopg2.extras
 app = Flask(__name__)
 
 ## SGBD configs
-DB_HOST = "db.tecnico.ulisboa.pt"
-DB_USER = "ist199341"
+DB_HOST = "db"
+DB_USER = "postgres"
 DB_DATABASE = DB_USER
-DB_PASSWORD = "fxjr4643"
+DB_PASSWORD = "postgres"
 DB_CONNECTION_STRING = "host=%s dbname=%s user=%s password=%s" % (
     DB_HOST,
     DB_DATABASE,
