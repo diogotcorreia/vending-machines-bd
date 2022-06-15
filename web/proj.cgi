@@ -133,6 +133,36 @@ def insert_super():
         dbConn.close()
 
 
+@app.route("/ask_retailer")
+def ask_retailer():
+    try:
+        return render_template("ask_retailer.html")
+    except Exception as e:
+        return str(e)
+
+
+@app.route("/insert_retailer", methods=["POST"])
+def insert_retailer():
+    dbConn = None
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        tin = request.form["tin"]
+        name = request.form["name"]
+        query = """INSERT INTO retailer (tin, name) VALUES (%s, %s);
+                    """
+        data = (tin, name)
+        cursor.execute(query, data)
+        return query
+    except Exception as e:
+        return str(e)
+    finally:
+        dbConn.commit()
+        cursor.close()
+        dbConn.close()
+
+
 @app.route("/category")
 def list_category():
     dbConn = None

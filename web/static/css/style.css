@@ -106,3 +106,28 @@ td.list {
 td.list:hover {
   background-color: rgb(7, 18, 18);
 }
+
+input {
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+input[type="text"]:focus {
+  background-color: rgb(1, 35, 7);
+  border: #4caf50;
+}
+
+input[type="submit"] {
+  background-color: black;
+  border: 2px solid #4caf50;
+  color: white;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.3s;
+  border-radius: 12px;
+  margin-left: 25px;
+}
