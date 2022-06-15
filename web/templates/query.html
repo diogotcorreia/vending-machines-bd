@@ -1,0 +1,28 @@
+{% include 'partial/base.html' %}
+{% block title %}<title>Query</title>{% endblock %}
+{% block content %}
+    {% if cursor %}
+        <h1>Query</h1>
+        <table border="2px">
+            <thead>
+                <tr>
+                    <tr>
+                        {% for record in cursor.description %}<th>{{ record[0] }}</th>{% endfor %}
+                    </tr>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in cursor %}
+                    <tr>
+                        {% for i in range(0,cursor.rowcount -1) %}
+                            <td>{{ record[i] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a class="button" href="../proj.cgi/">Main Menu</a>
+    {% else %}
+        <p>Erro: ao obter dados da base de dados!</p>
+    {% endif %}
+{% endblock %}

@@ -31,42 +31,16 @@ def list_entities():
     return render_template("index.html")
 
 
-@app.route("/accounts")
-def list_accounts_edit():
+@app.route("/insert_query", methods=["POST"])
+def insert_query():
     dbConn = None
     cursor = None
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT account_number, branch_name, balance FROM account;"
+        query = request.form["query"]
         cursor.execute(query)
-        return render_template("accounts.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/balance")
-def change_balance():
-    try:
-        return render_template("balance.html", params=request.args)
-    except Exception as e:
-        return str(e)
-
-
-@app.route("/update", methods=["POST"])
-def update_balance():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        # Esta versão é vuneravel a SQL injection
-        query = f"""UPDATE account SET balance={request.form["balance"]} WHERE account_number = '{request.form["account_number"]}';"""
-        cursor.execute(query)
-        return query
+        return render_template("query.html", cursor=cursor, params=request.args)
     except Exception as e:
         return str(e)
     finally:
