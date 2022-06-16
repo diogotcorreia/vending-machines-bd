@@ -35,7 +35,7 @@ def insert_query():
     return exec_query(
         request.form["query"],
         lambda cursor: render_template(
-            "query.html", cursor=cursor, params=request.args
+            "query.html", cursor=cursor, params={"title": request.form["query"]}
         ),
     )
 
@@ -100,7 +100,7 @@ def list_sub_categories():
             ) SELECT category AS sub_categories FROM list_recurs;
             """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, params=request.args
+            "query.html", cursor=cursor, params={"title": "List Sub-Categories"}
         ),
         data_from_request(("super_category",)),
     )
@@ -304,30 +304,19 @@ def ivm_values():
 
 @app.route("/list_replenishment_event_ivm", methods=["POST"])
 def list_replenishment_event_ivm():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        serial_num = request.form["serial_num"]
-        manuf = request.form["manuf"]
-        query = """
-            SELECT ean, number, serial_num, manuf, instant, units, tin
-            FROM replenishment_event
-            WHERE serial_num = %s AND manuf = %s;
-            """
-        data = (serial_num, manuf)
-        cursor.execute(query, data)
-        return render_template(
-            "list_replenishment_event_ivm.html",
+    return exec_query(
+        """
+        SELECT ean, number, serial_num, manuf, instant, units, tin
+        FROM replenishment_event
+        WHERE serial_num = %s AND manuf = %s;
+        """,
+        lambda cursor: render_template(
+            "query.html",
             cursor=cursor,
-            params=request.args,
-        )
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
+            params={"title": "List Replenishment Events of IVM"},
+        ),
+        data_from_request(("serial_num", "manuf")),
+    )
 
 
 ###############

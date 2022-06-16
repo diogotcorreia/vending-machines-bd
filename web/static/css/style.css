@@ -69,6 +69,7 @@ table {
 th {
   padding: 20px;
   background-color: cadetblue;
+  text-transform: capitalize;
 }
 
 tr {

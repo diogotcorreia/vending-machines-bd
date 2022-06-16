@@ -7,7 +7,7 @@
             <thead>
                 <tr>
                     <tr>
-                        {% for record in cursor.description %}<th>{{ record[0] }}</th>{% endfor %}
+                        {% for record in cursor.description %}<th>{{ record[0]|replace("_"," ") }}</th>{% endfor %}
                     </tr>
                 </tr>
             </thead>
