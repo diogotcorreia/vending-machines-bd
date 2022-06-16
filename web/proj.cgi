@@ -35,7 +35,7 @@ def insert_query():
     return exec_query(
         request.form["query"],
         lambda cursor: render_template(
-            "query.html", cursor=cursor, params={"title": request.form["query"]}
+            "query.html", cursor=cursor, title=request.form["query"]
         ),
     )
 
@@ -45,7 +45,7 @@ def ask_simple():
     try:
         return render_template("ask_simple.html")
     except Exception as e:
-        return str(e)
+        return render_template("error_page.html", error=e)
 
 
 @app.route("/insert_simple", methods=["POST"])
@@ -89,18 +89,18 @@ def ask_list():
 def list_sub_categories():
     return exec_query(
         """
-            WITH RECURSIVE list_recurs(super_category, category) AS (
-                SELECT super_category, category
-                FROM has_other
-                WHERE super_category = %s
-                UNION ALL
-                SELECT child.super_category, child.category
-                FROM has_other AS child
-                    INNER JOIN list_recurs AS parent ON child.super_category = parent.category
-            ) SELECT category AS sub_categories FROM list_recurs;
-            """,
+        WITH RECURSIVE list_recurs(super_category, category) AS (
+            SELECT super_category, category
+            FROM has_other
+            WHERE super_category = %s
+            UNION ALL
+            SELECT child.super_category, child.category
+            FROM has_other AS child
+                INNER JOIN list_recurs AS parent ON child.super_category = parent.category
+        ) SELECT category AS sub_categories FROM list_recurs;
+        """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, params={"title": "List Sub-Categories"}
+            "query.html", cursor=cursor, title="List Sub-Categories"
         ),
         data_from_request(("super_category",)),
     )
@@ -111,7 +111,7 @@ def ask_retailer():
     try:
         return render_template("ask_retailer.html")
     except Exception as e:
-        return str(e)
+        return render_template("error_page.html", error=e)
 
 
 @app.route("/insert_retailer", methods=["POST"])
@@ -133,7 +133,7 @@ def list_category():
         SELECT name FROM category;
         """,
         lambda cursor: render_template(
-            "category.html", cursor=cursor, params={"title": "category"}
+            "category.html", cursor=cursor, title="category"
         ),
     )
 
@@ -145,7 +145,7 @@ def list_simple_category():
         SELECT name FROM simple_category;
         """,
         lambda cursor: render_template(
-            "simple_category.html", cursor=cursor, params={"title": "Simple Category"}
+            "simple_category.html", cursor=cursor, title="Simple Category"
         ),
     )
 
@@ -157,7 +157,7 @@ def list_super_category():
         SELECT name FROM super_category;
         """,
         lambda cursor: render_template(
-            "super_category.html", cursor=cursor, params={"title": "Super Category"}
+            "super_category.html", cursor=cursor, title="Super Category"
         ),
     )
 
@@ -168,9 +168,7 @@ def list_has_other():
         """
         SELECT super_category, category FROM has_other;
         """,
-        lambda cursor: render_template(
-            "query.html", cursor=cursor, params={"title": "Has Other"}
-        ),
+        lambda cursor: render_template("query.html", cursor=cursor, title="Has Other"),
     )
 
 
@@ -180,9 +178,7 @@ def list_product():
         """
         SELECT ean, category, description FROM product;
         """,
-        lambda cursor: render_template(
-            "query.html", cursor=cursor, params={"title": "Product"}
-        ),
+        lambda cursor: render_template("query.html", cursor=cursor, title="Product"),
     )
 
 
@@ -193,7 +189,7 @@ def list_has_category():
         SELECT ean, name FROM has_category;
         """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, params={"title": "Has Category"}
+            "query.html", cursor=cursor, title="Has Category"
         ),
     )
 
@@ -204,9 +200,7 @@ def list_ivm():
         """
         SELECT serial_num, manuf FROM ivm;
         """,
-        lambda cursor: render_template(
-            "ivm.html", cursor=cursor, params={"title": "IVM"}
-        ),
+        lambda cursor: render_template("ivm.html", cursor=cursor, title="IVM"),
     )
 
 
@@ -217,7 +211,7 @@ def list_retail_point():
         SELECT name, district, county FROM retail_point;
         """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, params={"title": "Retail Point"}
+            "query.html", cursor=cursor, title="Retail Point"
         ),
     )
 
@@ -229,7 +223,7 @@ def list_installed_on():
         SELECT serial_num, manuf, local FROM installed_on;
         """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, params={"title": "Installed On"}
+            "query.html", cursor=cursor, title="Installed On"
         ),
     )
 
@@ -240,9 +234,7 @@ def list_shelf():
         """
         SELECT number, serial_num, manuf, height, name FROM shelf;
         """,
-        lambda cursor: render_template(
-            "query.html", cursor=cursor, params={"title": "Shelf"}
-        ),
+        lambda cursor: render_template("query.html", cursor=cursor, title="Shelf"),
     )
 
 
@@ -253,9 +245,7 @@ def list_planogram():
         SELECT ean, number, serial_num, manuf, face, units, loc
         FROM planogram;
         """,
-        lambda cursor: render_template(
-            "query.html", cursor=cursor, params={"title": "Planogram"}
-        ),
+        lambda cursor: render_template("query.html", cursor=cursor, title="Planogram"),
     )
 
 
@@ -266,7 +256,7 @@ def list_retailer():
         SELECT tin, name FROM retailer;
         """,
         lambda cursor: render_template(
-            "retailer.html", cursor=cursor, params={"title": "Retailer"}
+            "retailer.html", cursor=cursor, title="Retailer"
         ),
     )
 
@@ -278,7 +268,7 @@ def list_responsible_for():
         SELECT cat_name, tin, serial_num, manuf FROM responsible_for;
         """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, params={"title": "Responsible For"}
+            "query.html", cursor=cursor, title="Responsible For"
         ),
     )
 
@@ -291,14 +281,13 @@ def list_replenishment_event():
         SELECT ean, number, serial_num, manuf, instant, units, tin FROM replenishment_event;
         """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, params={"title": "Replenishment Event"}
+            "query.html", cursor=cursor, title="Replenishment Event"
         ),
     )
 
 
 @app.route("/ivm_values")
 def ivm_values():
-
     return render_template("ivm_values.html", params=request.args)
 
 
@@ -333,7 +322,7 @@ def exec_query(query, outcome, data=()):
         cursor.execute(query, data)
         return outcome(cursor)
     except Exception as e:
-        return render_template("error.html", error=e)
+        return render_template("error_page.html", error=e)
     finally:
         dbConn.commit()
         cursor.close()
