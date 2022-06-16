@@ -45,7 +45,7 @@ CREATE TABLE has_other (
 CREATE TABLE product (
     ean VARCHAR(13) NOT NULL,
     category VARCHAR(255) NOT NULL,
-    description text NOT NULL,
+    description TEXT NOT NULL,
     CONSTRAINT pk_product PRIMARY KEY (ean),
     CONSTRAINT fk_product_category FOREIGN KEY(category) REFERENCES category(name) -- RI_RE6
 );
@@ -80,7 +80,7 @@ CREATE TABLE shelf (
     number VARCHAR(255) NOT NULL,
     serial_num VARCHAR(255) NOT NULL,
     manuf VARCHAR(255) NOT NULL,
-    height VARCHAR(255) NOT NULL,
+    height INT NOT NULL,
     name VARCHAR(255) NOT NULL,
     CONSTRAINT pk_shelf PRIMARY KEY (number, serial_num, manuf),
     CONSTRAINT fk_shelf_ivm FOREIGN KEY(serial_num, manuf) REFERENCES ivm(serial_num, manuf),
@@ -118,7 +118,7 @@ CREATE TABLE replenishment_event(
     number VARCHAR(255) NOT NULL,
     serial_num VARCHAR(255) NOT NULL,
     manuf VARCHAR(255) NOT NULL,
-    instant timestamp NOT NULL,
+    instant TIMESTAMP NOT NULL,
     units INT NOT NULL,
     tin VARCHAR(255) NOT NULL,
     CONSTRAINT pk_replenishment_event PRIMARY KEY (ean, number, serial_num, manuf, instant),
