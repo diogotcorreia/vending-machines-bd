@@ -333,8 +333,7 @@ def exec_query(query, outcome, data=()):
         cursor.execute(query, data)
         return outcome(cursor)
     except Exception as e:
-        # TODO show a fancy error page (?)
-        return str(e)
+        return render_template("error.html", error=e)
     finally:
         dbConn.commit()
         cursor.close()
