@@ -20,7 +20,7 @@ FROM responsible_for
     INNER JOIN simple_category ON responsible_for.cat_name = simple_category.name
 GROUP BY retailer.name
 HAVING COUNT(DISTINCT cat_name) = (
-    Select COUNT(*)
+    SELECT COUNT(*)
     FROM simple_category
 );
 
