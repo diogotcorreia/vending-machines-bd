@@ -77,7 +77,7 @@ VALUES ('ivm-1', 'fizz', 'Frigu'),
 ----------------------
 INSERT INTO shelf
 VALUES ('1', 'ivm-1', 'fizz', '2', 'Bolachas'),
-    ('2', 'ivm-1', 'fizz', '2', 'Fruta'),
+    ('3', 'ivm-1', 'fizz', '2', 'Fruta'),
     ('2', 'ivm-2', 'buzz', '3', 'Fruta'),
     ('3', 'ivm-2', 'fizz', '3', 'Snipers');
 ----------------------
@@ -94,8 +94,8 @@ VALUES (
         'Cima'
     ),
     (
-        '1111111111112',
-        '2',
+        '1111111111113',
+        '3',
         'ivm-1',
         'fizz',
         '2',
@@ -136,6 +136,13 @@ VALUES ('1', 'Diogo'),
 INSERT INTO responsible_for
 VALUES ('Bolachas', '3', 'ivm-1', 'fizz'),
     ('Bolachas de Chocolate', '3', 'ivm-1', 'fizz'),
+    ('Fruta', '3', 'ivm-1', 'fizz'),
+    ('Semi-Auto', '3', 'ivm-3', 'fizz'),
+    ('Snipers', '3', 'ivm-1', 'fizz'),
+    ('Bolachas', '5', 'ivm-2', 'fizz'),
+    ('Bolachas de Chocolate', '5', 'ivm-2', 'fizz'),
+    ('Fruta', '5', 'ivm-3', 'fizz'),
+    ('Snipers', '5', 'ivm-2', 'fizz'),
     ('Fruta', '1', 'ivm-1', 'fizz');
 ----------------------
 -- Replenishment Event
@@ -148,5 +155,23 @@ VALUES (
         'fizz',
         '2022-06-09 18:34:21',
         '6',
+        '3'
+    ),
+    (
+        '1111111111113',
+        '3',
+        'ivm-1',
+        'fizz',
+        '2022-06-09 19:54:21',
+        '7',
+        '2'
+    ),
+    (
+        '1111111111113',
+        '2',
+        'ivm-2',
+        'buzz',
+        '2022-06-09 14:54:21',
+        '7',
         '3'
     );

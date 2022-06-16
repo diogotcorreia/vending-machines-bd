@@ -1,22 +1,27 @@
+------------------------------------
+-- 1 Categorias distintas ou podem repetir?
+-----------------
 --1
-Select tin,
+Select name,
     COUNT(*)
 FROM responsible_for
-GROUP BY tin
+    NATURAL JOIN retailer
+GROUP BY name
 HAVING COUNT(*) >= ALL (
-        SELECT COUNT(*)
+        SELECT COUNT(DISTINCT cat_name)
         FROM responsible_for
         GROUP BY tin
     );
---2 (INCOMPLETE)
-SELECT tin
+--2 
+SELECT retailer.name
 FROM responsible_for
+    NATURAL JOIN retailer
     INNER JOIN simple_category ON responsible_for.cat_name = simple_category.name
-GROUP By tin
-HAVING COUNT(
-        DISTINCT cat_name
-        WHERE cat_name IN simple_category
-    ) = COUNT(simple_category);
+GROUP By retailer.name
+HAVING COUNT(DISTINCT cat_name) = (
+        Select COUNT(*)
+        FROM simple_category
+    );
 --3
 SELECT product.ean
 FROM product
