@@ -1,0 +1,6 @@
+{
+  "[html]": {
+    "editor.defaultFormatter": "monosans.djlint"
+  },
+  "python.formatting.provider": "black"
+}

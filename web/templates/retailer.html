@@ -1,0 +1,36 @@
+<html>
+  <title>Retailer</title>
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"/>
+  <body style="padding: 20px">
+    {% if cursor %}
+      <h1>Retailer</h1>
+      <table border="2px">
+        <thead>
+          <tr>
+            <th>TIN</th>
+            <th>Name</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in cursor %}
+            <tr>
+              <td>{{ record[0] }}</td>
+              <td>{{ record[1] }}</td>
+              <td class="remove">
+                <a class="button, remove" href="">Remove</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div>
+        <a class="button" href="./ask_retailer">Insert Retailer</a>
+        <a class="button" href="../proj.cgi/">Main Menu</a>
+      </div>
+    {% else %}
+      <p>Erro: ao obter dados da base de dados!</p>
+    {% endif %}
+  </body>
+</html>
