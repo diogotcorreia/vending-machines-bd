@@ -241,7 +241,9 @@ def list_has_other():
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         query = "SELECT super_category, category FROM has_other;"
         cursor.execute(query)
-        return render_template("has_other.html", cursor=cursor, params=request.args)
+        return render_template(
+            "query.html", cursor=cursor, params={"title": "has_other"}
+        )
     except Exception as e:
         return str(e)
     finally:
