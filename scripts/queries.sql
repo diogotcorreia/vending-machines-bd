@@ -25,8 +25,10 @@ HAVING COUNT(DISTINCT cat_name) = (
 --3
 SELECT product.ean
 FROM product
-    LEFT OUTER JOIN replenishment_event ON product.ean = replenishment_event.ean
-WHERE replenishment_event.ean IS NULL;
+WHERE product.ean NOT IN (
+        SELECT ean
+        FROM replenishment_event
+    );
 --4
 Select ean
 FROM replenishment_event
