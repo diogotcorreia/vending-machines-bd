@@ -302,7 +302,7 @@ def list_replenishment_event_ivm():
         lambda cursor: render_template(
             "query.html",
             cursor=cursor,
-            params={"title": "List Replenishment Events of IVM"},
+            title="List Replenishment Events of IVM",
         ),
         data_from_request(("serial_num", "manuf")),
     )
