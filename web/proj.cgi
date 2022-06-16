@@ -107,6 +107,34 @@ def insert_super():
         dbConn.close()
 
 
+@app.route("/ask_list")
+def ask_list():
+    return render_template("ask_list.html", params=request.args)
+
+
+@app.route("/list_sub_categories", methods=["POST"])
+def list_sub_categories():
+    dbConn = None
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        super_category = request.form["super_category"]
+        query = "with RECURSIVE list_recurs(super_category, category) AS( SELECT super_category, category FROM has_other WHERE super_category = %s Union ALL SELECT child.super_category, child.category FROM has_other AS child INNER JOIN list_recurs AS parent ON child.super_category = parent.category) select category AS sub_categories from list_recurs;"
+        data = (super_category,)
+        cursor.execute(query, data)
+        return render_template(
+            "list_sub_categories.html",
+            cursor=cursor,
+            params=request.args,
+        )
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+        dbConn.close()
+
+
 @app.route("/ask_retailer")
 def ask_retailer():
     try:

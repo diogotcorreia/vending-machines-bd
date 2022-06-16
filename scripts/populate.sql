@@ -7,28 +7,50 @@ VALUES ('Bolachas'),
     ('Fruta'),
     ('Armas'),
     ('Semi-Auto'),
-    ('Snipers');
+    ('Snipers'),
+    ('Rockets'),
+    ('SMG'),
+    ('AR'),
+    ('Lasers'),
+    ('Pistols'),
+    ('Shotguns'),
+    ('Full-Auto');
 ---------------------
 -- Super Category
 ---------------------
 INSERT INTO super_category
 VALUES ('Bolachas'),
     ('Armas'),
-    ('Semi-Auto');
+    ('Semi-Auto'),
+    ('Full-Auto');
 ---------------------
 -- Simple Category
 ---------------------
 INSERT INTO simple_category
 VALUES ('Bolachas de Chocolate'),
     ('Snipers'),
-    ('Fruta');
+    ('Fruta'),
+    ('Rockets'),
+    ('SMG'),
+    ('AR'),
+    ('Lasers'),
+    ('Pistols'),
+    ('Shotguns');
+;
 ---------------------
 -- Has Other 
 ---------------------
 INSERT INTO has_other
 VALUES ('Bolachas', 'Bolachas de Chocolate'),
     ('Armas', 'Semi-Auto'),
-    ('Semi-Auto', 'Snipers');
+    ('Armas', 'Full-Auto'),
+    ('Armas', 'Lasers'),
+    ('Armas', 'Rockets'),
+    ('Full-Auto', 'SMG'),
+    ('Full-Auto', 'AR'),
+    ('Semi-Auto', 'Snipers'),
+    ('Semi-Auto', 'Pistols'),
+    ('Semi-Auto', 'Shotguns');
 ---------------------
 -- Product
 ---------------------

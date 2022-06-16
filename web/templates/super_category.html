@@ -20,7 +20,13 @@
         {% for record in cursor %}
         <tr>
           <td>{{ record[0] }}</td>
-          <td class="list"><a class="button, list" href="">List</a></td>
+          <td class="list">
+            <a
+              class="button, list"
+              href="./ask_list?super_category={{ record[0] }}"
+              >List</a
+            >
+          </td>
           <td class="remove"><a class="button, remove" href="">Remove</a></td>
         </tr>
         {% endfor %}

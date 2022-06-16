@@ -31,4 +31,18 @@ WHERE replenishment_event.ean IS NULL;
 Select ean
 FROM replenishment_event
 GROUP BY ean
-Having COUNT(DISTINCT tin) = 1
+Having COUNT(DISTINCT tin) = 1;
+---list
+with RECURSIVE list_recurs(super_category, category) AS(
+    SELECT super_category,
+        category
+    FROM has_other
+    WHERE super_category = 'Armas'
+    Union ALL
+    SELECT child.super_category,
+        child.category
+    FROM has_other AS child
+        INNER JOIN list_recurs AS parent ON child.super_category = parent.category
+)
+select category
+from list_recurs AS sub_categories;
