@@ -1,3 +1,34 @@
+-- (RI-1) Uma Categoria não pode estar contida em si própria
+DROP TRIGGER IF EXISTS self_contained_category_trigger ON has_other;
+
+CREATE OR REPLACE FUNCTION self_contained_category_trigger() RETURNS trigger AS $$
+BEGIN
+  IF EXISTS(
+    WITH RECURSIVE list_recurs(super_category, category) AS (
+      SELECT super_category,
+        category
+      FROM has_other
+      WHERE category = new.super_category
+      UNION ALL
+      SELECT child.super_category,
+        child.category
+      FROM has_other AS child
+        INNER JOIN list_recurs AS parent ON child.super_category = parent.category
+    )
+    SELECT category
+    FROM list_recurs AS sub_categories
+  )
+  THEN
+    RAISE EXCEPTION 'Categories cannot be contained within themselves';
+  END IF;
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER self_contained_category_trigger BEFORE INSERT ON has_other
+FOR EACH ROW EXECUTE PROCEDURE self_contained_category_trigger();
+
+
 -- (RI-4) O número de unidades repostas num Evento de Reposição não pode exceder o número de
 -- unidades especificado no Planograma
 DROP TRIGGER IF EXISTS replenishment_event_units_lower_than_planogram_trigger ON replenishment_event;
@@ -24,6 +55,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER replenishment_event_units_lower_than_planogram_trigger BEFORE INSERT ON replenishment_event
 FOR EACH ROW EXECUTE PROCEDURE replenishment_event_units_lower_than_planogram();
 
+
 -- (RI-5) Um Produto só pode ser reposto numa Prateleira que apresente (pelo menos)
 -- uma das Categorias desse produto
 DROP TRIGGER IF EXISTS product_placed_incorrect_shelf_trigger ON product;
@@ -37,19 +69,14 @@ BEGIN
     WHERE number = new.number AND
           serial_num = new.serial_num AND
           manuf = new.manuf;
-
-  SELECT ARRAY_AGG(name) INTO possible_category_names
-    FROM has_category
-    WHERE ean = new.ean;
   
   IF NOT EXISTS(
-    SELECT *
-    FROM unnest(possible_category_names) AS possible_category_name
-      WHERE possible_category_name = shelf_category_name
+    SELECT * from has_category
+    WHERE name = shelf_category_name AND ean = new.ean
   )
   THEN
-    RAISE EXCEPTION 'At least one of the Product''s (%) categories must match the shelf''s categories',
-      new.ean;
+    RAISE EXCEPTION 'At least one of the Product''s (%) categories must match the shelf''s category (%)',
+      new.ean, shelf_category_name;
   END IF;
   RETURN new;
 END;
