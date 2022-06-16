@@ -26,8 +26,7 @@ DB_CONNECTION_STRING = "host=%s dbname=%s user=%s password=%s" % (
 ## Runs the function once the root page is requested.
 ## The request comes with the folder structure setting ~/web as the root
 @app.route("/")
-def list_entities():
-
+def homepage():
     return render_template("index.html")
 
 
@@ -65,8 +64,10 @@ def insert_simple():
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         name = request.form["name"]
-        query = """INSERT INTO category (name) VALUES (%s);
-                    INSERT INTO simple_category (name) VALUES (%s);"""
+        query = """
+            INSERT INTO category (name) VALUES (%s);
+            INSERT INTO simple_category (name) VALUES (%s);
+            """
         data = (name, name)
         cursor.execute(query, data)
         return query
@@ -94,8 +95,10 @@ def insert_super():
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         name = request.form["name"]
-        query = """INSERT INTO category (name) VALUES (%s);
-                    INSERT INTO super_category (name) VALUES (%s);"""
+        query = """
+            INSERT INTO category (name) VALUES (%s);
+            INSERT INTO super_category (name) VALUES (%s);
+            """
         data = (name, name)
         cursor.execute(query, data)
         return query
@@ -120,7 +123,17 @@ def list_sub_categories():
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         super_category = request.form["super_category"]
-        query = "with RECURSIVE list_recurs(super_category, category) AS( SELECT super_category, category FROM has_other WHERE super_category = %s Union ALL SELECT child.super_category, child.category FROM has_other AS child INNER JOIN list_recurs AS parent ON child.super_category = parent.category) select category AS sub_categories from list_recurs;"
+        query = """
+            WITH RECURSIVE list_recurs(super_category, category) AS (
+                SELECT super_category, category
+                FROM has_other
+                WHERE super_category = %s
+                UNION ALL
+                SELECT child.super_category, child.category
+                FROM has_other AS child
+                    INNER JOIN list_recurs AS parent ON child.super_category = parent.category
+            ) SELECT category AS sub_categories FROM list_recurs;
+            """
         data = (super_category,)
         cursor.execute(query, data)
         return render_template(
@@ -152,8 +165,7 @@ def insert_retailer():
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         tin = request.form["tin"]
         name = request.form["name"]
-        query = """INSERT INTO retailer (tin, name) VALUES (%s, %s);
-                    """
+        query = "INSERT INTO retailer (tin, name) VALUES (%s, %s);"
         data = (tin, name)
         cursor.execute(query, data)
         return query
@@ -244,7 +256,7 @@ def list_product():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT ean, category, description  FROM product;"
+        query = "SELECT ean, category, description FROM product;"
         cursor.execute(query)
         return render_template("product.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -261,7 +273,7 @@ def list_has_category():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT ean, name  FROM has_category;"
+        query = "SELECT ean, name FROM has_category;"
         cursor.execute(query)
         return render_template("has_category.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -278,7 +290,7 @@ def list_ivm():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT serial_num, manuf  FROM ivm;"
+        query = "SELECT serial_num, manuf FROM ivm;"
         cursor.execute(query)
         return render_template("ivm.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -295,7 +307,7 @@ def list_retail_point():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT name, district, county  FROM retail_point;"
+        query = "SELECT name, district, county FROM retail_point;"
         cursor.execute(query)
         return render_template("retail_point.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -312,7 +324,7 @@ def list_installed_on():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT serial_num, manuf, local  FROM installed_on;"
+        query = "SELECT serial_num, manuf, local FROM installed_on;"
         cursor.execute(query)
         return render_template("installed_on.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -329,7 +341,7 @@ def list_shelf():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT number, serial_num, manuf, height, name  FROM shelf;"
+        query = "SELECT number, serial_num, manuf, height, name FROM shelf;"
         cursor.execute(query)
         return render_template("shelf.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -346,9 +358,10 @@ def list_planogram():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = (
-            "SELECT ean, number, serial_num, manuf, face, units, loc  FROM planogram;"
-        )
+        query = """
+            SELECT ean, number, serial_num, manuf, face, units, loc
+            FROM planogram;
+            """
         cursor.execute(query)
         return render_template("planogram.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -365,7 +378,7 @@ def list_retailer():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT tin, name  FROM retailer;"
+        query = "SELECT tin, name FROM retailer;"
         cursor.execute(query)
         return render_template("retailer.html", cursor=cursor, params=request.args)
     except Exception as e:
@@ -382,7 +395,7 @@ def list_responsible_for():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT cat_name, tin, serial_num, manuf  FROM responsible_for;"
+        query = "SELECT cat_name, tin, serial_num, manuf FROM responsible_for;"
         cursor.execute(query)
         return render_template(
             "responsible_for.html", cursor=cursor, params=request.args
@@ -401,7 +414,7 @@ def list_replenishment_event():
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT ean, number, serial_num, manuf, instant, units, tin  FROM replenishment_event;"
+        query = "SELECT ean, number, serial_num, manuf, instant, units, tin FROM replenishment_event;"
         cursor.execute(query)
         return render_template(
             "replenishment_event.html",
@@ -430,7 +443,11 @@ def list_replenishment_event_ivm():
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         serial_num = request.form["serial_num"]
         manuf = request.form["manuf"]
-        query = "SELECT ean, number, serial_num, manuf, instant, units, tin  FROM replenishment_event WHERE serial_num = %s AND manuf = %s ;"
+        query = """
+            SELECT ean, number, serial_num, manuf, instant, units, tin
+            FROM replenishment_event
+            WHERE serial_num = %s AND manuf = %s;
+            """
         data = (serial_num, manuf)
         cursor.execute(query, data)
         return render_template(
