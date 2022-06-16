@@ -32,7 +32,7 @@ CREATE OR REPLACE FUNCTION product_placed_incorrect_shelf() RETURNS TRIGGER AS $
 DECLARE shelf_category_name VARCHAR(255);
 DECLARE possible_category_names VARCHAR(255) ARRAY;
 BEGIN
-  SELECT name into shelf_category_name
+  SELECT name INTO shelf_category_name
     FROM shelf
     WHERE number = new.number AND
           serial_num = new.serial_num AND
@@ -42,16 +42,20 @@ BEGIN
     FROM has_category
     WHERE ean = new.ean;
   
-  IF NOT FIND_IN_SET(shelf_category_name, possible_category_names)
+  IF NOT EXISTS(
+    SELECT *
+    FROM unnest(possible_category_names) AS possible_category_name
+      WHERE possible_category_name = shelf_category_name
+  )
   THEN
-    RAISE EXCEPTION 'The shelf where product (%) was going to be replenished does not allow its category.',
+    RAISE EXCEPTION 'At least one of the Product''s (%) categories must match the shelf''s categories',
       new.ean;
   END IF;
   RETURN new;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER product_placed_incorrect_shelf_trigger BEFORE INSERT ON product
+CREATE TRIGGER product_placed_incorrect_shelf_trigger BEFORE INSERT ON replenishment_event
 FOR EACH ROW EXECUTE PROCEDURE product_placed_incorrect_shelf();
 
   
