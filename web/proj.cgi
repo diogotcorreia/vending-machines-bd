@@ -2,7 +2,7 @@
 
 from wsgiref.handlers import CGIHandler
 from flask import Flask
-from flask import render_template, request
+from flask import render_template, request, redirect
 
 ## Libs postgres
 import psycopg2
@@ -32,20 +32,12 @@ def homepage():
 
 @app.route("/insert_query", methods=["POST"])
 def insert_query():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = request.form["query"]
-        cursor.execute(query)
-        return render_template("query.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        dbConn.commit()
-        cursor.close()
-        dbConn.close()
+    return exec_query(
+        request.form["query"],
+        lambda cursor: render_template(
+            "query.html", cursor=cursor, params=request.args
+        ),
+    )
 
 
 @app.route("/ask_simple")
@@ -58,25 +50,14 @@ def ask_simple():
 
 @app.route("/insert_simple", methods=["POST"])
 def insert_simple():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        name = request.form["name"]
-        query = """
-            INSERT INTO category (name) VALUES (%s);
-            INSERT INTO simple_category (name) VALUES (%s);
-            """
-        data = (name, name)
-        cursor.execute(query, data)
-        return query
-    except Exception as e:
-        return str(e)
-    finally:
-        dbConn.commit()
-        cursor.close()
-        dbConn.close()
+    return exec_query(
+        """
+        INSERT INTO category (name) VALUES (%s);
+        INSERT INTO simple_category (name) VALUES (%s);
+        """,
+        lambda cursor: redirect("./simple_category"),
+        data_from_request(("name", "name")),
+    )
 
 
 @app.route("/ask_super")
@@ -460,6 +441,32 @@ def list_replenishment_event_ivm():
     finally:
         cursor.close()
         dbConn.close()
+
+
+###############
+#    Utils    #
+###############
+
+
+def exec_query(query, outcome, data=()):
+    dbConn = None
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute(query, data)
+        return outcome(cursor)
+    except Exception as e:
+        # TODO show a fancy error page (?)
+        return str(e)
+    finally:
+        dbConn.commit()
+        cursor.close()
+        dbConn.close()
+
+
+def data_from_request(fields):
+    return tuple(map(lambda field: request.form[field], fields))
 
 
 CGIHandler().run(app)
