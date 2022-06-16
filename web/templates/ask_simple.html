@@ -1,16 +1,18 @@
-{% include 'partial/base.html' %} {% block title %}<title>
-  Insert Simple Category</title
->{% endblock %} {% block content %}
-<h1>Insert Simple Category</h1>
-
-<form action="insert_simple" method="post">
-  <p>
-    <input type="hidden" name="simple_category" />
-  </p>
-  <p>New Simple Category Name: <input type="text" name="name" /></p>
-  <p><input type="submit" value="Submit" /></p>
-</form>
-
-<a class="button" href="../proj.cgi/">Main Menu</a>
-
+{% include 'partial/base.html' %}
+{% block title %}<title>Insert Simple Category</title>{% endblock %}
+{% block content %}
+  <h1>Insert Simple Category</h1>
+  <form action="insert_simple" method="post">
+    <p>
+      <input type="hidden" name="simple_category" />
+    </p>
+    <p>
+      New Simple Category Name:
+      <input type="text" name="name" />
+    </p>
+    <p>
+      <input type="submit" value="Submit" />
+    </p>
+  </form>
+  <a class="button" href="../proj.cgi/">Main Menu</a>
 {% endblock %}
