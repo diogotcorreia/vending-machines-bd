@@ -80,11 +80,6 @@ def insert_super():
     )
 
 
-@app.route("/ask_list")
-def ask_list():
-    return render_template("ask_list.html", params=request.args)
-
-
 @app.route("/list_sub_categories", methods=["POST"])
 def list_sub_categories():
     return exec_query(
@@ -286,14 +281,8 @@ def list_replenishment_event():
     )
 
 
-@app.route("/ivm_values")
-def ivm_values():
-    return render_template("ivm_values.html", params=request.args)
-
-
 @app.route("/list_replenishment_event_ivm", methods=["POST"])
 def list_replenishment_event_ivm():
-    print(request.args)
     return exec_query(
         """
         SELECT ean, number, serial_num, manuf, instant, units, tin
