@@ -293,6 +293,7 @@ def ivm_values():
 
 @app.route("/list_replenishment_event_ivm", methods=["POST"])
 def list_replenishment_event_ivm():
+    print(request.args)
     return exec_query(
         """
         SELECT ean, number, serial_num, manuf, instant, units, tin
