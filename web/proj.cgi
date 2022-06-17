@@ -332,5 +332,22 @@ def exec_query(query, outcome, data=()):
 def data_from_request(fields):
     return tuple(map(lambda field: request.form[field], fields))
 
+@app.route("/sales", methods=["GET"])
+# TODO: will be fixed in the app cleanup PR
+def list_sales():
+    dbConn = None
+    cursor = None
+    try:
+        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
+        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        query = "SELECT * FROM sales;"
+        cursor.execute(query)
+        return render_template("sales.html", cursor=cursor, params=request.args)
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+        dbConn.close()
+
 
 CGIHandler().run(app)
