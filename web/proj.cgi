@@ -80,7 +80,7 @@ def insert_super():
     )
 
 
-@app.route("/list_sub_categories", methods=["POST"])
+@app.route("/list_sub_categories", methods=["GET"])
 def list_sub_categories():
     return exec_query(
         """
@@ -281,7 +281,7 @@ def list_replenishment_event():
     )
 
 
-@app.route("/list_replenishment_event_ivm", methods=["POST"])
+@app.route("/list_replenishment_event_ivm", methods=["GET"])
 def list_replenishment_event_ivm():
     return exec_query(
         """
