@@ -16,7 +16,6 @@ DROP VIEW IF EXISTS sales;
 
 CREATE VIEW sales AS
 SELECT
-  replenishment_event.units,
   product.ean,
   category.name,
   year,
@@ -24,7 +23,8 @@ SELECT
   day_month,
   day_week,
   retail_point.district,
-  retail_point.county
+  retail_point.county,
+  replenishment_event.units
 FROM
   replenishment_event
   INNER JOIN product ON replenishment_event.ean = product.ean
