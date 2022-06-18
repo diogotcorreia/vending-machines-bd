@@ -10,7 +10,8 @@
 -- `units` comes from `replenishment_event`: that is, we replenished the amount of units that were sold)
 -- `ean` and `cat` come from `product` and `category`: we sold a certain product, which belongs to a certain category
 -- `district` and `county` come from `retail_point`: the sale was done in a specific address, the one in which retail_point is located
--- `year`, `quarter`, `day_month` and `day_week`, all derived from `instant` (which is an attribute from `replenishment_event`. Note: the teachers recommend utilizing the extract() function to gather the attributes from timestamps (which, in this case, are instants)
+-- `year`, `quarter`, `day_month` and `day_week`, all derived from `instant` (which is an attribute from `replenishment_event`)
+-- Note: the teachers recommend utilizing the extract() function to gather the attributes from timestamps (which, in this case, are instants)
 
 DROP VIEW IF EXISTS sales;
 
@@ -38,4 +39,3 @@ EXTRACT(QUARTER FROM instant) AS quarter,
 EXTRACT(MONTH FROM instant) AS month,
 EXTRACT(DAY FROM instant) AS day_month,
 EXTRACT(DOW FROM instant) AS day_week;
-  
