@@ -125,26 +125,52 @@
   \end{titlepage}
 
   \section*{Restrições de Integridade}
+
+  \begin{enumerate}
+    \item \textbf{(RI-1) Uma Categoria não pode estar contida em si própria.}
+
+    \lstinputlisting[language=SQL]{sql/report3/integrity-constraints/ic1.sql}
+
+    \vspace*{1cm}
+
+    \item \textbf{(RI-4) O número de unidades repostas num Evento de Reposição
+    não pode exceder o número de unidades especificado no Planograma.}
+
+    \lstinputlisting[language=SQL]{sql/report3/integrity-constraints/ic2.sql}
+
+    \vspace*{1cm}
+
+    \item \textbf{(RI-5) Um Produto só pode ser reposto numa Prateleira que apresente
+    (pelo menos) uma das Categorias desse produto.}
+
+    \lstinputlisting[language=SQL]{sql/report3/integrity-constraints/ic3.sql}
+  \end{enumerate}
+
+  De realçar que todas as restrições de integridade descritas acima estão também
+  presentes em \texttt{scripts/ICs.sql}.
   
   \section*{SQL}
 
   \begin{enumerate}
     \item \textbf{Qual o nome do retalhista (ou retalhistas) responsáveis pela reposição do maior número de categorias?}
 
-    \lstinputlisting[language=SQL]{sql/report3/query1.sql}
+    \lstinputlisting[language=SQL]{sql/report3/queries/query1.sql}
 
     \item \textbf{Qual o nome do ou dos retalhistas que são responsáveis por todas as categorias simples?}
 
-    \lstinputlisting[language=SQL]{sql/report3/query2.sql}
+    \lstinputlisting[language=SQL]{sql/report3/queries/query2.sql}
 
     \item \textbf{Quais os produtos (ean) que nunca foram repostos?}
 
-    \lstinputlisting[language=SQL]{sql/report3/query3.sql}
+    \lstinputlisting[language=SQL]{sql/report3/queries/query3.sql}
 
     \item \textbf{Quais os produtos (ean) que foram repostos sempre pelo mesmo retalhista?}
 
-    \lstinputlisting[language=SQL]{sql/report3/query4.sql}
+    \lstinputlisting[language=SQL]{sql/report3/queries/query4.sql}
   \end{enumerate}
+
+  De realçar que todas as \textit{queries} descritas acima estão também
+  presentes em \texttt{scripts/queries.sql}.
 
   \section*{Vistas}
 
