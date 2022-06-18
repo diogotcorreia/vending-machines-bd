@@ -20,6 +20,7 @@ SELECT
   category.name,
   year,
   quarter,
+  month
   day_month,
   day_week,
   retail_point.district,
@@ -34,6 +35,7 @@ FROM
   INNER JOIN retail_point ON installed_on.local = retail_point.name,
 EXTRACT(YEAR FROM instant) AS year,
 EXTRACT(QUARTER FROM instant) AS quarter,
+EXTRACT(MONTH FROM instant) AS month,
 EXTRACT(DAY FROM instant) AS day_month,
 EXTRACT(DOW FROM instant) AS day_week;
   
