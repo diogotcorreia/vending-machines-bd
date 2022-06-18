@@ -1,6 +1,8 @@
-DROP TRIGGER IF EXISTS replenishment_event_units_lower_than_planogram_trigger ON replenishment_event;
+DROP TRIGGER IF EXISTS replenishment_event_units_lower_than_planogram_trigger
+  ON replenishment_event;
 
-CREATE OR REPLACE FUNCTION replenishment_event_units_lower_than_planogram() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION replenishment_event_units_lower_than_planogram()
+  RETURNS TRIGGER AS $$
 DECLARE max_units INTEGER;
 BEGIN
   SELECT units INTO max_units
@@ -19,5 +21,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER replenishment_event_units_lower_than_planogram_trigger BEFORE INSERT ON replenishment_event
-FOR EACH ROW EXECUTE PROCEDURE replenishment_event_units_lower_than_planogram();
+CREATE TRIGGER replenishment_event_units_lower_than_planogram_trigger
+  BEFORE INSERT ON replenishment_event
+FOR EACH ROW
+  EXECUTE PROCEDURE replenishment_event_units_lower_than_planogram();

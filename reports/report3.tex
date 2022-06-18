@@ -131,14 +131,10 @@
 
     \lstinputlisting[language=SQL]{sql/report3/integrity-constraints/ic1.sql}
 
-    \vspace*{1cm}
-
     \item \textbf{(RI-4) O número de unidades repostas num Evento de Reposição
     não pode exceder o número de unidades especificado no Planograma.}
 
     \lstinputlisting[language=SQL]{sql/report3/integrity-constraints/ic2.sql}
-
-    \vspace*{1cm}
 
     \item \textbf{(RI-5) Um Produto só pode ser reposto numa Prateleira que apresente
     (pelo menos) uma das Categorias desse produto.}
@@ -174,8 +170,43 @@
 
   \section*{Vistas}
 
+  % TODO: not sure se é preciso colocar no relatório, either way fica aqui o placeholder
+
+  \section*{Aplicação}
+
+  % TODO: same here, não tenho a certeza se precisamos de colocar coisas nesta secção
+
   \section*{Consultas OLAP}
 
+  Pretendia-se que escrevêssemos duas consultas SQL que permitissem analisar o número
+  total de artigos vendidos:
+
+  \begin{enumerate}
+    \item \textbf{Num dado período (i.e. entre duas datas), por dia da semana, por concelho e no total.}
+    
+    \lstinputlisting[language=SQL]{sql/report3/olap-queries/olap1.sql}
+
+    \item \textbf{Num dado distrito (i.e. “Lisboa”), por concelho, categoria, dia da semana e no total.}
+  
+    \lstinputlisting[language=SQL]{sql/report3/olap-queries/olap2.sql}
+  \end{enumerate}
+
+  De realçar que todas as \textit{queries} OLAP descritas acima estão também
+  presentes em \\ \texttt{scripts/analytics.sql}.
+
   \section*{Índices}
+
+  Foi-nos pedido, ainda, que indicássemos (justificando) os índices que faria sentido
+  criar, por forma a \textit{agilizar} a execução de cada uma das \textit{queries} abaixo:
+
+  \begin{enumerate}
+    \item \textbf{Primeira \textit{query}:}
+    
+    \lstinputlisting[language=SQL]{sql/report3/queries/example1.sql}
+
+    \item \textbf{Segunda \textit{query}:}
+  
+    \lstinputlisting[language=SQL]{sql/report3/queries/example2.sql}
+  \end{enumerate}
   
 \end{document}

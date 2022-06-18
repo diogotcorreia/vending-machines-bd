@@ -1,6 +1,8 @@
-DROP TRIGGER IF EXISTS product_placed_incorrect_shelf_trigger ON replenishment_event;
+DROP TRIGGER IF EXISTS product_placed_incorrect_shelf_trigger
+  ON replenishment_event;
 
-CREATE OR REPLACE FUNCTION product_placed_incorrect_shelf() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION product_placed_incorrect_shelf()
+  RETURNS TRIGGER AS $$
 DECLARE shelf_category_name VARCHAR(255);
 DECLARE possible_category_names VARCHAR(255) ARRAY;
 BEGIN
@@ -22,5 +24,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER product_placed_incorrect_shelf_trigger BEFORE INSERT ON replenishment_event
-FOR EACH ROW EXECUTE PROCEDURE product_placed_incorrect_shelf();
+CREATE TRIGGER product_placed_incorrect_shelf_trigger
+  BEFORE INSERT ON replenishment_event
+FOR EACH ROW
+  EXECUTE PROCEDURE product_placed_incorrect_shelf();
