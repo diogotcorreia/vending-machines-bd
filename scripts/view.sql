@@ -17,7 +17,7 @@ DROP VIEW IF EXISTS sales;
 CREATE VIEW sales AS
 SELECT
   product.ean,
-  category.name,
+  category.name AS category_name,
   year,
   quarter,
   month,

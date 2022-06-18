@@ -17,11 +17,11 @@ ORDER BY county,
 
 SELECT county,
   day_week,
-  name,
+  category_name,
   SUM(units) AS total_units
 FROM sales
 WHERE district = 'Lisbon'
-GROUP BY GROUPING SETS (county, day_week, name, ())
+GROUP BY GROUPING SETS (county, day_week, category_name, ())
 ORDER BY county,
   day_week,
-  name;
+  category_name;
