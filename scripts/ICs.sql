@@ -8,7 +8,7 @@ BEGIN
       SELECT super_category,
         category
       FROM has_other
-      WHERE category = new.super_category
+      WHERE category = NEW.super_category
       UNION ALL
       SELECT child.super_category,
         child.category
@@ -21,7 +21,7 @@ BEGIN
   THEN
     RAISE EXCEPTION 'Categories cannot be contained within themselves';
   END IF;
-  RETURN new;
+  RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -38,17 +38,17 @@ DECLARE max_units INTEGER;
 BEGIN
   SELECT units INTO max_units
     FROM planogram
-    WHERE ean = new.ean AND
-          number = new.number AND
-          serial_num = new.serial_num AND
-          manuf = new.manuf;
+    WHERE ean = NEW.ean AND
+          number = NEW.number AND
+          serial_num = NEW.serial_num AND
+          manuf = NEW.manuf;
 
-  IF new.units > max_units
+  IF NEW.units > max_units
   THEN
     RAISE EXCEPTION 'Replenished units (%) cannot exceed the number of units specified in the planogram (%).',
-      new.units, max_units;
+      NEW.units, max_units;
   END IF;
-  RETURN new;
+  RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -58,7 +58,7 @@ FOR EACH ROW EXECUTE PROCEDURE replenishment_event_units_lower_than_planogram();
 
 -- (RI-5) Um Produto só pode ser reposto numa Prateleira que apresente (pelo menos)
 -- uma das Categorias desse produto
-DROP TRIGGER IF EXISTS product_placed_incorrect_shelf_trigger ON product;
+DROP TRIGGER IF EXISTS product_placed_incorrect_shelf_trigger ON replenishment_event;
 
 CREATE OR REPLACE FUNCTION product_placed_incorrect_shelf() RETURNS TRIGGER AS $$
 DECLARE shelf_category_name VARCHAR(255);
@@ -66,19 +66,19 @@ DECLARE possible_category_names VARCHAR(255) ARRAY;
 BEGIN
   SELECT name INTO shelf_category_name
     FROM shelf
-    WHERE number = new.number AND
-          serial_num = new.serial_num AND
-          manuf = new.manuf;
+    WHERE number = NEW.number AND
+          serial_num = NEW.serial_num AND
+          manuf = NEW.manuf;
   
   IF NOT EXISTS(
     SELECT * from has_category
-    WHERE name = shelf_category_name AND ean = new.ean
+    WHERE name = shelf_category_name AND ean = NEW.ean
   )
   THEN
     RAISE EXCEPTION 'At least one of the Product''s (%) categories must match the shelf''s category (%)',
-      new.ean, shelf_category_name;
+      NEW.ean, shelf_category_name;
   END IF;
-  RETURN new;
+  RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
