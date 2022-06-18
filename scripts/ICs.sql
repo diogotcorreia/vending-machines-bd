@@ -22,7 +22,7 @@ BEGIN
     WHERE category = NEW.super_category
   )
   THEN
-    RAISE EXCEPTION 'Categories cannot be contained within themselves';
+    RAISE EXCEPTION 'Category "%" cannot be contained within itself', NEW.category;
   END IF;
   RETURN NEW;
 END;
@@ -48,8 +48,8 @@ BEGIN
 
   IF NEW.units > max_units
   THEN
-    RAISE EXCEPTION 'Replenished units (%) cannot exceed the number of units specified in the planogram (%).',
-      NEW.units, max_units;
+    RAISE EXCEPTION 'Replenished units (%) for "%" at shelf (%, %, %) cannot exceed the number of units specified in the planogram (%).',
+      NEW.units, NEW.ean, NEW.number, NEW.serial_num, NEW.manuf, max_units;
   END IF;
   RETURN NEW;
 END;
@@ -78,8 +78,8 @@ BEGIN
     WHERE name = shelf_category_name AND ean = NEW.ean
   )
   THEN
-    RAISE EXCEPTION 'At least one of the Product''s (%) categories must match the shelf''s category (%)',
-      NEW.ean, shelf_category_name;
+    RAISE EXCEPTION 'At least one of the Product''s (%) categories must match the shelf''s (%, %, %) category (%)',
+      NEW.ean, NEW.number, NEW.serial_num, NEW.manuf, shelf_category_name;
   END IF;
   RETURN NEW;
 END;
@@ -87,5 +87,3 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER product_placed_incorrect_shelf_trigger BEFORE INSERT ON replenishment_event
 FOR EACH ROW EXECUTE PROCEDURE product_placed_incorrect_shelf();
-
-  
