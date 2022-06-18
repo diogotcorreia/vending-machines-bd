@@ -5,10 +5,23 @@ SELECT county,
   day_week,
   SUM(units) AS total_units
 FROM sales
-WHERE district = 'Lisbon'
+WHERE day_month BETWEEN 4 AND 6
+  AND month BETWEEN 2 AND 12
+  AND year BETWEEN 2022 AND 2024
 GROUP BY GROUPING SETS (county, day_week, ())
 ORDER BY county,
   day_week;
 
 -- The total amount of sold products in a given district, by day of the week,
 -- county, category or total
+
+SELECT county,
+  day_week,
+  name,
+  SUM(units) AS total_units
+FROM sales
+WHERE district = 'Lisbon'
+GROUP BY GROUPING SETS (county, day_week, name, ())
+ORDER BY county,
+  day_week,
+  name;
