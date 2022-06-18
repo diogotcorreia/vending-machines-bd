@@ -5,9 +5,8 @@ SELECT county,
   day_week,
   SUM(units) AS total_units
 FROM sales
-WHERE day_month BETWEEN 1 AND 20
-  AND month BETWEEN 2 AND 12
-  AND year BETWEEN 2022 AND 2024
+WHERE MAKE_DATE('mock_year', 'mock_month', 'mock_day_month')
+  BETWEEN 'mock-timestamp-1' AND 'mock-timestamp-2'
 GROUP BY GROUPING SETS (county, day_week, ())
 ORDER BY county,
   day_week;
