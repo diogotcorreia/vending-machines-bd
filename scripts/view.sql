@@ -20,7 +20,7 @@ SELECT
   category.name,
   year,
   quarter,
-  month
+  month,
   day_month,
   day_week,
   retail_point.district,
