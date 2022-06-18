@@ -42,8 +42,6 @@ VALUES ('Bolachas de Chocolate'),
 ---------------------
 INSERT INTO has_other
 VALUES ('Bolachas', 'Bolachas de Chocolate'),
-    ('Bolachas de Chocolate', 'Bolachas de Chocolate Branco'),
-    ('Bolachas de Chocolate Branco', 'Bolachas'),
     ('Armas', 'Semi-Auto'),
     ('Armas', 'Full-Auto'),
     ('Armas', 'Lasers'),
