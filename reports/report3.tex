@@ -124,6 +124,18 @@
     \end{itemize}
   \end{titlepage}
 
+  \section*{Base de Dados}
+
+  \subsection*{Esquema}
+
+  % TODO: integrity constraints aren't done yet
+
+  \lstinputlisting[language=SQL]{sql/report3/schema/entities.sql}
+  
+  \subsection*{Carregamento}
+
+  % \lstinputlisting[language=SQL]{sql/report3/populate/populate.sql}
+
   \section*{Restrições de Integridade}
 
   \begin{enumerate}
@@ -158,9 +170,6 @@
     \item \textbf{Qual o nome do ou dos retalhistas que são responsáveis por todas as categorias simples?}
 
     \lstinputlisting[language=SQL]{sql/report3/queries/query2.sql}
-
-    % otherwise the query would be split in half
-    \vspace*{2cm}
 
     \item \textbf{Quais os produtos (ean) que nunca foram repostos?}
 
@@ -276,8 +285,6 @@
     \item \textbf{Num dado período (i.e. entre duas datas), por dia da semana, por concelho e no total.}
     
     \lstinputlisting[language=SQL]{sql/report3/olap-queries/olap1.sql}
-
-    \vspace*{2.5cm}
 
     \item \textbf{Num dado distrito (i.e. “Lisboa”), por concelho, categoria, dia da semana e no total.}
   
