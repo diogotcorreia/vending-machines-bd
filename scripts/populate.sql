@@ -36,9 +36,8 @@ VALUES ('Bolachas de Chocolate'),
     ('Lasers'),
     ('Pistols'),
     ('Shotguns');
-;
 ---------------------
--- Has Other 
+-- Has Other
 ---------------------
 INSERT INTO has_other
 VALUES ('Bolachas', 'Bolachas de Chocolate'),
@@ -98,10 +97,10 @@ VALUES ('ivm-1', 'fizz', 'Frigu'),
 -- Shelf
 ----------------------
 INSERT INTO shelf
-VALUES ('1', 'ivm-1', 'fizz', '2', 'Bolachas'),
+VALUES ('1', 'ivm-1', 'fizz', '2', 'Bolachas de Chocolate'),
     ('3', 'ivm-1', 'fizz', '2', 'Fruta'),
     ('2', 'ivm-2', 'buzz', '3', 'Fruta'),
-    ('3', 'ivm-2', 'fizz', '3', 'Snipers');
+    ('3', 'ivm-2', 'fizz', '3', 'Bolachas');
 ----------------------
 -- Planogram
 ----------------------
@@ -112,7 +111,7 @@ VALUES (
         'ivm-1',
         'fizz',
         '2',
-        '2',
+        8,
         'Cima'
     ),
     (
@@ -121,7 +120,7 @@ VALUES (
         'ivm-1',
         'fizz',
         '2',
-        '1',
+        9,
         'Baixo'
     ),
     (
@@ -130,7 +129,7 @@ VALUES (
         'ivm-2',
         'buzz',
         '3',
-        '1',
+        10,
         'Meio'
     ),
     (
@@ -139,7 +138,7 @@ VALUES (
         'ivm-2',
         'fizz',
         '3',
-        '1',
+        15,
         'Meio'
     );
 ----------------------
@@ -196,4 +195,13 @@ VALUES (
         '2022-11-09 14:54:21',
         '7',
         '3'
+    ),
+    (
+        '1111111111114',
+        '3',
+        'ivm-2',
+        'fizz',
+        '2022-06-09 15:54:21',
+        '8',
+        '2'
     );
