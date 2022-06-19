@@ -1,8 +1,13 @@
-<doctype html>
-<title>Main Menu</title>
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"/>
-<body style="padding: 20px">
+{% extends 'partial/base.html' %}
+{% block head %}
+  <style>
+  .query-container {
+    min-width: 80%;
+  }
+  </style>
+{% endblock %}
+{% block title %}<title>Main Menu</title>{% endblock %}
+{% block content %}
   <h1>Projeto de BD - 2021/2022</h1>
   <div class="container">
     <a class="button" href="./category">Category</a>
@@ -21,19 +26,15 @@
     <a class="button" href="./replenishment_event">Replenishment Event</a>
     <a class="button" href="./sales">Past Sales</a>
   </div>
-  <div>
+  <div class="query-container">
     <form action="insert_query" method="post">
-      <p>
-        <input type="hidden" name="retailer" />
-      </p>
-      <p class="query">
-        Insert Query:
-        <input class="query" type="text" name="query" />
-      </p>
+      <div class="query">
+        <p>Insert Query: (Prone to SQL Injection duh)</p>
+        <textarea rows="5" class="query" type="text" name="query"></textarea>
+      </div>
       <p>
         <input type="submit" value="Submit" />
       </p>
     </form>
   </div>
-</body>
-</doctype>
+{% endblock %}

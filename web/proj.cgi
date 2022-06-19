@@ -2,7 +2,8 @@
 
 from wsgiref.handlers import CGIHandler
 from flask import Flask
-from flask import render_template, request
+from flask import render_template, request, redirect
+from urllib.parse import urlencode
 
 ## Libs postgres
 import psycopg2
@@ -27,456 +28,471 @@ DB_CONNECTION_STRING = "host=%s dbname=%s user=%s password=%s" % (
 ## The request comes with the folder structure setting ~/web as the root
 @app.route("/")
 def homepage():
-    return render_template("index.html")
+    try:
+        return render_template("index.html")
+    except Exception as e:
+        return render_template("error_page.html", error=e)
 
 
 @app.route("/insert_query", methods=["POST"])
 def insert_query():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = request.form["query"]
-        cursor.execute(query)
-        return render_template("query.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        dbConn.commit()
-        cursor.close()
-        dbConn.close()
+    query = request.form["query"]
+    return exec_query(
+        query,
+        lambda cursor: render_template(
+            "query.html", cursor=cursor, title="User Query", query=query
+        ),
+    )
 
 
-@app.route("/ask_simple")
+@app.route("/insert_simple", methods=["GET"])
 def ask_simple():
     try:
-        return render_template("ask_simple.html")
+        return render_template(
+            "ask_input.html",
+            title="Insert Simple Category",
+            fields=(
+                {
+                    "label": "New Simple Category Name:",
+                    "name": "name",
+                },
+            ),
+        )
     except Exception as e:
-        return str(e)
+        return render_template("error_page.html", error=e)
 
 
 @app.route("/insert_simple", methods=["POST"])
 def insert_simple():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        name = request.form["name"]
-        query = """
-            INSERT INTO category (name) VALUES (%s);
-            INSERT INTO simple_category (name) VALUES (%s);
-            """
-        data = (name, name)
-        cursor.execute(query, data)
-        return query
-    except Exception as e:
-        return str(e)
-    finally:
-        dbConn.commit()
-        cursor.close()
-        dbConn.close()
+    return exec_query(
+        """
+        INSERT INTO category (name) VALUES (%s);
+        INSERT INTO simple_category (name) VALUES (%s);
+        """,
+        lambda cursor: redirect("./simple_category"),
+        data_from_request(("name", "name")),
+    )
 
 
-@app.route("/ask_super")
+@app.route("/insert_super", methods=["GET"])
 def ask_super():
     try:
-        return render_template("ask_super.html")
+        return render_template(
+            "ask_input.html",
+            title="Insert Super Category",
+            fields=(
+                {
+                    "label": "New Super Category Name:",
+                    "name": "name",
+                },
+            ),
+        )
     except Exception as e:
-        return str(e)
+        return render_template("error_page.html", error=e)
 
 
 @app.route("/insert_super", methods=["POST"])
 def insert_super():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        name = request.form["name"]
-        query = """
-            INSERT INTO category (name) VALUES (%s);
-            INSERT INTO super_category (name) VALUES (%s);
-            """
-        data = (name, name)
-        cursor.execute(query, data)
-        return query
-    except Exception as e:
-        return str(e)
-    finally:
-        dbConn.commit()
-        cursor.close()
-        dbConn.close()
+    return exec_query(
+        """
+        INSERT INTO category (name) VALUES (%s);
+        INSERT INTO super_category (name) VALUES (%s);
+        """,
+        lambda cursor: redirect("./super_category"),
+        data_from_request(("name", "name")),
+    )
 
 
-@app.route("/ask_list")
-def ask_list():
-    return render_template("ask_list.html", params=request.args)
-
-
-@app.route("/list_sub_categories", methods=["POST"])
+@app.route("/list_sub_categories", methods=["GET"])
 def list_sub_categories():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        super_category = request.form["super_category"]
-        query = """
-            WITH RECURSIVE list_recurs(super_category, category) AS (
-                SELECT super_category, category
-                FROM has_other
-                WHERE super_category = %s
-                UNION ALL
-                SELECT child.super_category, child.category
-                FROM has_other AS child
-                    INNER JOIN list_recurs AS parent ON child.super_category = parent.category
-            ) SELECT category AS sub_categories FROM list_recurs;
-            """
-        data = (super_category,)
-        cursor.execute(query, data)
-        return render_template(
-            "list_sub_categories.html",
+    return exec_query(
+        """
+        WITH RECURSIVE list_recurs(super_category, category) AS (
+            SELECT super_category, category
+            FROM has_other
+            WHERE super_category = %s
+            UNION ALL
+            SELECT child.super_category, child.category
+            FROM has_other AS child
+                INNER JOIN list_recurs AS parent ON child.super_category = parent.category
+        ) SELECT category AS sub_categories FROM list_recurs;
+        """,
+        lambda cursor: render_template(
+            "query.html",
             cursor=cursor,
-            params=request.args,
-        )
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
+            title="List Sub-Categories",
+            page_actions=({"title": "Back", "link": "./super_category"},),
+        ),
+        data_from_http_query(("super_category",)),
+    )
 
 
-@app.route("/ask_retailer")
+@app.route("/insert_retailer", methods=["GET"])
 def ask_retailer():
     try:
-        return render_template("ask_retailer.html")
+        return render_template(
+            "ask_input.html",
+            title="Insert Retailer",
+            fields=(
+                {
+                    "label": "New Retailer TIN:",
+                    "name": "tin",
+                },
+                {
+                    "label": "New Retailer Name:",
+                    "name": "name",
+                },
+            ),
+        )
     except Exception as e:
-        return str(e)
+        return render_template("error_page.html", error=e)
 
 
 @app.route("/insert_retailer", methods=["POST"])
 def insert_retailer():
+    return exec_query(
+        """
+        INSERT INTO retailer (tin, name) VALUES (%s, %s);
+        """,
+        lambda cursor: redirect("./retailer"),
+        data_from_request(("tin", "name")),
+    )
+
+
+@app.route("/category")
+def list_category():
+    return exec_query(
+        """
+        SELECT name FROM category;
+        """,
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="Category",
+            row_actions=(
+                {
+                    "className": "remove",
+                    "link": lambda record: f"./delete_category?{urlencode({'category': record[0]})}",
+                    "name": "Remove",
+                },
+            ),
+            page_actions=(
+                {"title": "Insert Simple Category", "link": "./insert_simple"},
+                {"title": "Insert Super Category", "link": "./insert_super"},
+            ),
+        ),
+    )
+
+
+@app.route("/simple_category")
+def list_simple_category():
+    return exec_query(
+        """
+        SELECT name FROM simple_category;
+        """,
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="Simple Category",
+            row_actions=(
+                {
+                    "className": "remove",
+                    "link": lambda record: f"./delete_category?{urlencode({'category': record[0]})}",
+                    "name": "Remove",
+                },
+            ),
+            page_actions=(
+                {"title": "Insert Simple Category", "link": "./insert_simple"},
+            ),
+        ),
+    )
+
+
+@app.route("/super_category")
+def list_super_category():
+    return exec_query(
+        """
+        SELECT name FROM super_category;
+        """,
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="Super Category",
+            row_actions=(
+                {
+                    "className": "list",
+                    "link": lambda record: f"./list_sub_categories?{urlencode({'super_category': record[0]})}",
+                    "name": "List Sub-Categories",
+                },
+                {
+                    "className": "remove",
+                    "link": lambda record: f"./delete_category?{urlencode({'category': record[0]})}",
+                    "name": "Remove",
+                },
+            ),
+            page_actions=(
+                {"title": "Insert Super Category", "link": "./insert_super"},
+            ),
+        ),
+    )
+
+
+@app.route("/has_other")
+def list_has_other():
+    return exec_query(
+        """
+        SELECT super_category, category FROM has_other;
+        """,
+        lambda cursor: render_template("query.html", cursor=cursor, title="Has Other"),
+    )
+
+
+@app.route("/product")
+def list_product():
+    return exec_query(
+        """
+        SELECT ean AS "EAN", category, description FROM product;
+        """,
+        lambda cursor: render_template("query.html", cursor=cursor, title="Product"),
+    )
+
+
+@app.route("/has_category")
+def list_has_category():
+    return exec_query(
+        """
+        SELECT ean AS "EAN", name AS category_name FROM has_category;
+        """,
+        lambda cursor: render_template(
+            "query.html", cursor=cursor, title="Has Category"
+        ),
+    )
+
+
+@app.route("/ivm")
+def list_ivm():
+    return exec_query(
+        """
+        SELECT serial_num AS serial_number, manuf AS manufacturer FROM ivm;
+        """,
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="IVM",
+            row_actions=(
+                {
+                    "className": "list",
+                    "link": lambda record: f"./list_replenishment_event_ivm?{urlencode({'serial_num': record[0], 'manuf': record[1]})}",
+                    "name": "List Replenishment Events",
+                },
+            ),
+        ),
+    )
+
+
+@app.route("/retail_point")
+def list_retail_point():
+    return exec_query(
+        """
+        SELECT name, district, county FROM retail_point;
+        """,
+        lambda cursor: render_template(
+            "query.html", cursor=cursor, title="Retail Point"
+        ),
+    )
+
+
+@app.route("/installed_on")
+def list_installed_on():
+    return exec_query(
+        """
+        SELECT serial_num AS serial_number, manuf AS manufacturer, local FROM installed_on;
+        """,
+        lambda cursor: render_template(
+            "query.html", cursor=cursor, title="Installed On"
+        ),
+    )
+
+
+@app.route("/shelf")
+def list_shelf():
+    return exec_query(
+        """
+        SELECT number, serial_num AS serial_number, manuf AS manufacturer, height, name FROM shelf;
+        """,
+        lambda cursor: render_template("query.html", cursor=cursor, title="Shelf"),
+    )
+
+
+@app.route("/planogram")
+def list_planogram():
+    return exec_query(
+        """
+        SELECT ean AS "EAN", number, serial_num AS serial_number, manuf AS manufacturer, face, units, loc
+        FROM planogram;
+        """,
+        lambda cursor: render_template("query.html", cursor=cursor, title="Planogram"),
+    )
+
+
+@app.route("/retailer")
+def list_retailer():
+    return exec_query(
+        """
+        SELECT tin AS "TIN", name FROM retailer;
+        """,
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="Retailer",
+            row_actions=(
+                {
+                    "className": "remove",
+                    "link": lambda record: f"./delete_retailer?{urlencode({'tin': record[0]})}",
+                    "name": "Remove",
+                },
+            ),
+            page_actions=({"title": "Insert Retailer", "link": "./insert_retailer"},),
+        ),
+    )
+
+
+@app.route("/responsible_for")
+def list_responsible_for():
+    return exec_query(
+        """
+        SELECT cat_name AS category_name, tin AS "TIN", serial_num AS serial_number, manuf AS manufacturer
+        FROM responsible_for;
+        """,
+        lambda cursor: render_template(
+            "query.html", cursor=cursor, title="Responsible For"
+        ),
+    )
+
+
+@app.route("/replenishment_event")
+def list_replenishment_event():
+    return exec_query(
+        """
+        SELECT ean AS "EAN", number, serial_num AS serial_number, manuf AS manufacturer, instant, units, tin AS "TIN"
+        FROM replenishment_event;
+        """,
+        lambda cursor: render_template(
+            "query.html", cursor=cursor, title="Replenishment Event"
+        ),
+    )
+
+
+@app.route("/list_replenishment_event_ivm", methods=["GET"])
+def list_replenishment_event_ivm():
+    return exec_query(
+        """
+        SELECT ean AS "EAN", number, serial_num AS serial_number, manuf as manufacturer, instant, units, tin AS "TIN"
+        FROM replenishment_event
+        WHERE serial_num = %s AND manuf = %s;
+        """,
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="List Replenishment Events of IVM",
+        ),
+        data_from_http_query(("serial_num", "manuf")),
+    )
+
+
+@app.route("/sales", methods=["GET"])
+def list_sales():
+    return exec_query(
+        """
+        SELECT ean AS "EAN", name, year, quarter, day_month, day_week, district, county, units
+        FROM sales;
+        """,
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="View Past Sales",
+        ),
+    )
+
+
+@app.route("/delete_category", methods=["GET"])
+def confirm_delete_category():
+    category = request.args["category"]
+    try:
+        return render_template(
+            "confirm_delete.html",
+            title=f"Delete Category '{category}'?",
+            data={"category": category},
+        )
+    except Exception as e:
+        return render_template("error_page.html", error=e)
+
+
+@app.route("/delete_category", methods=["POST"])
+def delete_category():
+    return exec_query(
+        """
+        DELETE FROM has_other WHERE category = %s;
+        DELETE FROM super_category WHERE name = %s;
+        DELETE FROM simple_category WHERE name = %s;
+        DELETE FROM category WHERE name = %s;
+        """,
+        lambda cursor: redirect("./category"),
+        data_from_request(("category", "category", "category", "category")),
+    )
+
+
+@app.route("/delete_retailer", methods=["GET"])
+def confirm_delete_retailer():
+    tin = request.args["tin"]
+    try:
+        return render_template(
+            "confirm_delete.html",
+            title=f"Delete Retailer with TIN '{tin}'?",
+            data={"tin": tin},
+        )
+    except Exception as e:
+        return render_template("error_page.html", error=e)
+
+
+@app.route("/delete_retailer", methods=["POST"])
+def delete_retailer():
+    return exec_query(
+        """
+        DELETE FROM retailer WHERE tin = %s;
+        """,
+        lambda cursor: redirect("./retailer"),
+        data_from_request(("tin",)),
+    )
+
+
+###############
+#    Utils    #
+###############
+
+
+def exec_query(query, outcome, data=()):
     dbConn = None
     cursor = None
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
         cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        tin = request.form["tin"]
-        name = request.form["name"]
-        query = "INSERT INTO retailer (tin, name) VALUES (%s, %s);"
-        data = (tin, name)
         cursor.execute(query, data)
-        return query
+        return outcome(cursor)
     except Exception as e:
-        return str(e)
+        return render_template("error_page.html", error=e)
     finally:
         dbConn.commit()
         cursor.close()
         dbConn.close()
 
 
-@app.route("/category")
-def list_category():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT name FROM category;"
-        cursor.execute(query)
-        return render_template("category.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
+def data_from_request(fields):
+    return tuple(map(lambda field: request.form[field], fields))
 
 
-@app.route("/simple_category")
-def list_simple_category():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT name FROM simple_category;"
-        cursor.execute(query)
-        return render_template(
-            "simple_category.html", cursor=cursor, params=request.args
-        )
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/super_category")
-def list_super_category():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT name FROM super_category;"
-        cursor.execute(query)
-        return render_template(
-            "super_category.html", cursor=cursor, params=request.args
-        )
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/has_other")
-def list_has_other():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT super_category, category FROM has_other;"
-        cursor.execute(query)
-        return render_template("has_other.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/product")
-def list_product():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT ean, category, description FROM product;"
-        cursor.execute(query)
-        return render_template("product.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/has_category")
-def list_has_category():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT ean, name FROM has_category;"
-        cursor.execute(query)
-        return render_template("has_category.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/ivm")
-def list_ivm():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT serial_num, manuf FROM ivm;"
-        cursor.execute(query)
-        return render_template("ivm.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/retail_point")
-def list_retail_point():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT name, district, county FROM retail_point;"
-        cursor.execute(query)
-        return render_template("retail_point.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/installed_on")
-def list_installed_on():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT serial_num, manuf, local FROM installed_on;"
-        cursor.execute(query)
-        return render_template("installed_on.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/shelf")
-def list_shelf():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT number, serial_num, manuf, height, name FROM shelf;"
-        cursor.execute(query)
-        return render_template("shelf.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/planogram")
-def list_planogram():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = """
-            SELECT ean, number, serial_num, manuf, face, units, loc
-            FROM planogram;
-            """
-        cursor.execute(query)
-        return render_template("planogram.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/retailer")
-def list_retailer():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT tin, name FROM retailer;"
-        cursor.execute(query)
-        return render_template("retailer.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/responsible_for")
-def list_responsible_for():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT cat_name, tin, serial_num, manuf FROM responsible_for;"
-        cursor.execute(query)
-        return render_template(
-            "responsible_for.html", cursor=cursor, params=request.args
-        )
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/replenishment_event")
-def list_replenishment_event():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT ean, number, serial_num, manuf, instant, units, tin FROM replenishment_event;"
-        cursor.execute(query)
-        return render_template(
-            "replenishment_event.html",
-            cursor=cursor,
-            params=request.args,
-        )
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-
-@app.route("/ivm_values")
-def ivm_values():
-
-    return render_template("ivm_values.html", params=request.args)
-
-
-@app.route("/list_replenishment_event_ivm", methods=["POST"])
-def list_replenishment_event_ivm():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        serial_num = request.form["serial_num"]
-        manuf = request.form["manuf"]
-        query = """
-            SELECT ean, number, serial_num, manuf, instant, units, tin
-            FROM replenishment_event
-            WHERE serial_num = %s AND manuf = %s;
-            """
-        data = (serial_num, manuf)
-        cursor.execute(query, data)
-        return render_template(
-            "list_replenishment_event_ivm.html",
-            cursor=cursor,
-            params=request.args,
-        )
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
-
-@app.route("/sales", methods=["GET"])
-# TODO: will be fixed in the app cleanup PR
-def list_sales():
-    dbConn = None
-    cursor = None
-    try:
-        dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        query = "SELECT * FROM sales;"
-        cursor.execute(query)
-        return render_template("sales.html", cursor=cursor, params=request.args)
-    except Exception as e:
-        return str(e)
-    finally:
-        cursor.close()
-        dbConn.close()
+def data_from_http_query(fields):
+    return tuple(map(lambda field: request.args[field], fields))
 
 
 CGIHandler().run(app)
