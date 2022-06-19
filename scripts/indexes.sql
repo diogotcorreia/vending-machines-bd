@@ -18,9 +18,9 @@ WHERE R.tin = P.tin
 -- SECOND index
 ----------------------
 DROP INDEX IF EXISTS idx_product_desc;
-CREATE INDEX idx_product_desc ON product (description);
+CREATE INDEX idx_product_desc ON product USING HASH (description);
 DROP INDEX IF EXISTS idx_has_category_name_ean;
-CREATE INDEX idx_has_category_name_ean ON has_category (name, ean);
+CREATE INDEX idx_has_category_name_ean ON has_category USING BTREE (name, ean);
 DROP INDEX IF EXISTS idx_product_category;
 CREATE INDEX idx_product_category ON product USING HASH(category);
 DROP INDEX IF EXISTS idx_has_category_name;
