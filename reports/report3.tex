@@ -159,6 +159,9 @@
 
     \lstinputlisting[language=SQL]{sql/report3/queries/query2.sql}
 
+    % otherwise the query would be split in half
+    \vspace*{2cm}
+
     \item \textbf{Quais os produtos (ean) que nunca foram repostos?}
 
     \lstinputlisting[language=SQL]{sql/report3/queries/query3.sql}
@@ -174,6 +177,21 @@
   \section*{Vistas}
 
   % TODO: not sure se é preciso colocar no relatório, either way fica aqui o placeholder
+
+  Pretendia-se que criássemos a vista \texttt{Vendas} (que tomámos a liberdade de renomear
+  para \texttt{Sales}), procurando representar todas as saídas de stock de um produto
+  (na ausência de desperdícios e roubos). Tendo em conta o enunciado, optámos por criar
+  a vista da seguinte forma:
+
+  \lstinputlisting[language=SQL]{sql/report3/views/view.sql}
+
+  Recorremos à função \texttt{EXTRACT}, do \texttt{POSTGRES}, para extrair os campos \texttt{year, 
+  quarter, day\_month} e \texttt{day\_week} a partir do campo \texttt{instant} dos
+  \texttt{Replenishment Events}, tal como sugerido no enunciado.
+
+  Para consultar a vista na aplicação, o utilizador pode, partindo do menu principal,
+  clicar no botão \texttt{Past Sales}, que o redireciona para uma página com uma
+  listagem de todas as \texttt{Sales} que ocorreram até então.
 
   \section*{Aplicação}
 
