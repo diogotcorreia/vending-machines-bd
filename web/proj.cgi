@@ -32,10 +32,11 @@ def homepage():
 
 @app.route("/insert_query", methods=["POST"])
 def insert_query():
+    query = request.form["query"]
     return exec_query(
-        request.form["query"],
+        query,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, title=request.form["query"]
+            "query.html", cursor=cursor, title="User Query", query=query
         ),
     )
 

@@ -1,26 +1,42 @@
 {% include 'partial/base.html' %}
+{% block head %}
+  <style>
+  pre {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 1em;
+    width: fit-content;
+    font-size: 1.1em;
+  }
+  </style>
+{% endblock %}
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block content %}
-    {% if cursor %}
-        <h1>{{ title }}</h1>
-        <table border="2px">
-            <thead>
-                <tr>
-                    <tr>
-                        {% for record in cursor.description %}<th>{{ record[0]|replace("_"," ") }}</th>{% endfor %}
-                    </tr>
-                </tr>
-            </thead>
-            <tbody>
-                {% for record in cursor %}
-                    <tr>
-                        {% for value in record %}<td>{{ value }}</td>{% endfor %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <a class="button" href="../proj.cgi/">Main Menu</a>
+  <h1>{{ title }}</h1>
+  {% if query %}<pre><code>{{ query }}</code></pre>{% endif %}
+  {% if cursor %}
+    {% if cursor.description %}
+      <table border="2px">
+        <thead>
+          <tr>
+            <tr>
+              {% for record in cursor.description %}<th>{{ record[0]|replace("_"," ") }}</th>{% endfor %}
+            </tr>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in cursor %}
+            <tr>
+              {% for value in record %}<td>{{ value }}</td>{% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     {% else %}
-        <p>Erro: ao obter dados da base de dados!</p>
+      <p>Query successful</p>
     {% endif %}
+    <a class="button" href="../proj.cgi/">Main Menu</a>
+  {% else %}
+    <p>Erro: ao obter dados da base de dados!</p>
+  {% endif %}
 {% endblock %}

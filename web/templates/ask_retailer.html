@@ -1,22 +1,22 @@
 {% include 'partial/base.html' %}
 {% block title %}<title>Insert Retailer</title>{% endblock %}
 {% block content %}
-    <h1>Insert Retailer</h1>
-    <form action="insert_retailer" method="post">
-        <p>
-            <input type="hidden" name="retailer" />
-        </p>
-        <p>
-            New Retailer TIN:
-            <input type="text" name="tin" />
-        </p>
-        <p>
-            New Retailer Name:
-            <input type="text" name="name" />
-        </p>
-        <p>
-            <input type="submit" value="Submit" />
-        </p>
-    </form>
-    <a class="button" href="../proj.cgi/">Main Menu</a>
+  <h1>Insert Retailer</h1>
+  <form action="insert_retailer" method="post">
+    <p>
+      <input type="hidden" name="retailer" />
+    </p>
+    <p>
+      New Retailer TIN:
+      <input type="text" name="tin" />
+    </p>
+    <p>
+      New Retailer Name:
+      <input type="text" name="name" />
+    </p>
+    <p>
+      <input type="submit" value="Submit" />
+    </p>
+  </form>
+  <a class="button" href="../proj.cgi/">Main Menu</a>
 {% endblock %}

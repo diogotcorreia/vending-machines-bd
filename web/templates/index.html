@@ -1,8 +1,6 @@
-<doctype html>
-<title>Main Menu</title>
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"/>
-<body style="padding: 20px">
+{% include 'partial/base.html' %}
+{% block title %}<title>Main Menu</title>{% endblock %}
+{% block content %}
   <h1>Projeto de BD - 2021/2022</h1>
   <div class="container">
     <a class="button" href="./category">Category</a>
@@ -28,12 +26,11 @@
       </p>
       <p class="query">
         Insert Query: (Prone to SQL Injection duh)
-        <input class="query" type="text" name="query" />
+        <textarea rows="5" class="query" type="text" name="query"></textarea>
       </p>
       <p>
         <input type="submit" value="Submit" />
       </p>
     </form>
   </div>
-</body>
-</doctype>
+{% endblock %}
