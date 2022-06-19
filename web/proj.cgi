@@ -471,7 +471,7 @@ def delete_retailer():
 ###############
 
 
-def exec_query(query, outcome, data=()):
+def exec_query(query, outcome, data=None):
     dbConn = None
     cursor = None
     try:
