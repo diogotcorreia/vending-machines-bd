@@ -198,10 +198,6 @@ textarea.query:focus {
   outline: none;
 }
 
-p.query {
-  margin: 0px 25px;
-}
-
 form {
   display: inline-block;
   position: relative;

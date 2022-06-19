@@ -1,4 +1,11 @@
 {% extends 'partial/base.html' %}
+{% block head %}
+  <style>
+  .query-container {
+    min-width: 80%;
+  }
+  </style>
+{% endblock %}
 {% block title %}<title>Main Menu</title>{% endblock %}
 {% block content %}
   <h1>Projeto de BD - 2021/2022</h1>
@@ -19,7 +26,7 @@
     <a class="button" href="./replenishment_event">Replenishment Event</a>
     <a class="button" href="./sales">Past Sales</a>
   </div>
-  <div>
+  <div class="query-container">
     <form action="insert_query" method="post">
       <div class="query">
         <p>Insert Query: (Prone to SQL Injection duh)</p>
