@@ -66,7 +66,7 @@ def ask_super():
     try:
         return render_template("ask_super.html")
     except Exception as e:
-        return str(e)
+        return render_template("error_page.html", error=e)
 
 
 @app.route("/insert_super", methods=["POST"])
@@ -98,7 +98,7 @@ def list_sub_categories():
         lambda cursor: render_template(
             "query.html", cursor=cursor, title="List Sub-Categories"
         ),
-        data_from_request(("super_category",)),
+        data_from_http_query(("super_category",)),
     )
 
 
@@ -123,7 +123,6 @@ def insert_retailer():
 
 @app.route("/category")
 def list_category():
-
     return exec_query(
         """
         SELECT name FROM category;
@@ -271,7 +270,6 @@ def list_responsible_for():
 
 @app.route("/replenishment_event")
 def list_replenishment_event():
-
     return exec_query(
         """
         SELECT ean, number, serial_num, manuf, instant, units, tin FROM replenishment_event;
@@ -295,7 +293,7 @@ def list_replenishment_event_ivm():
             cursor=cursor,
             title="List Replenishment Events of IVM",
         ),
-        data_from_request(("serial_num", "manuf")),
+        data_from_http_query(("serial_num", "manuf")),
     )
 
 
@@ -336,6 +334,10 @@ def exec_query(query, outcome, data=()):
 
 def data_from_request(fields):
     return tuple(map(lambda field: request.form[field], fields))
+
+
+def data_from_http_query(fields):
+    return tuple(map(lambda field: request.args[field], fields))
 
 
 CGIHandler().run(app)

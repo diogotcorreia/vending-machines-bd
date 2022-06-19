@@ -18,13 +18,11 @@
             <tr>
               <td>{{ record[0] }}</td>
               <td class="list">
-                <form action="list_sub_categories" method="post">
-                  <input type="hidden" name="super_category" value={{ record[0] }} />
-                  <input type="submit" class="list" value="List Sub-Categories" />
-                </form>
+                <a class="list"
+                   href="./list_sub_categories?super_category={{ record[0] }}">List Sub-Categories</a>
               </td>
               <td class="remove">
-                <a class="button, remove" href="">Remove</a>
+                <a class="remove" href="">Remove</a>
               </td>
             </tr>
           {% endfor %}

@@ -102,8 +102,6 @@ td.list {
   text-align: center;
   background-color: rgb(12, 62, 63);
   transition-duration: 0.3s;
-  margin: 0;
-  padding: 0;
 }
 
 td.list:hover {
@@ -145,6 +143,7 @@ textarea.query {
   border: 2px solid transparent;
   border-bottom-color: #4caf50;
   margin-top: 10px;
+  box-sizing: border-box;
 
   background-color: #0d0e0e;
   color: #fff;
@@ -158,24 +157,6 @@ textarea.query {
 textarea.query:focus {
   border-color: #4caf50;
   outline: none;
-}
-
-input.list[type="submit"] {
-  text-align: center;
-  display: inline-block;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(12, 62, 63);
-  transition-duration: 0.3s;
-  border: none;
-  padding: auto;
-  margin: 0;
-  border-radius: 0;
-}
-
-input.list:hover {
-  background-color: rgb(7, 18, 18);
 }
 
 p.query {
