@@ -28,7 +28,7 @@ CREATE INDEX idx_has_category_name ON has_category USING HASH(name);
 ----------------------
 EXPLAIN ANALYZE
 SELECT T.name,
-    count(T.ean)
+    COUNT(T.ean)
 FROM product P,
     has_category T
 WHERE P.category = T.name
