@@ -73,9 +73,13 @@ INSERT INTO ivm
 VALUES ('ivm-1', 'fizz'),
     ('ivm-2', 'fizz'),
     ('ivm-3', 'fizz'),
+    ('ivm-4', 'fizz'),
+    ('ivm-5', 'fizz'),
     ('ivm-1', 'buzz'),
     ('ivm-2', 'buzz'),
-    ('ivm-3', 'buzz');
+    ('ivm-3', 'buzz'),
+    ('ivm-4', 'buzz'),
+    ('ivm-5', 'buzz');
 ----------------------
 -- Retail Point
 ----------------------
@@ -156,15 +160,15 @@ VALUES ('1', 'Diogo'),
 ---------------------
 INSERT INTO responsible_for
 VALUES ('Bolachas', '3', 'ivm-1', 'fizz'),
-    ('Bolachas de Chocolate', '3', 'ivm-1', 'fizz'),
-    ('Fruta', '3', 'ivm-1', 'fizz'),
+    ('Bolachas de Chocolate', '3', 'ivm-1', 'buzz'),
+    ('Fruta', '3', 'ivm-2', 'fizz'),
     ('Semi-Auto', '3', 'ivm-3', 'fizz'),
-    ('Snipers', '3', 'ivm-1', 'fizz'),
-    ('Bolachas', '5', 'ivm-2', 'fizz'),
-    ('Bolachas de Chocolate', '5', 'ivm-2', 'fizz'),
-    ('Fruta', '5', 'ivm-3', 'fizz'),
-    ('Snipers', '5', 'ivm-2', 'fizz'),
-    ('Fruta', '1', 'ivm-1', 'fizz');
+    ('Snipers', '3', 'ivm-2', 'buzz'),
+    ('Bolachas', '5', 'ivm-3', 'buzz'),
+    ('Bolachas de Chocolate', '5', 'ivm-4', 'fizz'),
+    ('Fruta', '5', 'ivm-4', 'buzz'),
+    ('Snipers', '5', 'ivm-5', 'fizz'),
+    ('Fruta', '1', 'ivm-5', 'buzz');
 ----------------------
 -- Replenishment Event
 ----------------------
@@ -185,7 +189,7 @@ VALUES (
         'fizz',
         '2022-08-09 19:54:21',
         '7',
-        '2'
+        '3'
     ),
     (
         '1111111111113',
