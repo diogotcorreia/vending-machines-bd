@@ -1,0 +1,23 @@
+{% include 'partial/base.html' %}
+{% block title %}<title>List Replenishment Events</title>{% endblock %}
+{% block content %}
+  <h1>List Replenishment Events</h1>
+  <form action="list_replenishment_event_ivm" method="post">
+    <p>
+      <input type="hidden"
+             name="serial_num"
+             value="{{ params.get('serial_num') }}"/>
+    </p>
+    <p>
+      <input type="hidden" name="manuf" value="{{ params.get('manuf') }}" />
+    </p>
+    <h3>
+      List Replenishment Events of the IVM ({{ params.get("serial_num") }},
+      {{ params.get('manuf') }} )
+    </h3>
+    <p>
+      <input type="submit" value="Submit" />
+    </p>
+  </form>
+  <a class="button" href="../proj.cgi/">Main Menu</a>
+{% endblock %}

@@ -18,24 +18,22 @@
             <tr>
               <td>{{ record[0] }}</td>
               <td class="list">
-                <form action="list_sub_categories" method="post">
-                  <input type="hidden" name="super_category" value={{ record[0] }} />
-                  <input type="submit" class="list" value="List Sub-Categories" />
-                </form>
-              </td>
-              <td class="remove">
-                <a class="button, remove" href="">Remove</a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <div>
-        <a class="button" href="./ask_super">Insert Super Category</a>
-        <a class="button" href="../proj.cgi/">Main Menu</a>
-      </div>
-    {% else %}
-      <p>Erro: ao obter dados da base de dados!</p>
-    {% endif %}
-  </body>
+              <a class="button, list" href="./ask_list?super_category={{ record[0] }}">List</a
+              >
+            </td>
+            <td class="remove">
+              <a class="button, remove" href="">Remove</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div>
+      <a class="button" href="./ask_super">Insert Super Category</a>
+      <a class="button" href="../proj.cgi/">Main Menu</a>
+    </div>
+  {% else %}
+    <p>Erro: ao obter dados da base de dados!</p>
+  {% endif %}
+</body>
 </html>

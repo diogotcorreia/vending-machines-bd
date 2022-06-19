@@ -1,16 +1,16 @@
 <html>
-  <title>IVM</title>
+  <title>Retail Point</title>
   <link rel="stylesheet"
         href="{{ url_for('static', filename='css/style.css') }}"/>
   <body style="padding: 20px">
     {% if cursor %}
-      <h1>IVM</h1>
+      <h1>Retail Point</h1>
       <table border="2px">
         <thead>
           <tr>
-            <th>Serial Number</th>
-            <th>Manufacturer</th>
-            <th>Action</th>
+            <th>Name</th>
+            <th>District</th>
+            <th>County</th>
           </tr>
         </thead>
         <tbody>
@@ -18,12 +18,7 @@
             <tr>
               <td>{{ record[0] }}</td>
               <td>{{ record[1] }}</td>
-              <td class="list">
-                <a class="button, list"
-                   href="./ivm_values?serial_num={{ record[0] }}&manuf={{ record[1] }}">
-                  List Replenishment Events
-                </a>
-              </td>
+              <td>{{ record[2] }}</td>
             </tr>
           {% endfor %}
         </tbody>

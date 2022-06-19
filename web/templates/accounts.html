@@ -1,16 +1,16 @@
 <html>
-  <title>IVM</title>
+  <title>List accounts - Flask</title>
   <link rel="stylesheet"
-        href="{{ url_for('static', filename='css/style.css') }}"/>
+        href="{{ url_for('static', filename='css/main.css') }}"/>
   <body style="padding: 20px">
     {% if cursor %}
-      <h1>IVM</h1>
       <table border="2px">
         <thead>
           <tr>
-            <th>Serial Number</th>
-            <th>Manufacturer</th>
-            <th>Action</th>
+            <th>Numero de Conta</th>
+            <th>Nome da Agência</th>
+            <th>Saldo</th>
+            <th>Alterar</th>
           </tr>
         </thead>
         <tbody>
@@ -18,17 +18,14 @@
             <tr>
               <td>{{ record[0] }}</td>
               <td>{{ record[1] }}</td>
-              <td class="list">
-                <a class="button, list"
-                   href="./ivm_values?serial_num={{ record[0] }}&manuf={{ record[1] }}">
-                  List Replenishment Events
-                </a>
+              <td>{{ record[2] }}</td>
+              <td>
+                <a href="balance?account_number={{ record[0] }}">Alterar saldo</a>
               </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
-      <a class="button" href="../proj.cgi/">Main Menu</a>
     {% else %}
       <p>Erro: ao obter dados da base de dados!</p>
     {% endif %}
