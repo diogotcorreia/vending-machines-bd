@@ -10,9 +10,15 @@
           rel="stylesheet"/>
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}"/>
+    {% block head %}{% endblock %}
     {% block title %}{% endblock %}
   </head>
   <body>
-    {% block content %}{% endblock %}
+    <div class="page-center">
+      {% block content %}{% endblock %}
+    </div>
+    <footer>
+      Made by Diogo Gaspar (99207), Diogo Correia (99211) and Tomás Esteves (99341) @ IST
+    </footer>
   </body>
 </html>
