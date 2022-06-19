@@ -1,27 +1,26 @@
-------------------------------------
--- 1 Categorias distintas ou podem repetir?
------------------
 --1
-SELECT name,
-    COUNT(*)
+SELECT name
 FROM responsible_for
     NATURAL JOIN retailer
 GROUP BY name
-HAVING COUNT(*) >= ALL (
+HAVING COUNT(DISTINCT cat_name) >= ALL (
     SELECT COUNT(DISTINCT cat_name)
     FROM responsible_for
     GROUP BY tin
 );
 
 --2
-SELECT retailer.name
-FROM responsible_for
+SELECT DISTINCT retailer.name FROM responsible_for RF
     NATURAL JOIN retailer
-    INNER JOIN simple_category ON responsible_for.cat_name = simple_category.name
-GROUP BY retailer.name
-HAVING COUNT(DISTINCT cat_name) = (
-    SELECT COUNT(*)
+WHERE NOT EXISTS (
+    SELECT name
     FROM simple_category
+    EXCEPT
+    SELECT name
+    FROM simple_category
+    INNER JOIN responsible_for
+        ON responsible_for.cat_name = simple_category.name
+    WHERE responsible_for.tin = RF.tin
 );
 
 --3
@@ -37,17 +36,3 @@ SELECT ean
 FROM replenishment_event
 GROUP BY ean
 HAVING COUNT(DISTINCT tin) = 1;
----list
-WITH RECURSIVE list_recurs(super_category, category) AS (
-    SELECT super_category,
-        category
-    FROM has_other
-    WHERE super_category = 'Armas'
-    UNION ALL
-    SELECT child.super_category,
-        child.category
-    FROM has_other AS child
-        INNER JOIN list_recurs AS parent ON child.super_category = parent.category
-)
-SELECT category
-FROM list_recurs AS sub_categories;
