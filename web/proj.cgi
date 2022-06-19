@@ -3,6 +3,7 @@
 from wsgiref.handlers import CGIHandler
 from flask import Flask
 from flask import render_template, request, redirect
+from urllib.parse import urlencode
 
 ## Libs postgres
 import psycopg2
@@ -27,7 +28,10 @@ DB_CONNECTION_STRING = "host=%s dbname=%s user=%s password=%s" % (
 ## The request comes with the folder structure setting ~/web as the root
 @app.route("/")
 def homepage():
-    return render_template("index.html")
+    try:
+        return render_template("index.html")
+    except Exception as e:
+        return render_template("error_page.html", error=e)
 
 
 @app.route("/insert_query", methods=["POST"])
@@ -96,7 +100,10 @@ def list_sub_categories():
         ) SELECT category AS sub_categories FROM list_recurs;
         """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, title="List Sub-Categories"
+            "query.html",
+            cursor=cursor,
+            title="List Sub-Categories",
+            page_actions=({"title": "Back", "link": "./super_category"},),
         ),
         data_from_http_query(("super_category",)),
     )
@@ -128,7 +135,20 @@ def list_category():
         SELECT name FROM category;
         """,
         lambda cursor: render_template(
-            "category.html", cursor=cursor, title="category"
+            "query.html",
+            cursor=cursor,
+            title="Category",
+            row_actions=(
+                {
+                    "className": "remove",
+                    "link": lambda record: f"./delete_category?{urlencode({'category': record[0]})}",
+                    "name": "Remove",
+                },
+            ),
+            page_actions=(
+                {"title": "Insert Simple Category", "link": "./ask_simple"},
+                {"title": "Insert Super Category", "link": "./ask_super"},
+            ),
         ),
     )
 
@@ -140,7 +160,17 @@ def list_simple_category():
         SELECT name FROM simple_category;
         """,
         lambda cursor: render_template(
-            "simple_category.html", cursor=cursor, title="Simple Category"
+            "query.html",
+            cursor=cursor,
+            title="Simple Category",
+            row_actions=(
+                {
+                    "className": "remove",
+                    "link": lambda record: f"./delete_category?{urlencode({'category': record[0]})}",
+                    "name": "Remove",
+                },
+            ),
+            page_actions=({"title": "Insert Simple Category", "link": "./ask_simple"},),
         ),
     )
 
@@ -152,7 +182,22 @@ def list_super_category():
         SELECT name FROM super_category;
         """,
         lambda cursor: render_template(
-            "super_category.html", cursor=cursor, title="Super Category"
+            "query.html",
+            cursor=cursor,
+            title="Super Category",
+            row_actions=(
+                {
+                    "className": "list",
+                    "link": lambda record: f"./list_sub_categories?{urlencode({'super_category': record[0]})}",
+                    "name": "List Sub-Categories",
+                },
+                {
+                    "className": "remove",
+                    "link": lambda record: f"./delete_category?{urlencode({'category': record[0]})}",
+                    "name": "Remove",
+                },
+            ),
+            page_actions=({"title": "Insert Super Category", "link": "./ask_super"},),
         ),
     )
 
@@ -171,7 +216,7 @@ def list_has_other():
 def list_product():
     return exec_query(
         """
-        SELECT ean, category, description FROM product;
+        SELECT ean AS "EAN", category, description FROM product;
         """,
         lambda cursor: render_template("query.html", cursor=cursor, title="Product"),
     )
@@ -181,7 +226,7 @@ def list_product():
 def list_has_category():
     return exec_query(
         """
-        SELECT ean, name FROM has_category;
+        SELECT ean AS "EAN", name AS category_name FROM has_category;
         """,
         lambda cursor: render_template(
             "query.html", cursor=cursor, title="Has Category"
@@ -193,9 +238,20 @@ def list_has_category():
 def list_ivm():
     return exec_query(
         """
-        SELECT serial_num, manuf FROM ivm;
+        SELECT serial_num AS serial_number, manuf AS manufacturer FROM ivm;
         """,
-        lambda cursor: render_template("ivm.html", cursor=cursor, title="IVM"),
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="IVM",
+            row_actions=(
+                {
+                    "className": "list",
+                    "link": lambda record: f"./list_replenishment_event_ivm?{urlencode({'serial_num': record[0], 'manuf': record[1]})}",
+                    "name": "List Replenishment Events",
+                },
+            ),
+        ),
     )
 
 
@@ -215,7 +271,7 @@ def list_retail_point():
 def list_installed_on():
     return exec_query(
         """
-        SELECT serial_num, manuf, local FROM installed_on;
+        SELECT serial_num AS serial_number, manuf AS manufacturer, local FROM installed_on;
         """,
         lambda cursor: render_template(
             "query.html", cursor=cursor, title="Installed On"
@@ -227,7 +283,7 @@ def list_installed_on():
 def list_shelf():
     return exec_query(
         """
-        SELECT number, serial_num, manuf, height, name FROM shelf;
+        SELECT number, serial_num AS serial_number, manuf AS manufacturer, height, name FROM shelf;
         """,
         lambda cursor: render_template("query.html", cursor=cursor, title="Shelf"),
     )
@@ -237,7 +293,7 @@ def list_shelf():
 def list_planogram():
     return exec_query(
         """
-        SELECT ean, number, serial_num, manuf, face, units, loc
+        SELECT ean AS "EAN", number, serial_num AS serial_number, manuf AS manufacturer, face, units, loc
         FROM planogram;
         """,
         lambda cursor: render_template("query.html", cursor=cursor, title="Planogram"),
@@ -248,10 +304,20 @@ def list_planogram():
 def list_retailer():
     return exec_query(
         """
-        SELECT tin, name FROM retailer;
+        SELECT tin AS "TIN", name FROM retailer;
         """,
         lambda cursor: render_template(
-            "retailer.html", cursor=cursor, title="Retailer"
+            "query.html",
+            cursor=cursor,
+            title="Retailer",
+            row_actions=(
+                {
+                    "className": "remove",
+                    "link": lambda record: f"./delete_retailer?{urlencode({'tin': record[0]})}",
+                    "name": "Remove",
+                },
+            ),
+            page_actions=({"title": "Insert Retailer", "link": "./ask_retailer"},),
         ),
     )
 
@@ -260,7 +326,8 @@ def list_retailer():
 def list_responsible_for():
     return exec_query(
         """
-        SELECT cat_name, tin, serial_num, manuf FROM responsible_for;
+        SELECT cat_name AS category_name, tin AS "TIN", serial_num AS serial_number, manuf AS manufacturer
+        FROM responsible_for;
         """,
         lambda cursor: render_template(
             "query.html", cursor=cursor, title="Responsible For"
@@ -272,7 +339,8 @@ def list_responsible_for():
 def list_replenishment_event():
     return exec_query(
         """
-        SELECT ean, number, serial_num, manuf, instant, units, tin FROM replenishment_event;
+        SELECT ean AS "EAN", number, serial_num AS serial_number, manuf AS manufacturer, instant, units, tin AS "TIN"
+        FROM replenishment_event;
         """,
         lambda cursor: render_template(
             "query.html", cursor=cursor, title="Replenishment Event"
@@ -284,7 +352,7 @@ def list_replenishment_event():
 def list_replenishment_event_ivm():
     return exec_query(
         """
-        SELECT ean, number, serial_num, manuf, instant, units, tin
+        SELECT ean AS "EAN", number, serial_num AS serial_number, manuf as manufacturer, instant, units, tin AS "TIN"
         FROM replenishment_event
         WHERE serial_num = %s AND manuf = %s;
         """,
@@ -301,13 +369,65 @@ def list_replenishment_event_ivm():
 def list_sales():
     return exec_query(
         """
-        SELECT * FROM sales;
+        SELECT ean AS "EAN", name, year, quarter, day_month, day_week, district, county, units
+        FROM sales;
         """,
         lambda cursor: render_template(
             "query.html",
             cursor=cursor,
             title="View Past Sales",
         ),
+    )
+
+
+@app.route("/delete_category", methods=["GET"])
+def confirm_delete_category():
+    category = request.args["category"]
+    try:
+        return render_template(
+            "confirm_delete.html",
+            title=f"Delete Category '{category}'?",
+            data={"category": category},
+        )
+    except Exception as e:
+        return render_template("error_page.html", error=e)
+
+
+@app.route("/delete_category", methods=["POST"])
+def delete_category():
+    return exec_query(
+        """
+        DELETE FROM has_other WHERE category = %s;
+        DELETE FROM super_category WHERE name = %s;
+        DELETE FROM simple_category WHERE name = %s;
+        DELETE FROM category WHERE name = %s;
+        """,
+        lambda cursor: redirect("./category"),
+        data_from_request(("category", "category", "category", "category")),
+    )
+
+
+@app.route("/delete_retailer", methods=["GET"])
+def confirm_delete_retailer():
+    tin = request.args["tin"]
+    try:
+        return render_template(
+            "confirm_delete.html",
+            title=f"Delete Retailer with TIN '{tin}'?",
+            data={"tin": tin},
+        )
+    except Exception as e:
+        return render_template("error_page.html", error=e)
+
+
+@app.route("/delete_retailer", methods=["POST"])
+def delete_retailer():
+    return exec_query(
+        """
+        DELETE FROM retailer WHERE tin = %s;
+        """,
+        lambda cursor: redirect("./retailer"),
+        data_from_request(("tin",)),
     )
 
 

@@ -1,4 +1,4 @@
-{% include 'partial/base.html' %}
+{% extends 'partial/base.html' %}
 {% block head %}
   <style>
   pre {
@@ -13,21 +13,29 @@
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block content %}
   <h1>{{ title }}</h1>
-  {% if query %}<pre><code>{{ query }}</code></pre>{% endif %}
+  {% if query %}<pre><code>{{ query|e }}</code></pre>{% endif %}
   {% if cursor %}
     {% if cursor.description %}
       <table border="2px">
         <thead>
           <tr>
             <tr>
-              {% for record in cursor.description %}<th>{{ record[0]|replace("_"," ") }}</th>{% endfor %}
+              {% for record in cursor.description %}<th>{{ record[0]|replace("_"," ")|e }}</th>{% endfor %}
+              {% for action in (row_actions if row_actions else []) %}
+                <th></th>
+              {% endfor %}
             </tr>
           </tr>
         </thead>
         <tbody>
           {% for record in cursor %}
             <tr>
-              {% for value in record %}<td>{{ value }}</td>{% endfor %}
+              {% for value in record %}<td>{{ value|e }}</td>{% endfor %}
+              {% for action in (row_actions if row_actions else []) %}
+                <td class="{{ action['className'] }}">
+                  <a class="{{ action['className'] }}" href="{{ action['link'](record) }}">{{ action['name'] }}</a>
+                </td>
+              {% endfor %}
             </tr>
           {% endfor %}
         </tbody>
@@ -35,7 +43,12 @@
     {% else %}
       <p>Query successful</p>
     {% endif %}
-    <a class="button" href="../proj.cgi/">Main Menu</a>
+    <div class="horizontal-center">
+      {% for action in (page_actions if page_actions else []) %}
+        <a class="button" href="{{ action['link'] }}">{{ action['title'] }}</a>
+      {% endfor %}
+      <a class="button" href="./">Main Menu</a>
+    </div>
   {% else %}
     <p>Erro: ao obter dados da base de dados!</p>
   {% endif %}
