@@ -45,10 +45,19 @@ def insert_query():
     )
 
 
-@app.route("/ask_simple")
+@app.route("/insert_simple", methods=["GET"])
 def ask_simple():
     try:
-        return render_template("ask_simple.html")
+        return render_template(
+            "ask_input.html",
+            title="Insert Simple Category",
+            fields=(
+                {
+                    "label": "New Simple Category Name:",
+                    "name": "name",
+                },
+            ),
+        )
     except Exception as e:
         return render_template("error_page.html", error=e)
 
@@ -65,10 +74,19 @@ def insert_simple():
     )
 
 
-@app.route("/ask_super")
+@app.route("/insert_super", methods=["GET"])
 def ask_super():
     try:
-        return render_template("ask_super.html")
+        return render_template(
+            "ask_input.html",
+            title="Insert Super Category",
+            fields=(
+                {
+                    "label": "New Super Category Name:",
+                    "name": "name",
+                },
+            ),
+        )
     except Exception as e:
         return render_template("error_page.html", error=e)
 
@@ -109,10 +127,23 @@ def list_sub_categories():
     )
 
 
-@app.route("/ask_retailer")
+@app.route("/insert_retailer", methods=["GET"])
 def ask_retailer():
     try:
-        return render_template("ask_retailer.html")
+        return render_template(
+            "ask_input.html",
+            title="Insert Retailer",
+            fields=(
+                {
+                    "label": "New Retailer TIN:",
+                    "name": "tin",
+                },
+                {
+                    "label": "New Retailer Name:",
+                    "name": "name",
+                },
+            ),
+        )
     except Exception as e:
         return render_template("error_page.html", error=e)
 
@@ -146,8 +177,8 @@ def list_category():
                 },
             ),
             page_actions=(
-                {"title": "Insert Simple Category", "link": "./ask_simple"},
-                {"title": "Insert Super Category", "link": "./ask_super"},
+                {"title": "Insert Simple Category", "link": "./insert_simple"},
+                {"title": "Insert Super Category", "link": "./insert_super"},
             ),
         ),
     )
@@ -170,7 +201,9 @@ def list_simple_category():
                     "name": "Remove",
                 },
             ),
-            page_actions=({"title": "Insert Simple Category", "link": "./ask_simple"},),
+            page_actions=(
+                {"title": "Insert Simple Category", "link": "./insert_simple"},
+            ),
         ),
     )
 
@@ -197,7 +230,9 @@ def list_super_category():
                     "name": "Remove",
                 },
             ),
-            page_actions=({"title": "Insert Super Category", "link": "./ask_super"},),
+            page_actions=(
+                {"title": "Insert Super Category", "link": "./insert_super"},
+            ),
         ),
     )
 
@@ -317,7 +352,7 @@ def list_retailer():
                     "name": "Remove",
                 },
             ),
-            page_actions=({"title": "Insert Retailer", "link": "./ask_retailer"},),
+            page_actions=({"title": "Insert Retailer", "link": "./insert_retailer"},),
         ),
     )
 
