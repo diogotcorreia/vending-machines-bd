@@ -36,8 +36,9 @@ a.button {
   border-radius: 12px;
 }
 
-a.button:hover {
+a.button:hover, a.button:focus {
   background-color: #4caf50; /* Green */
+  outline: none;
 }
 
 .button.danger {
@@ -138,10 +139,21 @@ input {
   padding: 4px;
 }
 
-input[type="text"]:focus {
-  background-color: rgb(1, 35, 7);
+input[type="text"] {
+  background-color: #0d0e0e;
   color: #fff;
-  border: #4caf50;
+  border-radius: 1em 1em 0 0;
+
+  border: 2px solid transparent;
+  border-bottom-color: #4caf50;
+  outline: none;
+  
+  padding: 0.5em 0.8em;
+}
+
+input[type="text"]:focus {
+  border-color: #4caf50;
+  outline: none;
 }
 
 button.button, input[type="submit"] {
@@ -155,17 +167,18 @@ button.button, input[type="submit"] {
   font-size: 16px;
   transition-duration: 0.3s;
   border-radius: 12px;
-  margin-left: 25px;
+  /*margin-left: 25px;*/
   cursor: pointer;
 }
 
-button.button:hover, input[type="submit"]:hover {
+button.button:hover, input[type="submit"]:hover,
+button.button:focus, input[type="submit"]:focus {
   background-color: #4caf50; /* Green */
+  outline: none;
 }
 
 textarea.query {
   width: 100%;
-  border: none;
   border: 2px solid transparent;
   border-bottom-color: #4caf50;
   margin-top: 10px;
@@ -174,7 +187,7 @@ textarea.query {
   background-color: #0d0e0e;
   color: #fff;
   border-radius: 1em 1em 0 0;
-  
+
   font-family: monospace;
   font-size: 1.3em;
   padding: 1em;
@@ -193,5 +206,23 @@ form {
   display: inline-block;
   position: relative;
   margin: 0;
+  width: 100%;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: stretch;
+
+  margin-bottom: 2em;
+}
+
+.form-field label{
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+
+.form-field input {
   width: 100%;
 }

@@ -4,11 +4,11 @@
   <h1>{{ title }}</h1>
   <form action="" method="post">
     {% for field in fields %}
-      <p>
-        {{ field.label }}
+      <div class="form-field">
+        <label>{{ field.label }}</label>
         <input type="{{ field.type if field.type else 'text' }}"
                name="{{ field.name }}"/>
-      </p>
+      </div>
     {% endfor %}
     <p class="horizontal-center">
       <input type="submit" value="Submit" />
