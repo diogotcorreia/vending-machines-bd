@@ -129,6 +129,9 @@
   \begin{enumerate}
     \item \textbf{(RI-1) Uma Categoria não pode estar contida em si própria.}
 
+    Considerámos que a noção de "contida em si própria" se estendia para além de uma
+    relação direta, não podendo, assim, haver quaisquer ciclos na hierarquia da categoria.
+
     \lstinputlisting[language=SQL]{sql/report3/integrity-constraints/ic1.sql}
 
     \item \textbf{(RI-4) O número de unidades repostas num Evento de Reposição
@@ -143,7 +146,7 @@
   \end{enumerate}
 
   De realçar que todas as restrições de integridade descritas acima estão também
-  presentes em \texttt{scripts/ICs.sql}.
+  presentes em \texttt{ICs.sql}.
   
   \section*{SQL}
 
@@ -166,7 +169,7 @@
   \end{enumerate}
 
   De realçar que todas as \textit{queries} descritas acima estão também
-  presentes em \texttt{scripts/queries.sql}.
+  presentes em \texttt{queries.sql}.
 
   \section*{Vistas}
 
@@ -175,6 +178,74 @@
   \section*{Aplicação}
 
   % TODO: same here, não tenho a certeza se precisamos de colocar coisas nesta secção
+
+  Pretendia-se, quanto à aplicação, que esta permitisse ao utilizador realizar um conjunto
+  de ações pré-determinado (garantindo a atomicidade de todas elas):
+
+  \begin{enumerate}
+    \item \textbf{Inserir e remover Categorias e Sub-Categorias.}
+    
+    Para \textbf{inserir} ou \textbf{remover} uma \textbf{Categoria} ou \textbf{Sub-Categoria}
+    da base de dados, o utilizador, partindo do menu principal, deve selecionar
+    uma das opções (\texttt{Category} ou \texttt{Simple Category}), conforme o tipo
+    que pretenda inserir ou remover. De seguida:
+
+    \begin{enumerate}
+      \item Caso pretenda inserir uma nova \textbf{Categoria} ou \textbf{Sub-Categoria},
+      o utilizador deve clicar no botão presente na página respetiva que o permite
+      realizar essa ação: \texttt{Insert Simple Category} ou \texttt{Insert Super Category}.
+      Será levado para uma outra página, onde poderá inserir o \texttt{name} da nova
+      \textbf{Categoria}.
+
+      \item Caso pretenda remover uma \textbf{Categoria} ou \textbf{Sub-Categoria},
+      o processo é ligeiramente diferente. É apresentada uma tabela ao utilizador,
+      onde cada entrada corresponde a uma \textbf{Categoria}. Deve, então, navegar
+      até à entrada correspondente à \textbf{Categoria} que pretende remover e
+      clicar no botão \texttt{Remove} que lhe corresponde. 
+    \end{enumerate}
+    
+    \item \textbf{Inserir e remover um Retalhista, com todos os seus produtos.}
+    
+    \textbf{Inserir} e \textbf{remover} um \textbf{Retalhista} é em tudo semelhante ao processo
+    descrito acima para as \textbf{Categorias}: o utilizador deve navegar,
+    partindo do menu principal, para a secção \texttt{Retailer}, onde lhe é
+    apresentada uma tabela, contendo todos os \textbf{Retalhistas} presentes na
+    base de dados, e um botão para adicionar um novo \textbf{Retalhista}:
+
+    \begin{enumerate}
+      \item Caso pretenda inserir um novo \textbf{Retalhista}, o utilizador
+      deve clicar no botão \texttt{Insert Retailer}, inserindo de seguida os respetivos
+      \texttt{name} e \texttt{tin}.
+
+      \item Caso pretenda remover um \textbf{Retalhista}, o utilizador deve, tal
+      como nas secções referentes às \textbf{Categorias}, escolher a entrada na
+      tabela correspondente ao \textbf{Retalhista} que pretende remover e clicar
+      no botão \texttt{Remove} que lhe corresponde.
+    \end{enumerate}
+    
+    \item \textbf{Listar todos os Eventos de Reposição de uma IVM, apresentando
+    o número de unidades repostas por Categoria de Produto.}
+
+    O utilizador deve, nesta situação, navegar até à secção \texttt{IVM},
+    partindo do menu principal. É-lhe apresentada uma tabela contendo todas as
+    \textbf{IVM} presentes na base de dados, e cada entrada tem um botão
+    associado, \texttt{List Replenishment Events}, que permite ao utilizador
+    visualizar todos os eventos de reposição associados à \textbf{IVM} em questão
+    sob a forma de uma tabela.
+    
+    \item \textbf{Listar todas as Sub-Categorias de uma Super-Categoria, a todos
+    os níveis de profundidade.}
+
+    O utilizador deve, aqui, navegar até à secção \texttt{Super Category},
+    partindo do menu principal. É-lhe apresentada uma tabela contendo todas as
+    \textbf{Super-Categorias} presentes na base de dados, e cada entrada tem um
+    botão associado, \texttt{List Sub-Categories}, que permite ao utilizador
+    visualizar todas as \textbf{Sub-Categorias} associadas à \textbf{Super-Categoria}
+    em questão sob a forma de uma tabela.
+
+  \end{enumerate}
+
+  % TODO: verificar se está tudo atómico e SQL Injection proof
 
   \section*{Consultas OLAP}
 
@@ -192,7 +263,7 @@
   \end{enumerate}
 
   De realçar que todas as \textit{queries} OLAP descritas acima estão também
-  presentes em \\ \texttt{scripts/analytics.sql}.
+  presentes em \texttt{analytics.sql}.
 
   \section*{Índices}
 
