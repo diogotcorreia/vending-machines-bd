@@ -390,13 +390,13 @@ def list_replenishment_event_ivm():
         SELECT ean AS "EAN", name, number, serial_num AS serial_number, manuf as manufacturer, instant, units AS total_units, tin AS "TIN"
         FROM replenishment_event
         NATURAL JOIN has_category
-        WHERE serial_num = 'ivm-1' AND manuf = 'fizz'
+        WHERE serial_num = %s AND manuf = %s
         GROUP BY (ean, name, number, serial_num , manuf, instant)
         UNION 
         SELECT NULL AS ean, name, NULL AS number, NULL AS serial_number, NULL AS manufacturer, NULL AS instant, SUM(units) as total_units , NULL AS "TIN" 
         FROM replenishment_event
         NATURAL JOIN has_category
-        WHERE serial_num = 'ivm-1' AND manuf = 'fizz'
+        WHERE serial_num = %s AND manuf = %s
         GROUP BY (name)
         """,
         lambda cursor: render_template(
@@ -404,7 +404,7 @@ def list_replenishment_event_ivm():
             cursor=cursor,
             title="List Replenishment Events of IVM",
         ),
-        data_from_http_query(("serial_num", "manuf")),
+        data_from_http_query(("serial_num", "manuf", "serial_num", "manuf")),
     )
 
 
