@@ -1,13 +1,13 @@
 {% include 'partial/base.html' %}
-{% block title %}<title>Query</title>{% endblock %}
+{% block title %}<title>{{ title }}</title>{% endblock %}
 {% block content %}
     {% if cursor %}
-        <h1>Query</h1>
+        <h1>{{ title }}</h1>
         <table border="2px">
             <thead>
                 <tr>
                     <tr>
-                        {% for record in cursor.description %}<th>{{ record[0] }}</th>{% endfor %}
+                        {% for record in cursor.description %}<th>{{ record[0]|replace("_"," ") }}</th>{% endfor %}
                     </tr>
                 </tr>
             </thead>

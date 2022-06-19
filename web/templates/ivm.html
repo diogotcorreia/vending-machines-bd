@@ -19,10 +19,11 @@
               <td>{{ record[0] }}</td>
               <td>{{ record[1] }}</td>
               <td class="list">
-                <a class="button, list"
-                   href="./ivm_values?serial_num={{ record[0] }}&manuf={{ record[1] }}">
-                  List Replenishment Events
-                </a>
+                <form action="list_replenishment_event_ivm" method="post">
+                  <input type="hidden" name="serial_num" value={{ record[0] }} />
+                  <input type="hidden" name="manuf" value={{ record[1] }} />
+                  <input type="submit" class="list" value="List Replenishment Events" />
+                </form>
               </td>
             </tr>
           {% endfor %}
