@@ -8,7 +8,7 @@ CREATE INDEX idx_responsible_for_cat_tin ON responsible_for USING HASH(tin);
 DROP INDEX IF EXISTS idx_retailer_tin;
 CREATE INDEX idx_retailer_tin ON retailer USING HASH(tin);
 ----------------------
-EXPLAIN ANALYSE
+EXPLAIN ANALYZE
 SELECT DISTINCT R.name
 FROM retailer R,
     responsible_for P
@@ -26,7 +26,7 @@ CREATE INDEX idx_product_category ON product USING HASH(category);
 DROP INDEX IF EXISTS idx_has_category_name;
 CREATE INDEX idx_has_category_name ON has_category USING HASH(name);
 ----------------------
-EXPLAIN ANALYSE
+EXPLAIN ANALYZE
 SELECT T.name,
     count(T.ean)
 FROM product P,
