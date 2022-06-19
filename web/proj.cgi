@@ -387,9 +387,17 @@ def list_replenishment_event():
 def list_replenishment_event_ivm():
     return exec_query(
         """
-        SELECT ean AS "EAN", number, serial_num AS serial_number, manuf as manufacturer, instant, units, tin AS "TIN"
+        SELECT ean AS "EAN", name, number, serial_num AS serial_number, manuf as manufacturer, instant, units AS total_units, tin AS "TIN"
         FROM replenishment_event
-        WHERE serial_num = %s AND manuf = %s;
+        NATURAL JOIN has_category
+        WHERE serial_num = 'ivm-1' AND manuf = 'fizz'
+        GROUP BY (ean, name, number, serial_num , manuf, instant)
+        UNION 
+        SELECT NULL AS ean, name, NULL AS number, NULL AS serial_number, NULL AS manufacturer, NULL AS instant, SUM(units) as total_units , NULL AS "TIN" 
+        FROM replenishment_event
+        NATURAL JOIN has_category
+        WHERE serial_num = 'ivm-1' AND manuf = 'fizz'
+        GROUP BY (name)
         """,
         lambda cursor: render_template(
             "query.html",
