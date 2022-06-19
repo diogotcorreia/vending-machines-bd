@@ -1,13 +1,9 @@
-------------------------------------
--- 1 Categorias distintas ou podem repetir?
------------------
 --1
-SELECT name,
-    COUNT(*)
+SELECT name
 FROM responsible_for
     NATURAL JOIN retailer
 GROUP BY name
-HAVING COUNT(*) >= ALL (
+HAVING COUNT(DISTINCT cat_name) >= ALL (
     SELECT COUNT(DISTINCT cat_name)
     FROM responsible_for
     GROUP BY tin
