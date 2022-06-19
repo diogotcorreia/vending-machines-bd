@@ -145,7 +145,7 @@ CREATE TABLE responsible_for(
     tin VARCHAR(255),
     serial_num VARCHAR(255),
     manuf VARCHAR(255),
-    CONSTRAINT pk_responsible_for PRIMARY KEY (cat_name, tin, serial_num, manuf),
+    CONSTRAINT pk_responsible_for PRIMARY KEY (serial_num, manuf),
     CONSTRAINT fk_responsible_for_ivm FOREIGN KEY(serial_num, manuf)
         REFERENCES ivm(serial_num, manuf)
         ON DELETE CASCADE

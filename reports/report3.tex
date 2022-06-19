@@ -124,6 +124,13 @@
     \end{itemize}
   \end{titlepage}
 
+  Note-se que, ao ler o enunciado, entendemos que as secções \textbf{SQL},
+  \textbf{Restrições de Integridade}, \textbf{Vistas}, \textbf{Consultas OLAP}
+  e \textbf{Base de Dados - Carregamento} fazem parte da estrutura do arquivo
+  submetido para avaliação, e não do relatório. Assim sendo, não serão aqui
+  incluídas, encontrando-se nos respetivos ficheiros (nomeados conforme especificado
+  pelo enunciado).
+
   \section*{Base de Dados}
 
   \subsection*{Esquema}
@@ -132,81 +139,40 @@
 
   \lstinputlisting[language=SQL]{sql/report3/schema/entities.sql}
   
-  \subsection*{Carregamento}
-
-  % \lstinputlisting[language=SQL]{sql/report3/populate/populate.sql}
-
-  \section*{Restrições de Integridade}
-
-  \begin{enumerate}
-    \item \textbf{(RI-1) Uma Categoria não pode estar contida em si própria.}
-
-    Considerámos que a noção de "contida em si própria" se estendia para além de uma
-    relação direta, não podendo, assim, haver quaisquer ciclos na hierarquia da categoria.
-
-    \lstinputlisting[language=SQL]{sql/report3/integrity-constraints/ic1.sql}
-
-    \item \textbf{(RI-4) O número de unidades repostas num Evento de Reposição
-    não pode exceder o número de unidades especificado no Planograma.}
-
-    \lstinputlisting[language=SQL]{sql/report3/integrity-constraints/ic2.sql}
-
-    \item \textbf{(RI-5) Um Produto só pode ser reposto numa Prateleira que apresente
-    (pelo menos) uma das Categorias desse produto.}
-
-    \lstinputlisting[language=SQL]{sql/report3/integrity-constraints/ic3.sql}
-  \end{enumerate}
-
-  De realçar que todas as restrições de integridade descritas acima estão também
-  presentes em \texttt{ICs.sql}.
-  
-  \section*{SQL}
-
-  \begin{enumerate}
-    \item \textbf{Qual o nome do retalhista (ou retalhistas) responsáveis pela reposição do maior número de categorias?}
-
-    \lstinputlisting[language=SQL]{sql/report3/queries/query1.sql}
-
-    \item \textbf{Qual o nome do ou dos retalhistas que são responsáveis por todas as categorias simples?}
-
-    \lstinputlisting[language=SQL]{sql/report3/queries/query2.sql}
-
-    \item \textbf{Quais os produtos (ean) que nunca foram repostos?}
-
-    \lstinputlisting[language=SQL]{sql/report3/queries/query3.sql}
-
-    \item \textbf{Quais os produtos (ean) que foram repostos sempre pelo mesmo retalhista?}
-
-    \lstinputlisting[language=SQL]{sql/report3/queries/query4.sql}
-  \end{enumerate}
-
-  De realçar que todas as \textit{queries} descritas acima estão também
-  presentes em \texttt{queries.sql}.
-
-  \section*{Vistas}
-
-  % TODO: not sure se é preciso colocar no relatório, either way fica aqui o placeholder
-
-  Pretendia-se que criássemos a vista \texttt{Vendas} (que tomámos a liberdade de renomear
-  para \texttt{Sales}), procurando representar todas as saídas de stock de um produto
-  (na ausência de desperdícios e roubos). Tendo em conta o enunciado, optámos por criar
-  a vista da seguinte forma:
-
-  \lstinputlisting[language=SQL]{sql/report3/views/view.sql}
-
-  Recorremos à função \texttt{EXTRACT}, do \texttt{POSTGRES}, para extrair os campos \texttt{year, 
-  quarter, day\_month} e \texttt{day\_week} a partir do campo \texttt{instant} dos
-  \texttt{Replenishment Events}, tal como sugerido no enunciado.
-
-  Para consultar a vista na aplicação, o utilizador pode, partindo do menu principal,
-  clicar no botão \texttt{Past Sales}, que o redireciona para uma página com uma
-  listagem de todas as \texttt{Sales} que ocorreram até então.
-
-  De realçar que a \textit{view} descrita acima está também presente em \texttt{views.sql}.
-
   \section*{Aplicação}
 
-  % TODO: same here, não tenho a certeza se precisamos de colocar coisas nesta secção
+  A aplicação \textit{web} desenvolvida no contexto do projeto pode ser encontrada
+  em \url{https://ivm.diogotc.com}, apresentando uma arquitetura bastante sucinta.
+  Abordando inicialmente pormenores mais \textit{low-level}, temos que todos os arquivos
+  \texttt{Python} e \texttt{HTML} que compõem a aplicação estão na pasta \texttt{web}.
+  O \textit{hub} principal da aplicação é o ficheiro \texttt{web/proj.cgi}, a partir do qual
+  é feito o \textit{routing} entre as diversas páginas da aplicação.
+
+  Optámos por uma abordagem \textbf{"em \textit{runtime}"}, ao invés de ter várias \textit{templates}
+  pré-feitas: visto que a vasta maioria das páginas que se pretende que a aplicação
+  apresente correspondem a \textit{queries}, tomou-se a liberdade de criar uma
+  \textbf{\textit{template} base} para qualquer \textit{query}, \texttt{web/templates/query.html}.
+  
+  A \textit{template} tem vários componentes que são dinamicamente substituídos
+  pelos dados referentes ao pedido feito pelo utilizador. O \textbf{menu principal},
+  igualmente simples, encontra-se em \texttt{web/templates/index.html}. Possui um
+  leque de botões correspondentes às consultas mais básicas da aplicação que um
+  utilizador poderá tentar realizar: \texttt{SELECT * FROM x}, onde \texttt{x} corresponde a qualquer
+  uma das relações mencionadas no esquema relacional.
+  
+  Encontra-se ainda, no fim da página, um campo onde o utilizador pode \textbf{introduzir a sua própria \textit{query}}.
+  Mais ainda, nas páginas referentes às consultas principais da aplicação,
+  o utilizador pode optar por adicionar elementos à base de dados: tem total
+  liberdade, por exemplo, para adicionar um \textbf{Retalhista} à base de dados,
+  havendo para tal um campo de \textit{input} que lhe permite adicionar todos os
+  campos referentes à relação em questão.
+
+  Note-se que toda esta simplicidade é atingida através da função \texttt{exec\_query},
+  presente em \texttt{web/proj.cgi}: um \textit{wrapper} que recebe uma qualquer
+  \textit{query} e a executa, retornando a página que a aplicação deve apresentar
+  ao utilizador.
+
+  \vspace*{0.5cm}
 
   Pretendia-se, quanto à aplicação, que esta permitisse ao utilizador realizar um conjunto
   de ações pré-determinado (garantindo a atomicidade de todas elas):
@@ -275,28 +241,6 @@
   \end{enumerate}
 
   % TODO: verificar se está tudo atómico e SQL Injection proof
-
-  \section*{Consultas OLAP}
-
-  Pretendia-se que escrevêssemos duas consultas SQL que permitissem analisar o número
-  total de artigos vendidos:
-
-  \begin{enumerate}
-    \item \textbf{Num dado período (i.e. entre duas datas), por dia da semana, por concelho e no total.}
-    
-    \lstinputlisting[language=SQL]{sql/report3/olap-queries/olap1.sql}
-
-    \item \textbf{Num dado distrito (i.e. “Lisboa”), por concelho, categoria, dia da semana e no total.}
-  
-    \lstinputlisting[language=SQL]{sql/report3/olap-queries/olap2.sql}
-  \end{enumerate}
-
-  Em ambas as \textit{queries} optámos por utilizar \texttt{GROUPING SETS}, tal como
-  recomendado no enunciado (e de forma semelhante ao abordado no contexto das aulas
-  teóricas).
-
-  De realçar que todas as \textit{queries} OLAP descritas acima estão também
-  presentes em \texttt{analytics.sql}.
 
   \section*{Índices}
 
