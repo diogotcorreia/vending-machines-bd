@@ -7,13 +7,28 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   min-height: 90vh;
 }
 
 .page-center {
+  flex-grow: 1;
+
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+}
+
+footer {
+  margin-top: 2em;
+  font-size: 0.9rem;
+  opacity: 0.6;
+  transition: opacity 1s cubic-bezier(.075,.82,.165,1);
+}
+
+footer:hover {
+  opacity: 1;
 }
 
 .horizontal-center {
