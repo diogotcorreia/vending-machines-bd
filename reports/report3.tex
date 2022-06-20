@@ -128,17 +128,44 @@
   \textbf{Restrições de Integridade}, \textbf{Vistas}, \textbf{Consultas OLAP}
   e \textbf{Base de Dados - Carregamento} fazem parte da estrutura do arquivo
   submetido para avaliação, e não do relatório. Assim sendo, não serão aqui
-  incluídas, encontrando-se nos respetivos ficheiros (nomeados conforme especificado
-  pelo enunciado).
+  incluídos os trechos de código relativos a essas secções, encontrando-se nos
+  respetivos ficheiros (nomeados conforme especificado pelo enunciado). Essas
+  secções poderão, contudo, ser incluídas no presente relatório como esclarecimento
+  de opções que foram tomadas ao elaborar o projeto.
 
   \section*{Base de Dados}
 
   \subsection*{Esquema}
 
+  A referência à proibição de mecanismos tais como \texttt{ON DELETE CASCADE} e/ou
+  \texttt{ON UPDATE CASCADE} foi incluída no enunciado apenas na segunda secção,
+  \textbf{Restrições de Integridade}, pelo que foi interpretado que se poderia
+  utilizá-los livremente nas outras secções. Em particular, foram utilizados no
+  \textbf{esquema} abaixo.
+
   % TODO: integrity constraints aren't done yet
 
   \lstinputlisting[language=SQL]{sql/report3/schema/entities.sql}
-  
+
+  \section*{Restrições de Integridade}
+
+  O trecho de código correspondente a esta secção encontra-se, no arquivo submetido,
+  em \texttt{ICs.sql}. Pretende-se realçar que, ao ler o enunciado, a interpretação
+  entendida por \textit{"uma categoria não pode estar contida em si própria"}, para
+  a primeira restrição de integridade, foi que \textbf{não podem haver ciclos na
+  hierarquia da categoria}, e o respetivo \textit{trigger} foi criado de acordo
+  com essa interpretação.
+
+  \section*{Vistas}
+
+  O trecho de código correspondente a esta secção encontra-se, no arquivo submetido,
+  em \texttt{view.sql}. O enunciado não foi excelente quanto a esta secção (por vários motivos).
+  É referido que todos os eventos de reposição correspondem a saídas de \textit{stock} de uma
+  quantidade de produto da \textbf{IVM}, e que os \textit{instantes} da venda
+  deviam ser obtidos a partir da relação \textbf{Evento de Reposição}. Assim sendo,
+  foi assumido, apesar de não parecer fazer muito sentido, que os eventos de reposição
+  se davam no mesmo instante da venda.
+
   \section*{Aplicação}
 
   A aplicação \textit{web} desenvolvida no contexto do projeto pode ser encontrada
@@ -242,6 +269,17 @@
 
   % TODO: verificar se está tudo atómico e SQL Injection proof
 
+  \section*{Consultas OLAP}
+
+  O trecho de código correspondente a esta secção encontra-se, no arquivo submetido,
+  em \texttt{analytics.sql}. Ao ler o enunciado, foi entendido por \textit{"escreva
+  duas consultas SQL que (...)"} que as consultas OLAP em questão não precisariam
+  de ter \textit{botões} ou mecanismos semelhantes presentes na aplicação por
+  definição - precisariam apenas de estar \textit{escritas} em \texttt{analytics.sql} -
+  pelo que tais mecanismos não foram incluídos. Note-se, contudo, que para efeitos de teste
+  o utilizador pode utilizar o campo de \textit{input} no fim do menu principal
+  para testar ambas as consultas.
+
   \section*{Índices}
 
   Foi pedido, ainda, que se indicasse (justificando) os índices que faria sentido
@@ -258,5 +296,11 @@
   \end{enumerate}
   
   Para a primeira, optámos pela seguinte indexação:
+
+  % indicar razões
+
+  Para a segunda, optámos pela seguinte indexação:
+
+  % indicar razões
 
 \end{document}
