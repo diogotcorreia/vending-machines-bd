@@ -408,7 +408,7 @@ def list_replenishment_event_ivm():
 def list_sales():
     return exec_query(
         """
-        SELECT ean AS "EAN", name, year, quarter, day_month, day_week, district, county, units
+        SELECT ean AS "EAN", category_name, year, quarter, day_month, day_week, district, county, units
         FROM sales;
         """,
         lambda cursor: render_template(
