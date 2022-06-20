@@ -103,7 +103,13 @@ VALUES ('ivm-1', 'fizz', 'Frigu'),
 -- Shelf
 ----------------------
 INSERT INTO shelf
-VALUES ('1', 'ivm-1', 'fizz', '2', 'Bolachas de Chocolate'),
+VALUES (
+        '1',
+        'ivm-1',
+        'fizz',
+        '2',
+        'Bolachas de Chocolate'
+    ),
     ('3', 'ivm-1', 'fizz', '2', 'Fruta'),
     ('2', 'ivm-2', 'buzz', '3', 'Fruta'),
     ('3', 'ivm-2', 'fizz', '3', 'Bolachas');
@@ -221,4 +227,13 @@ VALUES (
         '2022-06-09 15:54:21',
         '8',
         '2'
+    ),
+    (
+        '1111111111111',
+        '1',
+        'ivm-1',
+        'fizz',
+        '2022-06-16 18:37:21',
+        '35',
+        '3'
     );
