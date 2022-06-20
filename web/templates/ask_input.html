@@ -6,8 +6,18 @@
     {% for field in fields %}
       <div class="form-field">
         <label>{{ field.label }}</label>
-        <input type="{{ field.type if field.type else 'text' }}"
-               name="{{ field.name }}"/>
+        {% if field.type == 'select' %}
+          <select name="{{ field.name }}">
+            {% if field.required is false %}<option />{% endif %}
+            {% for value in field.options|default([]) %}
+              <option value="{{ value[0] }}">
+                {{ value[1] }}
+              </option>
+            {% endfor %}
+          </select>
+        {% else %}
+          <input type="{{ field.type|default('text') }}" name="{{ field.name }}"/>
+        {% endif %}
       </div>
     {% endfor %}
     <p class="horizontal-center">

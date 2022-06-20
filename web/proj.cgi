@@ -2,7 +2,7 @@
 
 from wsgiref.handlers import CGIHandler
 from flask import Flask
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, url_for
 from urllib.parse import urlencode
 
 ## Libs postgres
@@ -45,41 +45,59 @@ def insert_query():
     )
 
 
-@app.route("/insert_simple", methods=["GET"])
-def ask_simple():
-    try:
-        return render_template(
-            "ask_input.html",
-            title="Insert Simple Category",
-            fields=(
-                {
-                    "label": "New Simple Category Name:",
-                    "name": "name",
-                },
-            ),
-        )
-    except Exception as e:
-        return render_template("error_page.html", error=e)
-
-
-@app.route("/insert_simple", methods=["POST"])
-def insert_simple():
+@app.route("/insert_category", methods=["GET"])
+def ask_category():
     return exec_query(
         """
-        INSERT INTO category (name) VALUES (%s);
-        INSERT INTO simple_category (name) VALUES (%s);
+        SELECT name FROM category
+        ORDER BY name;
         """,
-        lambda cursor: redirect("./simple_category"),
-        data_from_request(("name", "name")),
+        lambda cursor: render_template(
+            "ask_input.html",
+            title="Insert Category",
+            fields=(
+                {
+                    "label": "New Category Name:",
+                    "name": "name",
+                },
+                {
+                    "label": "Parent Category:",
+                    "name": "parent_category",
+                    "type": "select",
+                    "required": False,
+                    "options": ((record[0], record[0]) for record in cursor),
+                },
+            ),
+        ),
     )
 
 
-@app.route("/insert_super", methods=["GET"])
-def ask_super():
+@app.route("/insert_category", methods=["POST"])
+def insert_category():
+    query = """
+        INSERT INTO category (name) VALUES (%s);
+        INSERT INTO simple_category (name) VALUES (%s);
+        """
+    fields = ("name", "name")
+    if request.form["parent_category"]:
+        query += """
+        INSERT INTO has_other (super_category, category) VALUES (%s, %s);
+        """
+        fields += ("parent_category", "name")
+    return exec_query(
+        query,
+        lambda cursor: redirect(url_for("list_category")),
+        data_from_request(fields),
+    )
+
+
+@app.route("/change_parent_category", methods=["GET"])
+def ask_change_parent_category():
+    # TODO
     try:
         return render_template(
             "ask_input.html",
-            title="Insert Super Category",
+            title="Change Parent of Category",
             fields=(
                 {
                     "label": "New Super Category Name:",
@@ -91,8 +109,9 @@ def ask_super():
         return render_template("error_page.html", error=e)
 
 
-@app.route("/insert_super", methods=["POST"])
-def insert_super():
+@app.route("/change_parent_category", methods=["POST"])
+def change_parent_category():
+    # TODO
     return exec_query(
         """
         INSERT INTO category (name) VALUES (%s);
@@ -163,7 +182,10 @@ def insert_retailer():
 def list_category():
     return exec_query(
         """
-        SELECT name FROM category;
+        SELECT name, super_category AS parent_category
+        FROM category
+            LEFT OUTER JOIN has_other ON has_other.category = category.name
+        ORDER BY name;
         """,
         lambda cursor: render_template(
             "query.html",
@@ -171,15 +193,17 @@ def list_category():
             title="Category",
             row_actions=(
                 {
+                    "className": "list",
+                    "link": lambda record: f"./change_parent_category?{urlencode({'category': record[0]})}",
+                    "name": "Set Parent Category",
+                },
+                {
                     "className": "remove",
                     "link": lambda record: f"./delete_category?{urlencode({'category': record[0]})}",
                     "name": "Remove",
                 },
             ),
-            page_actions=(
-                {"title": "Insert Simple Category", "link": "./insert_simple"},
-                {"title": "Insert Super Category", "link": "./insert_super"},
-            ),
+            page_actions=({"title": "Insert Category", "link": "./insert_category"},),
         ),
     )
 

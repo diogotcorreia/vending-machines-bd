@@ -24,7 +24,7 @@ footer {
   margin-top: 2em;
   font-size: 0.9rem;
   opacity: 0.6;
-  transition: opacity 1s cubic-bezier(.075,.82,.165,1);
+  transition: opacity 1s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 footer:hover {
@@ -51,7 +51,8 @@ a.button {
   border-radius: 12px;
 }
 
-a.button:hover, a.button:focus {
+a.button:hover,
+a.button:focus {
   background-color: #4caf50; /* Green */
   outline: none;
 }
@@ -154,7 +155,8 @@ input {
   padding: 4px;
 }
 
-input[type="text"] {
+input[type="text"],
+select {
   background-color: #0d0e0e;
   color: #fff;
   border-radius: 1em 1em 0 0;
@@ -162,16 +164,18 @@ input[type="text"] {
   border: 2px solid transparent;
   border-bottom-color: #4caf50;
   outline: none;
-  
+
   padding: 0.5em 0.8em;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+select:focus {
   border-color: #4caf50;
   outline: none;
 }
 
-button.button, input[type="submit"] {
+button.button,
+input[type="submit"] {
   background-color: black;
   border: 2px solid #4caf50;
   color: white;
@@ -187,8 +191,10 @@ button.button, input[type="submit"] {
   cursor: pointer;
 }
 
-button.button:hover, input[type="submit"]:hover,
-button.button:focus, input[type="submit"]:focus {
+button.button:hover,
+input[type="submit"]:hover,
+button.button:focus,
+input[type="submit"]:focus {
   background-color: #4caf50; /* Green */
   outline: none;
 }
@@ -230,11 +236,13 @@ form {
   margin-bottom: 2em;
 }
 
-.form-field label{
+.form-field label {
   font-weight: bold;
   margin-bottom: 0.5em;
 }
 
-.form-field input {
+.form-field input,
+.form-field select {
   width: 100%;
+  box-sizing: border-box;
 }
