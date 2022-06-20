@@ -30,7 +30,7 @@
         <tbody>
           {% for record in cursor %}
             <tr>
-              {% for value in record %}<td>{{  value|e if value is not none  }}</td>{% endfor %}
+              {% for value in record %}<td>{{  value|default('',True)|e  }}</td>{% endfor %}
               {% for action in (row_actions if row_actions else []) %}
                 <td class="{{ action['className'] }}">
                   <a class="{{ action['className'] }}" href="{{ action['link'](record) }}">{{ action['name'] }}</a>
