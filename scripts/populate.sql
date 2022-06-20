@@ -5,57 +5,57 @@ INSERT INTO category
 VALUES ('Bolachas'),
     ('Bolachas de Chocolate'),
     ('Fruta'),
-    ('Armas'),
-    ('Semi-Auto'),
-    ('Snipers'),
-    ('Rockets'),
-    ('SMG'),
-    ('AR'),
-    ('Lasers'),
-    ('Pistols'),
-    ('Shotguns'),
-    ('Full-Auto');
+    ('Bebidas'),
+    ('Sumos Naturais'),
+    ('Sumo de Laranja Natural'),
+    ('Vinho'),
+    ('Cerveja Artesanal'),
+    ('Sagres'),
+    ('Água'),
+    ('Sumo de Manga'),
+    ('Sumo que existe'),
+    ('Cerveja');
 ---------------------
 -- Super Category
 ---------------------
 INSERT INTO super_category
 VALUES ('Bolachas'),
-    ('Armas'),
-    ('Semi-Auto'),
-    ('Full-Auto');
+    ('Bebidas'),
+    ('Sumos Naturais'),
+    ('Cerveja');
 ---------------------
 -- Simple Category
 ---------------------
 INSERT INTO simple_category
 VALUES ('Bolachas de Chocolate'),
-    ('Snipers'),
+    ('Sumo de Laranja Natural'),
     ('Fruta'),
-    ('Rockets'),
-    ('SMG'),
-    ('AR'),
-    ('Lasers'),
-    ('Pistols'),
-    ('Shotguns');
+    ('Vinho'),
+    ('Cerveja Artesanal'),
+    ('Sagres'),
+    ('Água'),
+    ('Sumo de Manga'),
+    ('Sumo que existe');
 ---------------------
 -- Has Other
 ---------------------
 INSERT INTO has_other
 VALUES ('Bolachas', 'Bolachas de Chocolate'),
-    ('Armas', 'Semi-Auto'),
-    ('Armas', 'Full-Auto'),
-    ('Armas', 'Lasers'),
-    ('Armas', 'Rockets'),
-    ('Full-Auto', 'SMG'),
-    ('Full-Auto', 'AR'),
-    ('Semi-Auto', 'Snipers'),
-    ('Semi-Auto', 'Pistols'),
-    ('Semi-Auto', 'Shotguns');
+    ('Bebidas', 'Sumos Naturais'),
+    ('Bebidas', 'Cerveja'),
+    ('Bebidas', 'Água'),
+    ('Bebidas', 'Vinho'),
+    ('Cerveja', 'Cerveja Artesanal'),
+    ('Cerveja', 'Sagres'),
+    ('Sumos Naturais', 'Sumo de Laranja Natural'),
+    ('Sumos Naturais', 'Sumo de Manga'),
+    ('Sumos Naturais', 'Sumo que existe');
 ---------------------
 -- Product
 ---------------------
 INSERT INTO product
 VALUES ('1111111111111', 'Bolachas de Chocolate', 'Oreo'),
-    ('1111111111112', 'Snipers', 'AWP'),
+    ('1111111111112', 'Sumo de Laranja Natural', 'Capri-Sun'),
     ('1111111111113', 'Fruta', 'Maçã'),
     ('1111111111114', 'Bolachas', 'Bolacha Maria');
 ---------------------
@@ -63,7 +63,7 @@ VALUES ('1111111111111', 'Bolachas de Chocolate', 'Oreo'),
 ---------------------
 INSERT INTO has_category
 VALUES ('1111111111111', 'Bolachas de Chocolate'),
-    ('1111111111112', 'Snipers'),
+    ('1111111111112', 'Sumo de Laranja Natural'),
     ('1111111111113', 'Fruta'),
     ('1111111111114', 'Bolachas');
 ---------------------
@@ -75,11 +75,13 @@ VALUES ('ivm-1', 'fizz'),
     ('ivm-3', 'fizz'),
     ('ivm-4', 'fizz'),
     ('ivm-5', 'fizz'),
+    ('ivm-6', 'fizz'),
     ('ivm-1', 'buzz'),
     ('ivm-2', 'buzz'),
     ('ivm-3', 'buzz'),
     ('ivm-4', 'buzz'),
-    ('ivm-5', 'buzz');
+    ('ivm-5', 'buzz'),
+    ('ivm-6', 'buzz');
 ----------------------
 -- Retail Point
 ----------------------
@@ -162,12 +164,14 @@ INSERT INTO responsible_for
 VALUES ('Bolachas', '3', 'ivm-1', 'fizz'),
     ('Bolachas de Chocolate', '3', 'ivm-1', 'buzz'),
     ('Fruta', '3', 'ivm-2', 'fizz'),
-    ('Semi-Auto', '3', 'ivm-3', 'fizz'),
-    ('Snipers', '3', 'ivm-2', 'buzz'),
+    ('Sumos Naturais', '3', 'ivm-3', 'fizz'),
+    ('Sumos Naturais', '3', 'ivm-6', 'fizz'),
+    ('Sumo de Laranja Natural', '3', 'ivm-2', 'buzz'),
     ('Bolachas', '5', 'ivm-3', 'buzz'),
     ('Bolachas de Chocolate', '5', 'ivm-4', 'fizz'),
     ('Fruta', '5', 'ivm-4', 'buzz'),
-    ('Snipers', '5', 'ivm-5', 'fizz'),
+    ('Sumo de Laranja Natural', '5', 'ivm-5', 'fizz'),
+    ('Sumo de Laranja Natural', '5', 'ivm-6', 'buzz'),
     ('Fruta', '1', 'ivm-5', 'buzz');
 ----------------------
 -- Replenishment Event
@@ -180,6 +184,15 @@ VALUES (
         'fizz',
         '2022-06-09 18:34:21',
         '6',
+        '3'
+    ),
+    (
+        '1111111111111',
+        '1',
+        'ivm-1',
+        'fizz',
+        '2022-06-17 22:19:16',
+        '4',
         '3'
     ),
     (
@@ -198,7 +211,7 @@ VALUES (
         'buzz',
         '2022-11-09 14:54:21',
         '7',
-        '3'
+        '1'
     ),
     (
         '1111111111114',
