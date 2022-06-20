@@ -93,32 +93,63 @@ def insert_category():
 
 @app.route("/change_parent_category", methods=["GET"])
 def ask_change_parent_category():
-    # TODO
-    try:
-        return render_template(
+    def first_or_none(result):
+        return result[0] if result else None
+
+    return exec_queries(
+        (
+            """
+        SELECT name FROM category
+        WHERE name != %s
+        ORDER BY name;
+        """,
+            """
+        SELECT super_category FROM has_other
+        WHERE category = %s;
+        """,
+        ),
+        lambda cursors: render_template(
             "ask_input.html",
             title="Change Parent of Category",
             fields=(
                 {
-                    "label": "New Super Category Name:",
+                    "label": "",
                     "name": "name",
+                    "type": "hidden",
+                    "value": request.args["category"],
+                },
+                {
+                    "label": "Parent Category:",
+                    "name": "parent_category",
+                    "type": "select",
+                    "required": False,
+                    "options": ((record[0], record[0]) for record in cursors[0]),
+                    "selected": first_or_none(cursors[1].fetchone()),
                 },
             ),
-        )
-    except Exception as e:
-        return render_template("error_page.html", error=e)
+        ),
+        (
+            data_from_http_query(("category",)),
+            data_from_http_query(("category",)),
+        ),
+    )
 
 
 @app.route("/change_parent_category", methods=["POST"])
 def change_parent_category():
-    # TODO
-    return exec_query(
+    query = """
+        DELETE FROM has_other WHERE category = %s;
         """
-        INSERT INTO category (name) VALUES (%s);
-        INSERT INTO super_category (name) VALUES (%s);
-        """,
-        lambda cursor: redirect("./super_category"),
-        data_from_request(("name", "name")),
+    fields = ("name",)
+    if request.form["parent_category"]:
+        query += """
+        INSERT INTO has_other (super_category, category) VALUES (%s, %s);
+        """
+        fields += ("parent_category", "name")
+    return exec_query(
+        query,
+        lambda cursor: redirect(url_for("list_category")),
+        data_from_request(fields),
     )
 
 
@@ -500,18 +531,26 @@ def delete_retailer():
 
 
 def exec_query(query, outcome, data=None):
+    return exec_queries((query,), lambda cursors: outcome(cursors[0]), (data,))
+
+
+def exec_queries(queries, outcome, data):
     dbConn = None
     cursor = None
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cursor.execute(query, data)
-        return outcome(cursor)
+        cursors = []
+        for query, query_data in zip(queries, data):
+            cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cursor.execute(query, query_data)
+            cursors.append(cursor)
+        return outcome(cursors)
     except Exception as e:
         return render_template("error_page.html", error=e)
     finally:
         dbConn.commit()
-        cursor.close()
+        for cursor in cursors:
+            cursor.close()
         dbConn.close()
 
 

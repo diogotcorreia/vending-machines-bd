@@ -10,13 +10,16 @@
           <select name="{{ field.name }}">
             {% if field.required is false %}<option />{% endif %}
             {% for value in field.options|default([]) %}
-              <option value="{{ value[0] }}">
+              <option value="{{ value[0] }}"
+                      {% if field.selected == value[0] %}selected{% endif %}>
                 {{ value[1] }}
               </option>
             {% endfor %}
           </select>
         {% else %}
-          <input type="{{ field.type|default('text') }}" name="{{ field.name }}"/>
+          <input type="{{ field.type|default('text') }}"
+                 name="{{ field.name }}"
+                 value="{{ field.value }}"/>
         {% endif %}
       </div>
     {% endfor %}
