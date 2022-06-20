@@ -73,7 +73,7 @@ BEGIN
           serial_num = NEW.serial_num AND
           manuf = NEW.manuf;
   
-  IF NOT EXISTS(
+  IF NOT EXISTS (
     SELECT * from has_category
     WHERE name = shelf_category_name AND ean = NEW.ean
   )
@@ -87,3 +87,27 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER product_placed_incorrect_shelf_trigger BEFORE INSERT ON replenishment_event
 FOR EACH ROW EXECUTE PROCEDURE product_placed_incorrect_shelf();
+
+---------------------
+--      UTILS      --
+---------------------
+
+-- Automatically change type of product from simple to super when a child category is added
+DROP TRIGGER IF EXISTS change_category_type_to_super_trigger ON has_other;
+
+CREATE OR REPLACE FUNCTION change_category_type_to_super() RETURNS TRIGGER AS $$
+DECLARE shelf_category_name VARCHAR(255);
+DECLARE possible_category_names VARCHAR(255) ARRAY;
+BEGIN
+  DELETE FROM simple_category WHERE name = NEW.super_category;
+
+  INSERT INTO super_category (name)
+  VALUES (NEW.super_category)
+  ON CONFLICT DO NOTHING;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER change_category_type_to_super_trigger BEFORE INSERT ON has_other
+FOR EACH ROW EXECUTE PROCEDURE change_category_type_to_super();
