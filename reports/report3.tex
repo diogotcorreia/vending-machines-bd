@@ -137,12 +137,6 @@
 
   \subsection*{Esquema}
 
-  A referência à proibição de mecanismos tais como \texttt{ON DELETE CASCADE} e/ou
-  \texttt{ON UPDATE CASCADE} foi incluída no enunciado apenas na segunda secção,
-  \textbf{Restrições de Integridade}, pelo que foi interpretado que se poderia
-  utilizá-los livremente nas outras secções. Em particular, foram utilizados no
-  \textbf{esquema} abaixo.
-
   % TODO: integrity constraints aren't done yet
 
   \lstinputlisting[language=SQL]{sql/report3/schema/entities.sql}
@@ -185,7 +179,10 @@
   igualmente simples, encontra-se em \texttt{web/templates/index.html}. Possui um
   leque de botões correspondentes às consultas mais básicas da aplicação que um
   utilizador poderá tentar realizar: \texttt{SELECT * FROM x}, onde \texttt{x} corresponde a qualquer
-  uma das relações mencionadas no esquema relacional.
+  uma das relações mencionadas no esquema relacional. Existe, contudo, uma \textbf{exceção}:
+  esta abordagem mais simples para a secção das categorias não permitia que
+  super/sub categorias pudessem ser corretamente criadas, pelo que para essas secções
+  optou-se por uma implementação \textit{à mão}, pré-definida.
   
   Encontra-se ainda, no fim da página, um campo onde o utilizador pode \textbf{introduzir a sua própria \textit{query}}.
   Mais ainda, nas páginas referentes às consultas principais da aplicação,
