@@ -463,10 +463,11 @@ def confirm_delete_retailer():
 def delete_retailer():
     return exec_query(
         """
+        DELETE FROM responsible_for WHERE tin = %s;
         DELETE FROM retailer WHERE tin = %s;
         """,
         lambda cursor: redirect("./retailer"),
-        data_from_request(("tin",)),
+        data_from_request(("tin", "tin")),
     )
 
 
