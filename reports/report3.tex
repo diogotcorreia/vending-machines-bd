@@ -148,7 +148,8 @@
   entendida por \textit{"uma categoria não pode estar contida em si própria"}, para
   a primeira restrição de integridade, foi que \textbf{não podem haver ciclos na
   hierarquia da categoria}, e o respetivo \textit{trigger} foi criado de acordo
-  com essa interpretação.
+  com essa interpretação. É, portanto, uma restrição que abrange mais do que
+  a \textit{"inclusão direta"} de categorias.
 
   \section*{Vistas}
 
@@ -182,12 +183,12 @@
   uma das relações mencionadas no esquema relacional. Existe, contudo, uma \textbf{exceção}:
   esta abordagem mais simples para a secção das categorias não permitia que
   super/sub categorias pudessem ser corretamente criadas, pelo que para essas secções
-  optou-se por uma implementação \textit{à mão}, pré-definida.
+  optou-se por uma implementação \textit{"à mão"}, mais singular.
   
   Encontra-se ainda, no fim da página, um campo onde o utilizador pode \textbf{introduzir a sua própria \textit{query}}.
-  Mais ainda, nas páginas referentes às consultas principais da aplicação,
+  Mais, nas páginas referentes às consultas principais da aplicação,
   o utilizador pode optar por adicionar elementos à base de dados: tem total
-  liberdade, por exemplo, para adicionar um \textbf{Retalhista} à base de dados,
+  liberdade, por exemplo, para adicionar uma \textbf{IVM} à base de dados,
   havendo para tal um campo de \textit{input} que lhe permite adicionar todos os
   campos referentes à relação em questão.
 
@@ -220,7 +221,7 @@
       o processo é ligeiramente diferente. É apresentada uma tabela ao utilizador,
       onde cada entrada corresponde a uma \textbf{Categoria}. Deve, então, navegar
       até à entrada correspondente à \textbf{Categoria} que pretende remover e
-      clicar no botão \texttt{Remove} que lhe corresponde. 
+      clicar no botão \texttt{Remove} que lhe corresponde.
     \end{enumerate}
     
     \item \textbf{Inserir e remover um Retalhista, com todas as suas responsabilidades
@@ -240,7 +241,8 @@
       \item Caso pretenda remover um \textbf{Retalhista}, o utilizador deve, tal
       como nas secções referentes às \textbf{Categorias}, escolher a entrada na
       tabela correspondente ao \textbf{Retalhista} que pretende remover e clicar
-      no botão \texttt{Remove} que lhe corresponde.
+      no botão \texttt{Remove} que lhe corresponde. Todas as responsabilidades
+      de reposição de produtos associadas ao \textbf{Retalhista} são, claro, removidas.
     \end{enumerate}
     
     \item \textbf{Listar todos os Eventos de Reposição de uma IVM, apresentando
