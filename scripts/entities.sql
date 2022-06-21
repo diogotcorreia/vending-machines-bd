@@ -115,8 +115,8 @@ CREATE TABLE retailer(
     CONSTRAINT pk_retailer PRIMARY KEY (tin) -- RI-RE7 (DONE)
 );
 CREATE TABLE responsible_for(
-    cat_name VARCHAR(255),
-    tin VARCHAR(255),
+    cat_name VARCHAR(255) NOT NULL,
+    tin VARCHAR(255) NOT NULL,
     serial_num VARCHAR(255),
     manuf VARCHAR(255),
     CONSTRAINT pk_responsible_for PRIMARY KEY (serial_num, manuf),
