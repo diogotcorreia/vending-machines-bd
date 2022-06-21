@@ -310,13 +310,34 @@ para testar ambas as consultas.
 
 Foi pedido, ainda, que se indicasse (justificando) os índices que faria sentido
 criar, por forma a \textit{agilizar} a execução de cada uma das \textit{queries}
-apresentadas de seguida.
+apresentadas de seguida. Note-se que o enunciado é particularmente confuso nesta
+secção: é referido que os alunos devem supor que não existem índices nas tabelas,
+"além daqueles implícitos ao declarar chaves primárias e estrangeiras". Ora, \textbf{a
+  criação de chaves estrangeiras não implica indexação automática} (sem declaração
+direta do programador, portanto), tal como referido na
+\href{https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-FK}
+{documentação do PostgreSQL}:
+
+\begin{quote}
+  \textit{"A foreign key must reference columns that either are a primary key or form a unique
+    constraint. This means that the referenced columns always have an index (the one
+    underlying the primary key or unique constraint); so checks on whether a referencing
+    row has a match will be efficient. Since a DELETE of a row from the referenced
+    table or an UPDATE of a referenced column will require a scan of the referencing
+    table for rows matching the old value, it is often a good idea to index the referencing
+    columns too. Because this is not always needed, and there are many choices available
+    on how to index, declaration of a foreign key constraint does not automatically
+    create an index on the referencing columns."}
+\end{quote}
+
+Considerou-se, assim, que se tratava de um lapso do enunciado (ou porventura de uma
+frase construída de forma infeliz), e a respetiva indexação foi adicionada quando necessário.
 
 \subsection*{Primeira \textit{query}:}
 
 \lstinputlisting[language=SQL]{sql/report3/queries/example1.sql}
 
-Para a primeira \textit{query}, decidimos criar índices em dois atributos da relação \texttt{responsible\_for}:
+Para a primeira \textit{query}, optou-se por criar índices em dois atributos da relação \texttt{responsible\_for}:
 \texttt{tin} e \texttt{cat\_name}.
 
 \vspace*{0.25cm}
@@ -338,11 +359,15 @@ O trecho de código correspondente à indexação pretendida encontra-se abaixo:
 
 \lstinputlisting[language=SQL]{sql/report3/indexes/index1.sql}
 
+Note-se que a criação dos índices está ordenada segundo a mesma tal e qual a
+ordenação das condições no \textit{statement} \texttt{WHERE}, para otimizar o desempenho
+da \textit{query}. % justificar melhor
+
 \subsection*{Segunda \textit{query}:}
 
 \lstinputlisting[language=SQL]{sql/report3/queries/example2.sql}
 
-Para a segunda \textit{query}, optámos por criar três índices: dois na relação
+Para a segunda \textit{query}, optou-se por criar três índices: dois na relação
 \texttt{product}, nos seus atributos \texttt{category} e \texttt{description},
 e outro na relação \texttt{has\_category} (em \texttt{name}).
 
@@ -352,10 +377,17 @@ e outro na relação \texttt{has\_category} (em \texttt{name}).
   \item a
   \item b
   \item c
+        % TODO: escrever coisas
 \end{itemize}
 
 O trecho de código correspondente à indexação pretendida encontra-se abaixo:
 
 \lstinputlisting[language=SQL]{sql/report3/indexes/index2.sql}
+
+Escolheu-se criar os índices pela ordem acima apresentada: primeiro os índice associado
+aos atributos presentes em \texttt{WHERE}, e só de seguida o índice associado
+a \texttt{GROUP BY}, por forma a maximizar o desempenho da \textit{query}.
+
+% justificação melhor kek
 
 \end{document}
