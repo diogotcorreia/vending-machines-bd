@@ -2,7 +2,7 @@
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block content %}
   <h1>{{ title }}</h1>
-  <form action="" method="post">
+  <form action="{{ action_url|default('') }}" method="post">
     {% for key, value in data.items() %}
       <input type="hidden" name="{{ key }}" value="{{ value|e }}" />
     {% endfor %}
@@ -11,5 +11,5 @@
       <input class="button danger" type="submit" value="Confirm" />
     </p>
   </form>
-  <a class="button" href="./">Main Menu</a>
+  <a class="button" href="{{ url_for('homepage') }}">Main Menu</a>
 {% endblock %}

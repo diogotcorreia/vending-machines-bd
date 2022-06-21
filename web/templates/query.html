@@ -63,7 +63,7 @@
       {% for action in (page_actions|default([])) %}
         <a class="button" href="{{ action.link }}">{{ action.title }}</a>
       {% endfor %}
-      <a class="button" href="./">Main Menu</a>
+      <a class="button" href="{{ url_for('homepage') }}">Main Menu</a>
     </div>
   {% else %}
     <p>Erro: ao obter dados da base de dados!</p>
