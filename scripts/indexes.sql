@@ -1,8 +1,8 @@
 ---------------------
 -- First index
 ---------------------
-DROP INDEX IF EXISTS idx_responsible_for_cat_tin;
-CREATE INDEX idx_responsible_for_cat_tin ON responsible_for USING HASH(tin);
+DROP INDEX IF EXISTS idx_responsible_for_tin;
+CREATE INDEX idx_responsible_for_tin ON responsible_for USING HASH(tin);
 DROP INDEX IF EXISTS idx_responsible_for_cat_name;
 CREATE INDEX idx_responsible_for_cat_name ON responsible_for USING HASH(cat_name);
 -- the retailer's tin is already indexed, since it is a primary key of that relation
