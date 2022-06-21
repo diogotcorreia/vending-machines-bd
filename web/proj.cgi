@@ -244,6 +244,20 @@ def list_category():
             page_actions=(
                 {"title": "Insert Category", "link": url_for("ask_category")},
             ),
+            page_top_actions=(
+                {
+                    "title": "Only Simple Categories",
+                    "link": url_for("list_simple_category"),
+                },
+                {
+                    "title": "Only Super Categories",
+                    "link": url_for("list_super_category"),
+                },
+                {
+                    "title": "Has Other",
+                    "link": url_for("list_has_other"),
+                },
+            ),
         ),
     )
 
@@ -268,6 +282,20 @@ def list_simple_category():
             ),
             page_actions=(
                 {"title": "Insert Category", "link": url_for("ask_category")},
+            ),
+            page_top_actions=(
+                {
+                    "title": "Show All Categories",
+                    "link": url_for("list_category"),
+                },
+                {
+                    "title": "Only Super Categories",
+                    "link": url_for("list_super_category"),
+                },
+                {
+                    "title": "Has Other",
+                    "link": url_for("list_has_other"),
+                },
             ),
         ),
     )
@@ -299,6 +327,20 @@ def list_super_category():
             page_actions=(
                 {"title": "Insert Category", "link": url_for("ask_category")},
             ),
+            page_top_actions=(
+                {
+                    "title": "Show All Categories",
+                    "link": url_for("list_category"),
+                },
+                {
+                    "title": "Only Simple Categories",
+                    "link": url_for("list_simple_category"),
+                },
+                {
+                    "title": "Has Other",
+                    "link": url_for("list_has_other"),
+                },
+            ),
         ),
     )
 
@@ -310,7 +352,25 @@ def list_has_other():
         SELECT super_category, category FROM has_other
         ORDER BY super_category, category;
         """,
-        lambda cursor: render_template("query.html", cursor=cursor, title="Has Other"),
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="Has Other",
+            page_top_actions=(
+                {
+                    "title": "Show All Categories",
+                    "link": url_for("list_category"),
+                },
+                {
+                    "title": "Only Simple Categories",
+                    "link": url_for("list_simple_category"),
+                },
+                {
+                    "title": "Only Super Categories",
+                    "link": url_for("list_super_category"),
+                },
+            ),
+        ),
     )
 
 

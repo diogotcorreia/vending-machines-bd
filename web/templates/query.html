@@ -12,6 +12,11 @@
 {% endblock %}
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block content %}
+  <div class="horizontal-center">
+    {% for action in (page_top_actions|default([])) %}
+      <a class="button" href="{{ action.link }}">{{ action.title }}</a>
+    {% endfor %}
+  </div>
   <h1>{{ title }}</h1>
   {% if query %}<pre><code>{{ query|e }}</code></pre>{% endif %}
   {% if cursor %}
@@ -34,7 +39,7 @@
                 <td>
                   {% if loop.index0 in chips %}
                     <span class="chip"
-                          style="background-color: {{ chips[loop.index0][value]|default("#000", true) }}">
+                          style="background-color: {{ chips[loop.index0][value]|default('#000', true) }}">
                       {{ value|e if value is not none else '' }}
                     </span>
                   {% else %}
@@ -42,9 +47,9 @@
                   {% endif %}
                 </td>
               {% endfor %}
-              {% for action in (row_actions if row_actions else []) %}
-                <td class="{{ action['className'] }}">
-                  <a class="{{ action['className'] }}" href="{{ action['link'](record) }}">{{ action['name'] }}</a>
+              {% for action in (row_actions|default([])) %}
+                <td class="{{ action.className }}">
+                  <a class="{{ action.className }}" href="{{ action.link(record) }}">{{ action.name }}</a>
                 </td>
               {% endfor %}
             </tr>
@@ -55,8 +60,8 @@
       <p>Query successful</p>
     {% endif %}
     <div class="horizontal-center">
-      {% for action in (page_actions if page_actions else []) %}
-        <a class="button" href="{{ action['link'] }}">{{ action['title'] }}</a>
+      {% for action in (page_actions|default([])) %}
+        <a class="button" href="{{ action.link }}">{{ action.title }}</a>
       {% endfor %}
       <a class="button" href="./">Main Menu</a>
     </div>
