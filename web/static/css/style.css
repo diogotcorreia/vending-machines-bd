@@ -246,3 +246,9 @@ form {
   width: 100%;
   box-sizing: border-box;
 }
+
+.chip {
+  padding: 0.2em 0.5em;
+  border-radius: 0.8em;
+  font-weight: bold;
+}

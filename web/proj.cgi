@@ -214,28 +214,36 @@ def insert_retailer():
 def list_category():
     return exec_query(
         """
-        SELECT name, super_category AS parent_category
-        FROM category
-            LEFT OUTER JOIN has_other ON has_other.category = category.name
-        ORDER BY name;
+        (
+            SELECT 'Simple' AS type, name, super_category AS parent_category
+            FROM simple_category
+                LEFT OUTER JOIN has_other ON has_other.category = simple_category.name
+            UNION
+            SELECT 'Super' AS type, name, super_category AS parent_category
+            FROM super_category
+                LEFT OUTER JOIN has_other ON has_other.category = super_category.name
+        ) ORDER BY name;
         """,
         lambda cursor: render_template(
             "query.html",
             cursor=cursor,
             title="Category",
+            chips={0: {"Simple": "#219ebc", "Super": "#fb8500"}},
             row_actions=(
                 {
                     "className": "list",
-                    "link": lambda record: f"./change_parent_category?{urlencode({'category': record[0]})}",
+                    "link": lambda record: f"./change_parent_category?{urlencode({'category': record[1]})}",
                     "name": "Set Parent Category",
                 },
                 {
                     "className": "remove",
-                    "link": lambda record: f"./delete_category?{urlencode({'category': record[0]})}",
+                    "link": lambda record: f"./delete_category?{urlencode({'category': record[1]})}",
                     "name": "Remove",
                 },
             ),
-            page_actions=({"title": "Insert Category", "link": "./insert_category"},),
+            page_actions=(
+                {"title": "Insert Category", "link": url_for("ask_category")},
+            ),
         ),
     )
 
@@ -244,7 +252,8 @@ def list_category():
 def list_simple_category():
     return exec_query(
         """
-        SELECT name FROM simple_category;
+        SELECT name FROM simple_category
+        ORDER BY name;
         """,
         lambda cursor: render_template(
             "query.html",
@@ -258,7 +267,7 @@ def list_simple_category():
                 },
             ),
             page_actions=(
-                {"title": "Insert Simple Category", "link": "./insert_simple"},
+                {"title": "Insert Category", "link": url_for("ask_category")},
             ),
         ),
     )
@@ -268,7 +277,8 @@ def list_simple_category():
 def list_super_category():
     return exec_query(
         """
-        SELECT name FROM super_category;
+        SELECT name FROM super_category
+        ORDER BY name;
         """,
         lambda cursor: render_template(
             "query.html",
@@ -287,7 +297,7 @@ def list_super_category():
                 },
             ),
             page_actions=(
-                {"title": "Insert Super Category", "link": "./insert_super"},
+                {"title": "Insert Category", "link": url_for("ask_category")},
             ),
         ),
     )
@@ -297,7 +307,8 @@ def list_super_category():
 def list_has_other():
     return exec_query(
         """
-        SELECT super_category, category FROM has_other;
+        SELECT super_category, category FROM has_other
+        ORDER BY super_category, category;
         """,
         lambda cursor: render_template("query.html", cursor=cursor, title="Has Other"),
     )

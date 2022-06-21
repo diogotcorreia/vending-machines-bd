@@ -30,7 +30,18 @@
         <tbody>
           {% for record in cursor %}
             <tr>
-              {% for value in record %}<td>{{ value|e if value is not none else '' }}</td>{% endfor %}
+              {% for value in record %}
+                <td>
+                  {% if loop.index0 in chips %}
+                    <span class="chip"
+                          style="background-color: {{ chips[loop.index0][value]|default("#000", true) }}">
+                      {{ value|e if value is not none else '' }}
+                    </span>
+                  {% else %}
+                    {{ value|e if value is not none else '' }}
+                  {% endif %}
+                </td>
+              {% endfor %}
               {% for action in (row_actions if row_actions else []) %}
                 <td class="{{ action['className'] }}">
                   <a class="{{ action['className'] }}" href="{{ action['link'](record) }}">{{ action['name'] }}</a>
