@@ -34,7 +34,7 @@ def homepage():
         return render_template("error_page.html", error=e)
 
 
-@app.route("/insert_query", methods=["POST"])
+@app.route("/user-query", methods=["POST"])
 def insert_query():
     query = request.form["query"]
     return exec_query(
@@ -45,7 +45,7 @@ def insert_query():
     )
 
 
-@app.route("/insert_category", methods=["GET"])
+@app.route("/category/insert", methods=["GET"])
 def ask_category():
     return exec_query(
         """
@@ -54,6 +54,7 @@ def ask_category():
         """,
         lambda cursor: render_template(
             "ask_input.html",
+            action_url=url_for("insert_category"),
             title="Insert Category",
             fields=(
                 {
@@ -72,7 +73,7 @@ def ask_category():
     )
 
 
-@app.route("/insert_category", methods=["POST"])
+@app.route("/category/insert", methods=["POST"])
 def insert_category():
     query = """
         INSERT INTO category (name) VALUES (%s);
@@ -91,32 +92,33 @@ def insert_category():
     )
 
 
-@app.route("/change_parent_category", methods=["GET"])
-def ask_change_parent_category():
+@app.route("/category/<string:category>/change-parent", methods=["GET"])
+def ask_change_parent_category(category):
     def first_or_none(result):
         return result[0] if result else None
 
     return exec_queries(
         (
             """
-        SELECT name FROM category
-        WHERE name != %s
-        ORDER BY name;
-        """,
+            SELECT name FROM category
+            WHERE name != %s
+            ORDER BY name;
+            """,
             """
-        SELECT super_category FROM has_other
-        WHERE category = %s;
-        """,
+            SELECT super_category FROM has_other
+            WHERE category = %s;
+            """,
         ),
         lambda cursors: render_template(
             "ask_input.html",
+            action_url=url_for("change_parent_category"),
             title="Change Parent of Category",
             fields=(
                 {
                     "label": "",
                     "name": "name",
                     "type": "hidden",
-                    "value": request.args["category"],
+                    "value": category,
                 },
                 {
                     "label": "Parent Category:",
@@ -129,13 +131,13 @@ def ask_change_parent_category():
             ),
         ),
         (
-            data_from_http_query(("category",)),
-            data_from_http_query(("category",)),
+            (category,),
+            (category,),
         ),
     )
 
 
-@app.route("/change_parent_category", methods=["POST"])
+@app.route("/category/change-parent", methods=["POST"])
 def change_parent_category():
     query = """
         DELETE FROM has_other WHERE category = %s;
@@ -154,8 +156,8 @@ def change_parent_category():
     )
 
 
-@app.route("/list_sub_categories", methods=["GET"])
-def list_sub_categories():
+@app.route("/category/<string:super_category>/list-children", methods=["GET"])
+def list_sub_categories(super_category):
     return exec_query(
         """
         WITH RECURSIVE list_recurs(super_category, category) AS (
@@ -172,17 +174,18 @@ def list_sub_categories():
             "query.html",
             cursor=cursor,
             title="List Sub-Categories",
-            page_actions=({"title": "Back", "link": "./super_category"},),
+            page_actions=({"title": "Back", "link": url_for("list_super_category")},),
         ),
-        data_from_http_query(("super_category",)),
+        (super_category,),
     )
 
 
-@app.route("/insert_retailer", methods=["GET"])
+@app.route("/retailer/insert", methods=["GET"])
 def ask_retailer():
     try:
         return render_template(
             "ask_input.html",
+            action_url=url_for("insert_retailer"),
             title="Insert Retailer",
             fields=(
                 {
@@ -199,13 +202,13 @@ def ask_retailer():
         return render_template("error_page.html", error=e)
 
 
-@app.route("/insert_retailer", methods=["POST"])
+@app.route("/retailer/insert", methods=["POST"])
 def insert_retailer():
     return exec_query(
         """
         INSERT INTO retailer (tin, name) VALUES (%s, %s);
         """,
-        lambda cursor: redirect("./retailer"),
+        lambda cursor: redirect(url_for("list_retailer")),
         data_from_request(("tin", "name")),
     )
 
@@ -232,12 +235,16 @@ def list_category():
             row_actions=(
                 {
                     "className": "list",
-                    "link": lambda record: f"./change_parent_category?{urlencode({'category': record[1]})}",
+                    "link": lambda record: url_for(
+                        "ask_change_parent_category", category=record[1]
+                    ),
                     "name": "Set Parent Category",
                 },
                 {
                     "className": "remove",
-                    "link": lambda record: f"./delete_category?{urlencode({'category': record[1]})}",
+                    "link": lambda record: url_for(
+                        "confirm_delete_category", category=record[1]
+                    ),
                     "name": "Remove",
                 },
             ),
@@ -262,7 +269,7 @@ def list_category():
     )
 
 
-@app.route("/simple_category")
+@app.route("/category/simple")
 def list_simple_category():
     return exec_query(
         """
@@ -276,7 +283,9 @@ def list_simple_category():
             row_actions=(
                 {
                     "className": "remove",
-                    "link": lambda record: f"./delete_category?{urlencode({'category': record[0]})}",
+                    "link": lambda record: url_for(
+                        "confirm_delete_category", category=record[0]
+                    ),
                     "name": "Remove",
                 },
             ),
@@ -301,7 +310,7 @@ def list_simple_category():
     )
 
 
-@app.route("/super_category")
+@app.route("/category/super")
 def list_super_category():
     return exec_query(
         """
@@ -315,14 +324,19 @@ def list_super_category():
             row_actions=(
                 {
                     "className": "list",
-                    "link": lambda record: f"./list_sub_categories?{urlencode({'super_category': record[0]})}",
+                    "link": lambda record: url_for(
+                        "list_sub_categories", super_category=record[0]
+                    ),
                     "name": "List Sub-Categories",
                 },
-                {
-                    "className": "remove",
-                    "link": lambda record: f"./delete_category?{urlencode({'category': record[0]})}",
-                    "name": "Remove",
-                },
+                # TODO deleting super categories will always fail
+                # {
+                #    "className": "remove",
+                #    "link": lambda record: url_for(
+                #        "confirm_delete_category", category=record[0]
+                #    ),
+                #    "name": "Remove",
+                # },
             ),
             page_actions=(
                 {"title": "Insert Category", "link": url_for("ask_category")},
@@ -345,7 +359,7 @@ def list_super_category():
     )
 
 
-@app.route("/has_other")
+@app.route("/category/has-other")
 def list_has_other():
     return exec_query(
         """
@@ -384,7 +398,7 @@ def list_product():
     )
 
 
-@app.route("/has_category")
+@app.route("/product/has-category")
 def list_has_category():
     return exec_query(
         """
@@ -409,7 +423,11 @@ def list_ivm():
             row_actions=(
                 {
                     "className": "list",
-                    "link": lambda record: f"./list_replenishment_event_ivm?{urlencode({'serial_num': record[0], 'manuf': record[1]})}",
+                    "link": lambda record: url_for(
+                        "list_replenishment_event_ivm",
+                        serial_num=record[0],
+                        manuf=record[1],
+                    ),
                     "name": "List Replenishment Events",
                 },
             ),
@@ -417,7 +435,7 @@ def list_ivm():
     )
 
 
-@app.route("/retail_point")
+@app.route("/retail-point")
 def list_retail_point():
     return exec_query(
         """
@@ -429,7 +447,7 @@ def list_retail_point():
     )
 
 
-@app.route("/installed_on")
+@app.route("/ivm/installed-on")
 def list_installed_on():
     return exec_query(
         """
@@ -441,7 +459,7 @@ def list_installed_on():
     )
 
 
-@app.route("/shelf")
+@app.route("/ivm/shelf")
 def list_shelf():
     return exec_query(
         """
@@ -451,7 +469,7 @@ def list_shelf():
     )
 
 
-@app.route("/planogram")
+@app.route("/product/planogram")
 def list_planogram():
     return exec_query(
         """
@@ -475,16 +493,20 @@ def list_retailer():
             row_actions=(
                 {
                     "className": "remove",
-                    "link": lambda record: f"./delete_retailer?{urlencode({'tin': record[0]})}",
+                    "link": lambda record: url_for(
+                        "confirm_delete_retailer", tin=record[0]
+                    ),
                     "name": "Remove",
                 },
             ),
-            page_actions=({"title": "Insert Retailer", "link": "./insert_retailer"},),
+            page_actions=(
+                {"title": "Insert Retailer", "link": url_for("ask_retailer")},
+            ),
         ),
     )
 
 
-@app.route("/responsible_for")
+@app.route("/retailer/responsible-for")
 def list_responsible_for():
     return exec_query(
         """
@@ -497,7 +519,7 @@ def list_responsible_for():
     )
 
 
-@app.route("/replenishment_event")
+@app.route("/ivm/replenishment-event")
 def list_replenishment_event():
     return exec_query(
         """
@@ -510,8 +532,10 @@ def list_replenishment_event():
     )
 
 
-@app.route("/list_replenishment_event_ivm", methods=["GET"])
-def list_replenishment_event_ivm():
+@app.route(
+    "/ivm/<string:serial_num>/<string:manuf>/replenishment-event", methods=["GET"]
+)
+def list_replenishment_event_ivm(serial_num, manuf):
     return exec_query(
         """
         SELECT ean AS "EAN", name AS category_name, number, serial_num AS serial_number,
@@ -526,8 +550,9 @@ def list_replenishment_event_ivm():
             "query.html",
             cursor=cursor,
             title="List Replenishment Events of IVM",
+            page_actions=({"title": "Back", "link": url_for("list_ivm")},),
         ),
-        data_from_http_query(("serial_num", "manuf")),
+        (serial_num, manuf),
     )
 
 
@@ -546,12 +571,12 @@ def list_sales():
     )
 
 
-@app.route("/delete_category", methods=["GET"])
-def confirm_delete_category():
-    category = request.args["category"]
+@app.route("/category/<string:category>/delete", methods=["GET"])
+def confirm_delete_category(category):
     try:
         return render_template(
             "confirm_delete.html",
+            action_url=url_for("delete_category"),
             title=f"Delete Category '{category}'?",
             data={"category": category},
         )
@@ -559,7 +584,7 @@ def confirm_delete_category():
         return render_template("error_page.html", error=e)
 
 
-@app.route("/delete_category", methods=["POST"])
+@app.route("/category/delete", methods=["POST"])
 def delete_category():
     return exec_query(
         """
@@ -568,17 +593,17 @@ def delete_category():
         DELETE FROM simple_category WHERE name = %s;
         DELETE FROM category WHERE name = %s;
         """,
-        lambda cursor: redirect("./category"),
+        lambda cursor: redirect(url_for("list_category")),
         data_from_request(("category", "category", "category", "category")),
     )
 
 
-@app.route("/delete_retailer", methods=["GET"])
-def confirm_delete_retailer():
-    tin = request.args["tin"]
+@app.route("/retailer/<string:tin>/delete", methods=["GET"])
+def confirm_delete_retailer(tin):
     try:
         return render_template(
             "confirm_delete.html",
+            action_url=url_for("delete_retailer"),
             title=f"Delete Retailer with TIN '{tin}'?",
             data={"tin": tin},
         )
@@ -586,13 +611,13 @@ def confirm_delete_retailer():
         return render_template("error_page.html", error=e)
 
 
-@app.route("/delete_retailer", methods=["POST"])
+@app.route("/retailer/delete", methods=["POST"])
 def delete_retailer():
     return exec_query(
         """
         DELETE FROM retailer WHERE tin = %s;
         """,
-        lambda cursor: redirect("./retailer"),
+        lambda cursor: redirect(url_for("list_retailer")),
         data_from_request(("tin",)),
     )
 
