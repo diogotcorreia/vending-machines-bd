@@ -2,7 +2,7 @@
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block content %}
   <h1>{{ title }}</h1>
-  <form action="" method="post">
+  <form action="{{ action_url|default('') }}" method="post">
     {% for field in fields %}
       <div class="form-field">
         <label>{{ field.label }}</label>
@@ -27,5 +27,5 @@
       <input type="submit" value="Submit" />
     </p>
   </form>
-  <a class="button" href="./">Main Menu</a>
+  <a class="button" href="{{ url_for('homepage') }}">Main Menu</a>
 {% endblock %}
