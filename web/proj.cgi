@@ -173,7 +173,7 @@ def list_sub_categories(super_category):
         lambda cursor: render_template(
             "query.html",
             cursor=cursor,
-            title="List Sub-Categories",
+            title=f"List Sub-Categories of '{super_category}'",
             page_actions=({"title": "Back", "link": url_for("list_super_category")},),
         ),
         (super_category,),
@@ -560,7 +560,7 @@ def list_replenishment_event_ivm(serial_num, manuf):
 def list_sales():
     return exec_query(
         """
-        SELECT ean AS "EAN", name, year, quarter, day_month, day_week, district, county, units
+        SELECT ean AS "EAN", category_name, year, quarter, day_month, day_week, district, county, units
         FROM sales;
         """,
         lambda cursor: render_template(
@@ -615,10 +615,11 @@ def confirm_delete_retailer(tin):
 def delete_retailer():
     return exec_query(
         """
+        DELETE FROM responsible_for WHERE tin = %s;
         DELETE FROM retailer WHERE tin = %s;
         """,
         lambda cursor: redirect(url_for("list_retailer")),
-        data_from_request(("tin",)),
+        data_from_request(("tin", "tin")),
     )
 
 
