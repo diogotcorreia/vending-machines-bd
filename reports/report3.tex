@@ -255,6 +255,11 @@
       no botão \texttt{Remove} que lhe corresponde. Todas as responsabilidades
       de reposição de produtos associadas ao \textbf{Retalhista} são, claro, removidas.
     \end{enumerate}
+
+    Note-se que, na implementação atual, \textbf{não é permitida a remoção de Retalhistas
+    com Eventos de Reposição a eles associados}: se tal acontecesse, os \textbf{Eventos
+    de Reposição} seriam também removidos, e o histórico de eventos não seria, assim,
+    totalmente fidedigno.
     
     \item \textbf{Listar todos os Eventos de Reposição de uma IVM, apresentando
     o número de unidades repostas por Categoria de Produto.}
