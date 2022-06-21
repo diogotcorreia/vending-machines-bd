@@ -2,7 +2,7 @@
 
 from wsgiref.handlers import CGIHandler
 from flask import Flask
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, url_for
 from urllib.parse import urlencode
 
 ## Libs postgres
@@ -45,61 +45,112 @@ def insert_query():
     )
 
 
-@app.route("/insert_simple", methods=["GET"])
-def ask_simple():
-    try:
-        return render_template(
-            "ask_input.html",
-            title="Insert Simple Category",
-            fields=(
-                {
-                    "label": "New Simple Category Name:",
-                    "name": "name",
-                },
-            ),
-        )
-    except Exception as e:
-        return render_template("error_page.html", error=e)
-
-
-@app.route("/insert_simple", methods=["POST"])
-def insert_simple():
+@app.route("/insert_category", methods=["GET"])
+def ask_category():
     return exec_query(
         """
-        INSERT INTO category (name) VALUES (%s);
-        INSERT INTO simple_category (name) VALUES (%s);
+        SELECT name FROM category
+        ORDER BY name;
         """,
-        lambda cursor: redirect("./simple_category"),
-        data_from_request(("name", "name")),
+        lambda cursor: render_template(
+            "ask_input.html",
+            title="Insert Category",
+            fields=(
+                {
+                    "label": "New Category Name:",
+                    "name": "name",
+                },
+                {
+                    "label": "Parent Category:",
+                    "name": "parent_category",
+                    "type": "select",
+                    "required": False,
+                    "options": ((record[0], record[0]) for record in cursor),
+                },
+            ),
+        ),
     )
 
 
-@app.route("/insert_super", methods=["GET"])
-def ask_super():
-    try:
-        return render_template(
+@app.route("/insert_category", methods=["POST"])
+def insert_category():
+    query = """
+        INSERT INTO category (name) VALUES (%s);
+        INSERT INTO simple_category (name) VALUES (%s);
+        """
+    fields = ("name", "name")
+    if request.form["parent_category"]:
+        query += """
+        INSERT INTO has_other (super_category, category) VALUES (%s, %s);
+        """
+        fields += ("parent_category", "name")
+    return exec_query(
+        query,
+        lambda cursor: redirect(url_for("list_category")),
+        data_from_request(fields),
+    )
+
+
+@app.route("/change_parent_category", methods=["GET"])
+def ask_change_parent_category():
+    def first_or_none(result):
+        return result[0] if result else None
+
+    return exec_queries(
+        (
+            """
+        SELECT name FROM category
+        WHERE name != %s
+        ORDER BY name;
+        """,
+            """
+        SELECT super_category FROM has_other
+        WHERE category = %s;
+        """,
+        ),
+        lambda cursors: render_template(
             "ask_input.html",
-            title="Insert Super Category",
+            title="Change Parent of Category",
             fields=(
                 {
-                    "label": "New Super Category Name:",
+                    "label": "",
                     "name": "name",
+                    "type": "hidden",
+                    "value": request.args["category"],
+                },
+                {
+                    "label": "Parent Category:",
+                    "name": "parent_category",
+                    "type": "select",
+                    "required": False,
+                    "options": ((record[0], record[0]) for record in cursors[0]),
+                    "selected": first_or_none(cursors[1].fetchone()),
                 },
             ),
-        )
-    except Exception as e:
-        return render_template("error_page.html", error=e)
+        ),
+        (
+            data_from_http_query(("category",)),
+            data_from_http_query(("category",)),
+        ),
+    )
 
 
-@app.route("/insert_super", methods=["POST"])
-def insert_super():
-    return exec_query(
+@app.route("/change_parent_category", methods=["POST"])
+def change_parent_category():
+    query = """
+        DELETE FROM has_other WHERE category = %s;
         """
-        INSERT INTO category (name) VALUES (%s);
-        INSERT INTO super_category (name) VALUES (%s);
-        """,
-        lambda cursor: redirect("./super_category"),
-        data_from_request(("name", "name")),
+    fields = ("name",)
+    if request.form["parent_category"]:
+        query = """
+        INSERT INTO has_other (super_category, category) VALUES (%s, %s)
+        ON CONFLICT (category) DO UPDATE SET super_category = %s;
+        """
+        fields = ("parent_category", "name", "parent_category")
+    return exec_query(
+        query,
+        lambda cursor: redirect(url_for("list_category")),
+        data_from_request(fields),
     )
 
 
@@ -163,22 +214,49 @@ def insert_retailer():
 def list_category():
     return exec_query(
         """
-        SELECT name FROM category;
+        (
+            SELECT 'Simple' AS type, name, super_category AS parent_category
+            FROM simple_category
+                LEFT OUTER JOIN has_other ON has_other.category = simple_category.name
+            UNION
+            SELECT 'Super' AS type, name, super_category AS parent_category
+            FROM super_category
+                LEFT OUTER JOIN has_other ON has_other.category = super_category.name
+        ) ORDER BY name;
         """,
         lambda cursor: render_template(
             "query.html",
             cursor=cursor,
             title="Category",
+            chips={0: {"Simple": "#219ebc", "Super": "#fb8500"}},
             row_actions=(
                 {
+                    "className": "list",
+                    "link": lambda record: f"./change_parent_category?{urlencode({'category': record[1]})}",
+                    "name": "Set Parent Category",
+                },
+                {
                     "className": "remove",
-                    "link": lambda record: f"./delete_category?{urlencode({'category': record[0]})}",
+                    "link": lambda record: f"./delete_category?{urlencode({'category': record[1]})}",
                     "name": "Remove",
                 },
             ),
             page_actions=(
-                {"title": "Insert Simple Category", "link": "./insert_simple"},
-                {"title": "Insert Super Category", "link": "./insert_super"},
+                {"title": "Insert Category", "link": url_for("ask_category")},
+            ),
+            page_top_actions=(
+                {
+                    "title": "Only Simple Categories",
+                    "link": url_for("list_simple_category"),
+                },
+                {
+                    "title": "Only Super Categories",
+                    "link": url_for("list_super_category"),
+                },
+                {
+                    "title": "Has Other",
+                    "link": url_for("list_has_other"),
+                },
             ),
         ),
     )
@@ -188,7 +266,8 @@ def list_category():
 def list_simple_category():
     return exec_query(
         """
-        SELECT name FROM simple_category;
+        SELECT name FROM simple_category
+        ORDER BY name;
         """,
         lambda cursor: render_template(
             "query.html",
@@ -202,7 +281,21 @@ def list_simple_category():
                 },
             ),
             page_actions=(
-                {"title": "Insert Simple Category", "link": "./insert_simple"},
+                {"title": "Insert Category", "link": url_for("ask_category")},
+            ),
+            page_top_actions=(
+                {
+                    "title": "Show All Categories",
+                    "link": url_for("list_category"),
+                },
+                {
+                    "title": "Only Super Categories",
+                    "link": url_for("list_super_category"),
+                },
+                {
+                    "title": "Has Other",
+                    "link": url_for("list_has_other"),
+                },
             ),
         ),
     )
@@ -212,7 +305,8 @@ def list_simple_category():
 def list_super_category():
     return exec_query(
         """
-        SELECT name FROM super_category;
+        SELECT name FROM super_category
+        ORDER BY name;
         """,
         lambda cursor: render_template(
             "query.html",
@@ -231,7 +325,21 @@ def list_super_category():
                 },
             ),
             page_actions=(
-                {"title": "Insert Super Category", "link": "./insert_super"},
+                {"title": "Insert Category", "link": url_for("ask_category")},
+            ),
+            page_top_actions=(
+                {
+                    "title": "Show All Categories",
+                    "link": url_for("list_category"),
+                },
+                {
+                    "title": "Only Simple Categories",
+                    "link": url_for("list_simple_category"),
+                },
+                {
+                    "title": "Has Other",
+                    "link": url_for("list_has_other"),
+                },
             ),
         ),
     )
@@ -241,9 +349,28 @@ def list_super_category():
 def list_has_other():
     return exec_query(
         """
-        SELECT super_category, category FROM has_other;
+        SELECT super_category, category FROM has_other
+        ORDER BY super_category, category;
         """,
-        lambda cursor: render_template("query.html", cursor=cursor, title="Has Other"),
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="Has Other",
+            page_top_actions=(
+                {
+                    "title": "Show All Categories",
+                    "link": url_for("list_category"),
+                },
+                {
+                    "title": "Only Simple Categories",
+                    "link": url_for("list_simple_category"),
+                },
+                {
+                    "title": "Only Super Categories",
+                    "link": url_for("list_super_category"),
+                },
+            ),
+        ),
     )
 
 
@@ -476,18 +603,26 @@ def delete_retailer():
 
 
 def exec_query(query, outcome, data=None):
+    return exec_queries((query,), lambda cursors: outcome(cursors[0]), (data,))
+
+
+def exec_queries(queries, outcome, data):
     dbConn = None
     cursor = None
     try:
         dbConn = psycopg2.connect(DB_CONNECTION_STRING)
-        cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cursor.execute(query, data)
-        return outcome(cursor)
+        cursors = []
+        for query, query_data in zip(queries, data):
+            cursor = dbConn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cursor.execute(query, query_data)
+            cursors.append(cursor)
+        return outcome(cursors)
     except Exception as e:
         return render_template("error_page.html", error=e)
     finally:
         dbConn.commit()
-        cursor.close()
+        for cursor in cursors:
+            cursor.close()
         dbConn.close()
 
 
