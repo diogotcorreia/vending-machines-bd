@@ -96,8 +96,6 @@ FOR EACH ROW EXECUTE PROCEDURE product_placed_incorrect_shelf();
 DROP TRIGGER IF EXISTS change_category_type_to_super_trigger ON has_other;
 
 CREATE OR REPLACE FUNCTION change_category_type_to_super() RETURNS TRIGGER AS $$
-DECLARE shelf_category_name VARCHAR(255);
-DECLARE possible_category_names VARCHAR(255) ARRAY;
 BEGIN
   DELETE FROM simple_category WHERE name = NEW.super_category;
 
@@ -109,5 +107,30 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER change_category_type_to_super_trigger BEFORE INSERT ON has_other
+CREATE TRIGGER change_category_type_to_super_trigger BEFORE INSERT OR UPDATE ON has_other
 FOR EACH ROW EXECUTE PROCEDURE change_category_type_to_super();
+
+
+-- Automatically change type of product from super to simple when all child categories are removed
+DROP TRIGGER IF EXISTS change_category_type_to_simple_trigger ON has_other;
+
+CREATE OR REPLACE FUNCTION change_category_type_to_simple() RETURNS TRIGGER AS $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT * FROM has_other
+    WHERE super_category = OLD.super_category
+  )
+  THEN
+    DELETE FROM super_category WHERE name = OLD.super_category;
+
+    INSERT INTO simple_category (name)
+      VALUES (OLD.super_category)
+      ON CONFLICT DO NOTHING;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER change_category_type_to_simple_trigger AFTER UPDATE OR DELETE ON has_other
+FOR EACH ROW EXECUTE PROCEDURE change_category_type_to_simple();

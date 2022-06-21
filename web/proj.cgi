@@ -142,10 +142,11 @@ def change_parent_category():
         """
     fields = ("name",)
     if request.form["parent_category"]:
-        query += """
-        INSERT INTO has_other (super_category, category) VALUES (%s, %s);
+        query = """
+        INSERT INTO has_other (super_category, category) VALUES (%s, %s)
+        ON CONFLICT (category) DO UPDATE SET super_category = %s;
         """
-        fields += ("parent_category", "name")
+        fields = ("parent_category", "name", "parent_category")
     return exec_query(
         query,
         lambda cursor: redirect(url_for("list_category")),
