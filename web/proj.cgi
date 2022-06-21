@@ -174,7 +174,6 @@ def list_sub_categories(super_category):
             "query.html",
             cursor=cursor,
             title=f"List Sub-Categories of '{super_category}'",
-            data={"super_category": super_category},
             page_actions=({"title": "Back", "link": url_for("list_super_category")},),
         ),
         (super_category,),
