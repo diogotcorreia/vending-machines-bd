@@ -655,8 +655,4 @@ def data_from_request(fields):
     return tuple(map(lambda field: request.form[field], fields))
 
 
-def data_from_http_query(fields):
-    return tuple(map(lambda field: request.args[field], fields))
-
-
 CGIHandler().run(app)
