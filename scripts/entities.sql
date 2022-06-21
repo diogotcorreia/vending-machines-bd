@@ -24,8 +24,6 @@ CREATE TABLE simple_category (
     CONSTRAINT pk_simple_category PRIMARY KEY (name),
     CONSTRAINT fk_simple_category_category FOREIGN KEY(name)
         REFERENCES category(name) -- RI_RE1
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
     -- RI_RE2
 );
 CREATE TABLE super_category (
@@ -33,8 +31,6 @@ CREATE TABLE super_category (
     CONSTRAINT pk_super_category PRIMARY KEY (name),
     CONSTRAINT fk_super_category_category FOREIGN KEY(name)
         REFERENCES category(name) -- RI_RE1
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
     -- RI_RE2
     -- RI_RE3
 );
@@ -42,14 +38,10 @@ CREATE TABLE has_other (
     super_category VARCHAR(255) NOT NULL,
     category VARCHAR(255),
     CONSTRAINT fk_has_other_super_category FOREIGN KEY(super_category)
-        REFERENCES super_category(name)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+        REFERENCES super_category(name),
     CONSTRAINT pk_has_other PRIMARY KEY (category),
     CONSTRAINT fk_has_other_category FOREIGN KEY(category)
-        REFERENCES category(name)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+        REFERENCES category(name),
     CHECK (super_category != category) -- RI_RE4(TRIGGER)
     -- RI_RE5 (DONE)
 );
@@ -60,21 +52,15 @@ CREATE TABLE product (
     CONSTRAINT pk_product PRIMARY KEY (ean),
     CONSTRAINT fk_product_category FOREIGN KEY(category)
         REFERENCES category(name) -- RI_RE6
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
 );
 CREATE TABLE has_category (
     ean VARCHAR(13),
     name VARCHAR(255),
     CONSTRAINT pk_has_category PRIMARY KEY (ean, name),
     CONSTRAINT fk_has_category_ean FOREIGN KEY(ean)
-        REFERENCES product(ean)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+        REFERENCES product(ean),
     CONSTRAINT fk_has_category_name FOREIGN KEY(name)
         REFERENCES category(name)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
 );
 CREATE TABLE ivm (
     serial_num VARCHAR(255),
@@ -93,13 +79,9 @@ CREATE TABLE installed_on (
     local VARCHAR(255) NOT NULL,
     CONSTRAINT pk_installed_on PRIMARY KEY (serial_num, manuf),
     CONSTRAINT fk_installed_on_ivm FOREIGN KEY(serial_num, manuf)
-        REFERENCES ivm(serial_num, manuf)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+        REFERENCES ivm(serial_num, manuf),
     CONSTRAINT fk_installed_on_retail_point FOREIGN KEY(local)
         REFERENCES retail_point(name)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
 );
 CREATE TABLE shelf (
     number VARCHAR(255),
@@ -109,13 +91,9 @@ CREATE TABLE shelf (
     name VARCHAR(255) NOT NULL,
     CONSTRAINT pk_shelf PRIMARY KEY (number, serial_num, manuf),
     CONSTRAINT fk_shelf_ivm FOREIGN KEY(serial_num, manuf)
-        REFERENCES ivm(serial_num, manuf)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+        REFERENCES ivm(serial_num, manuf),
     CONSTRAINT fk_shelf_category FOREIGN KEY(name)
         REFERENCES category(name)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
 );
 CREATE TABLE planogram(
     ean VARCHAR(13),
@@ -127,13 +105,9 @@ CREATE TABLE planogram(
     loc VARCHAR(255) NOT NULL,
     CONSTRAINT pk_planogram PRIMARY KEY (ean, number, serial_num, manuf),
     CONSTRAINT fk_planogram_product FOREIGN KEY(ean)
-        REFERENCES product(ean)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+        REFERENCES product(ean),
     CONSTRAINT fk_planogram_shelf FOREIGN KEY(number, serial_num, manuf)
         REFERENCES shelf(number, serial_num, manuf)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
 );
 CREATE TABLE retailer(
     tin VARCHAR(255),
@@ -147,17 +121,11 @@ CREATE TABLE responsible_for(
     manuf VARCHAR(255),
     CONSTRAINT pk_responsible_for PRIMARY KEY (serial_num, manuf),
     CONSTRAINT fk_responsible_for_ivm FOREIGN KEY(serial_num, manuf)
-        REFERENCES ivm(serial_num, manuf)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+        REFERENCES ivm(serial_num, manuf),
     CONSTRAINT fk_responsible_for_retailer FOREIGN KEY(tin)
-        REFERENCES retailer(tin)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+        REFERENCES retailer(tin),
     CONSTRAINT fk_responsible_for_category FOREIGN KEY(cat_name)
         REFERENCES category(name)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
 );
 CREATE TABLE replenishment_event(
     ean VARCHAR(13),
@@ -169,11 +137,7 @@ CREATE TABLE replenishment_event(
     tin VARCHAR(255) NOT NULL,
     CONSTRAINT pk_replenishment_event PRIMARY KEY (ean, number, serial_num, manuf, instant),
     CONSTRAINT fk_replenishment_event_planogram FOREIGN KEY (ean, number, serial_num, manuf)
-        REFERENCES planogram(ean, number, serial_num, manuf)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+        REFERENCES planogram(ean, number, serial_num, manuf),
     CONSTRAINT fk_replenishment_event_retailer FOREIGN KEY(tin)
         REFERENCES retailer(tin) -- RI-RE8
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
 );

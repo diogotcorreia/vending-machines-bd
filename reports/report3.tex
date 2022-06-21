@@ -185,7 +185,8 @@
   super/sub categorias pudessem ser corretamente criadas, pelo que para essas secções
   optou-se por uma implementação \textit{"à mão"}, mais singular.
   
-  Encontra-se ainda, no fim da página, um campo onde o utilizador pode \textbf{introduzir a sua própria \textit{query}}.
+  Encontra-se ainda, no fim da página, um campo onde o utilizador pode
+  \textbf{introduzir a sua própria \textit{query}}.
   Mais, nas páginas referentes às consultas principais da aplicação,
   o utilizador pode optar por adicionar elementos à base de dados: tem total
   liberdade, por exemplo, para adicionar uma \textbf{IVM} à base de dados,
@@ -195,7 +196,11 @@
   Note-se que toda esta simplicidade é atingida através da função \texttt{exec\_query},
   presente em \texttt{web/proj.cgi}: um \textit{wrapper} que recebe uma qualquer
   \textit{query} e a executa, retornando a página que a aplicação deve apresentar
-  ao utilizador.
+  ao utilizador. \textbf{Todas as \textit{queries} que passam por \texttt{exec\_query} são,
+  por definição, atómicas}, já que o \textit{commit} (\texttt{dbConn.commit()}, do \texttt{psycopg})
+  da \textit{transaction} só ocorre depois do \textit{outcome} da \textit{query}
+  ser retornado. Desta forma, é garantido o \textit{rollback} das ações caso alguma
+  ação falhe durante o decorrer da \textit{query}.
 
   \vspace*{0.5cm}
 
