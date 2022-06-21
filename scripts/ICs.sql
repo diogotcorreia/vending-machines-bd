@@ -83,7 +83,7 @@ BEGIN
           serial_num = NEW.serial_num AND
           manuf = NEW.manuf;
   
-  IF NOT EXISTS(
+  IF NOT EXISTS (
     SELECT * from has_category
     WHERE name = shelf_category_name AND ean = NEW.ean
   )
@@ -95,7 +95,52 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER product_placed_incorrect_shelf_trigger
-  BEFORE INSERT ON replenishment_event
-FOR EACH ROW
-  EXECUTE PROCEDURE product_placed_incorrect_shelf();
+CREATE TRIGGER product_placed_incorrect_shelf_trigger BEFORE INSERT ON replenishment_event
+FOR EACH ROW EXECUTE PROCEDURE product_placed_incorrect_shelf();
+
+---------------------
+--      UTILS      --
+---------------------
+
+-- Automatically change type of product from simple to super when a child category is added
+DROP TRIGGER IF EXISTS change_category_type_to_super_trigger ON has_other;
+
+CREATE OR REPLACE FUNCTION change_category_type_to_super() RETURNS TRIGGER AS $$
+BEGIN
+  DELETE FROM simple_category WHERE name = NEW.super_category;
+
+  INSERT INTO super_category (name)
+  VALUES (NEW.super_category)
+  ON CONFLICT DO NOTHING;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER change_category_type_to_super_trigger BEFORE INSERT OR UPDATE ON has_other
+FOR EACH ROW EXECUTE PROCEDURE change_category_type_to_super();
+
+
+-- Automatically change type of product from super to simple when all child categories are removed
+DROP TRIGGER IF EXISTS change_category_type_to_simple_trigger ON has_other;
+
+CREATE OR REPLACE FUNCTION change_category_type_to_simple() RETURNS TRIGGER AS $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT * FROM has_other
+    WHERE super_category = OLD.super_category
+  )
+  THEN
+    DELETE FROM super_category WHERE name = OLD.super_category;
+
+    INSERT INTO simple_category (name)
+      VALUES (OLD.super_category)
+      ON CONFLICT DO NOTHING;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER change_category_type_to_simple_trigger AFTER UPDATE OR DELETE ON has_other
+FOR EACH ROW EXECUTE PROCEDURE change_category_type_to_simple();
