@@ -124,10 +124,10 @@
   \end{itemize}
 \end{titlepage}
 
-Note-se que, ao ler o enunciado, foi entendido que as secções \textbf{SQL},
-\textbf{Restrições de Integridade}, \textbf{Vistas}, \textbf{Consultas OLAP}
-e \textbf{Base de Dados - Carregamento} fazem parte da estrutura do arquivo
-submetido para avaliação, e não do relatório. Assim sendo, não serão aqui
+Note-se que, ao ler o enunciado, foi entendido que as secções
+\textbf{Base de Dados - Carregamento}, \textbf{Restrições de Integridade},
+\textbf{SQL}, \textbf{Vistas} e \textbf{Consultas OLAP} fazem parte da estrutura
+do arquivo submetido para avaliação, e não do relatório. Assim sendo, não serão aqui
 incluídos os trechos de código relativos a essas secções, encontrando-se nos
 respetivos ficheiros (nomeados conforme especificado pelo enunciado). Essas
 secções poderão, contudo, ser incluídas no presente relatório como esclarecimento
@@ -303,53 +303,59 @@ em \texttt{analytics.sql}. Ao ler o enunciado, foi entendido por \textit{"escrev
 de ter \textit{botões} ou mecanismos semelhantes presentes na aplicação por
 definição - precisariam apenas de estar \textit{escritas} em \texttt{analytics.sql} -
 pelo que tais mecanismos não foram incluídos. Note-se, contudo, que para efeitos de teste
-o utilizador pode utilizar o campo de \textit{input} no fim do menu principal
+o utilizador pode recorrer ao campo de \textit{input} de \textit{queries} no fim do menu principal
 para testar ambas as consultas.
 
 \section*{Índices}
 
 Foi pedido, ainda, que se indicasse (justificando) os índices que faria sentido
-criar, por forma a \textit{agilizar} a execução de cada uma das seguintes \textit{queries}:
+criar, por forma a \textit{agilizar} a execução de cada uma das \textit{queries}
+apresentadas de seguida.
 
-\begin{enumerate}
-  \item \textbf{Primeira \textit{query}:}
+\subsection*{Primeira \textit{query}:}
 
-        \lstinputlisting[language=SQL]{sql/report3/queries/example1.sql}
+\lstinputlisting[language=SQL]{sql/report3/queries/example1.sql}
 
-  \item \textbf{Segunda \textit{query}:}
+Para a primeira \textit{query}, decidimos criar índices em dois atributos da relação \texttt{responsible\_for}:
+\texttt{tin} e \texttt{cat\_name}.
 
-        \lstinputlisting[language=SQL]{sql/report3/queries/example2.sql}
-\end{enumerate}
-
-Para a primeira, decidimos que \textbf{não fazia sentido criar indexação adicional}.
-Existem, à partida, três sitios em que faria sentido criar índices:
+\vspace*{0.25cm}
 
 \begin{itemize}
-  \item No atributo \texttt{name}, em \texttt{Retailer}, visto ser o atributo
-        \textbf{selecionado} pela \textit{query} \textbf{e ser \texttt{DISTINCT}}. Temos, contudo,
-        que o atributo já é \texttt{UNIQUE}, pelo esquema relacional, pelo que esta
-        indexação por definição (com \textbf{BTree});
+  \item Não criámos nenhum índice quanto ao atributo \texttt{name}, em \texttt{retailer},
+        apesar de ser o atributo \textbf{selecionado} pela \textit{query} \textbf{e ser
+          \texttt{DISTINCT}} - o atributo já é \texttt{UNIQUE}, pelo
+        esquema relacional, pelo que esta indexação é feita por definição (com
+        \textbf{BTree}), sem ser necessário adicionar outros índices;
 
-  \item Nos atributos \texttt{tin} e \texttt{cat\_name}, em \texttt{Responsible For},
-        faria sentido criar índices \textbf{Hash}, evitando procuras sequenciais (é pretendido,
-        em ambas as situações, que o atributo corresponda a \textit{algo} concreto).
-        Porém, são ambos \textbf{chaves estrangeiras} (para \texttt{Product} e
-        \texttt{Category}, respetivamente), estando, assim, indexadas por definição
-        (com \textbf{Hash}).
+  \item Nos atributos \texttt{tin} e \texttt{cat\_name}, em \texttt{responsible\_for},
+        faz sentido criar índices \textbf{Hash}, por forma a evitar procuras sequenciais
+        (é pretendido, em ambas as situações, que o atributo corresponda a
+        \textbf{\textit{algo} concreto}).
 \end{itemize}
 
-Não existem, assim (na nossa opinião), atributos que devam ser indexados, por forma
-a agilizar a \textit{query} em questão, que não estejam já indexados. Realça-se, ainda,
-que a conclusão a que se chegou foi posta à prova, testando a \textit{query}
-com um conjunto de $100 000$ \texttt{IVMs} e \texttt{Retailers}, e a avaliação
-estatística não indicou diferenças notórias ao introduzir nova indexação.
+O trecho de código correspondente à indexação pretendida encontra-se abaixo:
 
-\vspace*{0.5cm}
+\lstinputlisting[language=SQL]{sql/report3/indexes/index1.sql}
 
-Para a segunda, optámos pela seguinte indexação:
+\subsection*{Segunda \textit{query}:}
 
-// TODO
+\lstinputlisting[language=SQL]{sql/report3/queries/example2.sql}
 
-% indicar razões
+Para a segunda \textit{query}, optámos por criar três índices: dois na relação
+\texttt{product}, nos seus atributos \texttt{category} e \texttt{description},
+e outro na relação \texttt{has\_category} (em \texttt{name}).
+
+\vspace*{0.25cm}
+
+\begin{itemize}
+  \item a
+  \item b
+  \item c
+\end{itemize}
+
+O trecho de código correspondente à indexação pretendida encontra-se abaixo:
+
+\lstinputlisting[language=SQL]{sql/report3/indexes/index2.sql}
 
 \end{document}
