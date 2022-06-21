@@ -321,11 +321,34 @@
     \lstinputlisting[language=SQL]{sql/report3/queries/example2.sql}
   \end{enumerate}
   
-  Para a primeira, optámos pela seguinte indexação:
+  Para a primeira, decidimos que \textbf{não fazia sentido criar indexação adicional}.
+  Existem, à partida, três sitios em que faria sentido criar índices:
 
-  % indicar razões
+  \begin{itemize}
+    \item No atributo \texttt{name}, em \texttt{Retailer}, visto ser o atributo
+    \textbf{selecionado} pela \textit{query} \textbf{e ser \texttt{DISTINCT}}. Temos, contudo,
+    que o atributo já é \texttt{UNIQUE}, pelo esquema relacional, pelo que esta
+    indexação por definição (com \textbf{BTree});
+
+    \item Nos atributos \texttt{tin} e \texttt{cat\_name}, em \texttt{Responsible For},
+    faria sentido criar índices \textbf{Hash}, evitando procuras sequenciais (é pretendido,
+    em ambas as situações, que o atributo corresponda a \textit{algo} concreto).
+    Porém, são ambos \textbf{chaves estrangeiras} (para \texttt{Product} e
+    \texttt{Category}, respetivamente), estando, assim, indexadas por definição
+    (com \textbf{Hash}).
+  \end{itemize}
+
+  Não existem, assim (na nossa opinião), atributos que devam ser indexados, por forma
+  a agilizar a \textit{query} em questão, que não estejam já indexados. Realça-se, ainda,
+  que a conclusão a que se chegou foi posta à prova, testando a \textit{query}
+  com um conjunto de $100 000$ \texttt{IVMs} e \texttt{Retailers}, e a avaliação
+  estatística não indicou diferenças notórias ao introduzir nova indexação.
+
+  \vspace*{0.5cm}
 
   Para a segunda, optámos pela seguinte indexação:
+
+  // TODO
 
   % indicar razões
 
