@@ -533,13 +533,7 @@ VALUES ('ivm-1', 'fizz', 'Frigu'),
 -- Shelf
 ----------------------
 INSERT INTO shelf
-VALUES (
-        '1',
-        'ivm-1',
-        'fizz',
-        '2',
-        'Bolachas de Chocolate'
-    ),
+VALUES ('1', 'ivm-1', 'fizz', '2', 'Bolachas'),
     ('3', 'ivm-1', 'fizz', '2', 'Fruta'),
     ('2', 'ivm-2', 'buzz', '3', 'Fruta'),
     ('3', 'ivm-2', 'fizz', '3', 'Bolachas'),
