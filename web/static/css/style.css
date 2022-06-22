@@ -285,3 +285,28 @@ form {
 .flex-grow {
   flex-grow: 1;
 }
+
+.tab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: stretch;
+}
+
+.tab-btn {
+  border-bottom: 1px solid #3a3a3a;
+  transition: color 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  display: inline-block;
+  font-weight: bold;
+
+  padding: 0.8em 2em;
+  margin: 0;
+  margin-bottom: 1px;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.tab-btn:hover, .tab-btn.active {
+  border-bottom: 2px solid #4caf50;
+  color: #4caf50;
+  margin-bottom: 0px;
+}

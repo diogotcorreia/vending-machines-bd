@@ -252,6 +252,11 @@ def list_category():
             ),
             page_top_actions=(
                 {
+                    "title": "Show All Categories",
+                    "link": "#",
+                    "active": True,
+                },
+                {
                     "title": "Only Simple Categories",
                     "link": url_for("list_simple_category"),
                 },
@@ -295,6 +300,11 @@ def list_simple_category():
                 {
                     "title": "Show All Categories",
                     "link": url_for("list_category"),
+                },
+                {
+                    "title": "Only Simple Categories",
+                    "link": "#",
+                    "active": True,
                 },
                 {
                     "title": "Only Super Categories",
@@ -349,6 +359,11 @@ def list_super_category():
                     "link": url_for("list_simple_category"),
                 },
                 {
+                    "title": "Only Super Categories",
+                    "link": "#",
+                    "active": True,
+                },
+                {
                     "title": "Has Other",
                     "link": url_for("list_has_other"),
                 },
@@ -380,6 +395,11 @@ def list_has_other():
                 {
                     "title": "Only Super Categories",
                     "link": url_for("list_super_category"),
+                },
+                {
+                    "title": "Has Other",
+                    "link": "#",
+                    "active": True,
                 },
             ),
         ),
