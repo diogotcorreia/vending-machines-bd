@@ -194,16 +194,28 @@ VALUES ('Bolachas', 'Bolachas de Chocolate'),
 ---------------------
 INSERT INTO product
 VALUES ('1111111111111', 'Bolachas de Chocolate', 'Oreo'),
-    ('1111111111112', 'Sumo de Laranja Natural', 'Capri-Sun'),
+    (
+        '1111111111112',
+        'Sumo de Laranja Natural',
+        'Capri-Sun'
+    ),
     ('1111111111113', 'Fruta', 'Maca'),
     ('1111111111114', 'Bolachas', 'Bolacha Maria'),
-    ('1111111111115', 'Bebidas', 'Chris''s Secret Stuff'),
+    (
+        '1111111111115',
+        'Bebidas',
+        'Chris''s Secret Stuff'
+    ),
     ('1111111111116', 'Bebidas', 'Lobos'),
     ('1111111111117', 'Bebidas', '818 Tequila'),
     ('1111111111118', 'Cerveja', 'Corona'),
     ('1111111111119', 'Cerveja', 'Budweiser'),
     ('1111111111120', 'Cerveja', 'Duff'),
-    ('1111111120000', 'Cerveja Artesanal', 'Fantastica'),
+    (
+        '1111111120000',
+        'Cerveja Artesanal',
+        'Fantastica'
+    ),
     ('1111111111121', 'Vinho', 'Tinto'),
     ('1111111111122', 'Vinho', 'Branco'),
     ('1111111111123', 'Vinho', 'Rose'),
@@ -222,11 +234,27 @@ VALUES ('1111111111111', 'Bolachas de Chocolate', 'Oreo'),
     ('1111111111136', 'Sumo que existe', 'Squeezit'),
     ('1111111111137', 'Sumo que existe', 'Roth IRA'),
     ('1111111111138', 'Sumo que existe', 'Old Sock'),
-    ('1111111111139', 'Skittles', 'Skittles com 2 cores'),
-    ('1111111111140', 'Skittles', 'Skittles com 3 cores'),
-    ('1111111111141', 'Skittles', 'Skittles com 4 cores'),
+    (
+        '1111111111139',
+        'Skittles',
+        'Skittles com 2 cores'
+    ),
+    (
+        '1111111111140',
+        'Skittles',
+        'Skittles com 3 cores'
+    ),
+    (
+        '1111111111141',
+        'Skittles',
+        'Skittles com 4 cores'
+    ),
     ('1111111111142', 'Refrigerantes', 'Buzz Cola'),
-    ('1111111111143', 'Refrigerantes', 'Sumo do Pingo Doce'),
+    (
+        '1111111111143',
+        'Refrigerantes',
+        'Sumo do Pingo Doce'
+    ),
     ('1111111111144', 'Refrigerantes', 'Sumo do Lidl'),
     ('1111111111145', 'Cerveja', 'Sprunk Beer'),
     ('1111111111146', 'Refrigerantes', 'Pisswasser'),
@@ -236,10 +264,22 @@ VALUES ('1111111111111', 'Bolachas de Chocolate', 'Oreo'),
     ('1111111111150', 'Refrigerantes', 'Nestea'),
     ('1111111111151', 'Refrigerantes', 'Nescafe'),
     ('1111111111152', 'Refrigerantes', 'Slurp Juice'),
-    ('1111111111153', 'Refrigerantes', 'Caldeirao do Obelix'),
-    ('1111111111154', 'Marlboro', 'Marlboro que nao mata'),
+    (
+        '1111111111153',
+        'Refrigerantes',
+        'Caldeirao do Obelix'
+    ),
+    (
+        '1111111111154',
+        'Marlboro',
+        'Marlboro que nao mata'
+    ),
     ('1111111111155', 'Marlboro', 'Marlboro que mata'),
-    ('1111111111156', 'Chesterfield', 'Chesterfield que mata pouco'),
+    (
+        '1111111111156',
+        'Chesterfield',
+        'Chesterfield que mata pouco'
+    ),
     ('1111111111157', 'Mascaras N95', 'KENDRICK'),
     ('1111111111158', 'Mascaras N99', 'KENDRICK'),
     ('1111111111159', 'Mascaras KN95', 'KENDRICK'),
@@ -248,11 +288,19 @@ VALUES ('1111111111111', 'Bolachas de Chocolate', 'Oreo'),
     ('1111111111162', 'Powerade', 'Powerade Azul'),
     ('1111111111163', 'Powerade', 'Powerade Verde'),
     ('1111111111164', 'Powerade', 'Powerade Laranja'),
-    ('1111111111165', 'Powerade', 'Powerade cor de lama'),
+    (
+        '1111111111165',
+        'Powerade',
+        'Powerade cor de lama'
+    ),
     ('1111111111166', 'Gatorade', 'Gatorade Azul'),
     ('1111111111167', 'Gatorade', 'Gatorade Verde'),
     ('1111111111168', 'Gatorade', 'Gatorade Laranja'),
-    ('1111111111169', 'Gatorade', 'Gatorade cor de lama'),
+    (
+        '1111111111169',
+        'Gatorade',
+        'Gatorade cor de lama'
+    ),
     ('1111111111170', 'Fanta', 'Fanta sem gas'),
     ('1111111111171', 'Fanta', 'Fanta com gas'),
     ('1111111111172', 'Fanta', 'Fanta de cereja'),
@@ -260,17 +308,45 @@ VALUES ('1111111111111', 'Bolachas de Chocolate', 'Oreo'),
     ('1111111111174', 'Fanta', 'Fanta de limao'),
     ('1111111111175', 'Fanta', 'Fanta de uva'),
     ('1111111111176', 'Milka', 'Milka hard'),
-    ('1111111111177', 'Batatas Pala-Pala', 'Pingo Doce Lisas'),
-    ('1111111111179', 'Batatas Pala-Pala', 'Pingo Doce Onduladas'),
-    ('1111111111180', 'Batatas Pala-Pala', 'Continente Lisas'),
-    ('1111111111181', 'Batatas Pala-Pala', 'Continente Onduladas'),
-    ('1111111111182', 'Batatas Pala-Pala', 'Lidl Lisas'),
-    ('1111111111183', 'Batatas Pala-Pala', 'Lidl Onduladas'),
+    (
+        '1111111111177',
+        'Batatas Pala-Pala',
+        'Pingo Doce Lisas'
+    ),
+    (
+        '1111111111179',
+        'Batatas Pala-Pala',
+        'Pingo Doce Onduladas'
+    ),
+    (
+        '1111111111180',
+        'Batatas Pala-Pala',
+        'Continente Lisas'
+    ),
+    (
+        '1111111111181',
+        'Batatas Pala-Pala',
+        'Continente Onduladas'
+    ),
+    (
+        '1111111111182',
+        'Batatas Pala-Pala',
+        'Lidl Lisas'
+    ),
+    (
+        '1111111111183',
+        'Batatas Pala-Pala',
+        'Lidl Onduladas'
+    ),
     ('1111111111184', 'Sumo de Manga', 'Compal'),
     ('1111111111185', 'Sumo de Manga', 'Not-Compal'),
     ('1111111111186', 'Sumo de Manga', 'Continente'),
     ('1111111111187', 'Fruta', 'Kiwi'),
-    ('1111111111188', 'Fruta', 'Kiwi de um pais mesmo longe'),
+    (
+        '1111111111188',
+        'Fruta',
+        'Kiwi de um pais mesmo longe'
+    ),
     ('1111111111189', 'Fruta', 'Manga'),
     ('1111111111190', 'Fruta', 'Pessego'),
     ('1111111111191', 'Snacks', 'Peixinhos da Horta');
@@ -400,11 +476,27 @@ INSERT INTO retail_point
 VALUES ('Frigu', 'Lisbon', 'RNL'),
     ('Galp', 'Oporto', 'Matosinhos'),
     ('ALDI', 'Algarve', 'Altura'),
-    ('Escola Secundaria de Mem Martins', 'Lisbon', 'Sintra'),
-    ('Escola Secundaria Padre Alberto Neto', 'Lisbon', 'Sintra'),
-    ('Escola Secundaria Leal da Camara', 'Lisbon', 'Sintra'),
+    (
+        'Escola Secundaria de Mem Martins',
+        'Lisbon',
+        'Sintra'
+    ),
+    (
+        'Escola Secundaria Padre Alberto Neto',
+        'Lisbon',
+        'Sintra'
+    ),
+    (
+        'Escola Secundaria Leal da Camara',
+        'Lisbon',
+        'Sintra'
+    ),
     ('ISEL', 'Lisbon', 'Chelas'),
-    ('Sociedade Recreativa de Bilhar', 'Alentejo', 'Algures');
+    (
+        'Sociedade Recreativa de Bilhar',
+        'Alentejo',
+        'Algures'
+    );
 ----------------------
 -- Installed On
 ----------------------
@@ -418,9 +510,21 @@ VALUES ('ivm-1', 'fizz', 'Frigu'),
     ('ivm-7', 'fizz', 'ALDI'),
     ('ivm-8', 'buzz', 'ALDI'),
     ('ivm-9', 'lightyear', 'ALDI'),
-    ('ivm-10', 'fizz', 'Escola Secundaria de Mem Martins'),
-    ('ivm-2', 'lightyear', 'Escola Secundaria de Mem Martins'),
-    ('ivm-4', 'buzz', 'Escola Secundaria Padre Alberto Neto'),
+    (
+        'ivm-10',
+        'fizz',
+        'Escola Secundaria de Mem Martins'
+    ),
+    (
+        'ivm-2',
+        'lightyear',
+        'Escola Secundaria de Mem Martins'
+    ),
+    (
+        'ivm-4',
+        'buzz',
+        'Escola Secundaria Padre Alberto Neto'
+    ),
     ('ivm-2', 'fizz', 'Galp'),
     ('ivm-3', 'buzz', 'Galp'),
     ('ivm-3', 'fizz', 'ALDI'),
@@ -429,13 +533,7 @@ VALUES ('ivm-1', 'fizz', 'Frigu'),
 -- Shelf
 ----------------------
 INSERT INTO shelf
-VALUES (
-        '1',
-        'ivm-1',
-        'fizz',
-        '2',
-        'Bolachas de Chocolate'
-    ),
+VALUES ('1', 'ivm-1', 'fizz', '2', 'Bolachas'),
     ('3', 'ivm-1', 'fizz', '2', 'Fruta'),
     ('2', 'ivm-2', 'buzz', '3', 'Fruta'),
     ('3', 'ivm-2', 'fizz', '3', 'Bolachas'),
@@ -626,7 +724,6 @@ VALUES ('1', 'Diogo'),
     ('17', 'Kiari Cephus'),
     ('18', 'Qavious Marshall'),
     ('19', 'Marco Almeida');
-
 ---------------------
 -- Responsible For
 ---------------------
@@ -789,3 +886,4 @@ VALUES (
         '8',
         '2'
     );
+    
