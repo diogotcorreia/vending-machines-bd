@@ -77,7 +77,6 @@ def ask_category():
 def insert_category():
     query = """
         INSERT INTO category (name) VALUES (%s);
-        INSERT INTO simple_category (name) VALUES (%s);
         """
     fields = ("name", "name")
     if request.form["parent_category"]:
@@ -559,7 +558,7 @@ def list_replenishment_event_ivm(serial_num, manuf):
 def list_sales():
     return exec_query(
         """
-        SELECT ean AS "EAN", category_name, year, quarter, day_month, day_week, district, county, units
+        SELECT ean AS "EAN", category_name, year, quarter, month, day_month, day_week, district, county, units
         FROM sales;
         """,
         lambda cursor: render_template(
