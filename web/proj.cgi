@@ -328,14 +328,13 @@ def list_super_category():
                     ),
                     "name": "List Sub-Categories",
                 },
-                # TODO deleting super categories will always fail
-                # {
-                #    "className": "remove",
-                #    "link": lambda record: url_for(
-                #        "confirm_delete_category", category=record[0]
-                #    ),
-                #    "name": "Remove",
-                # },
+                {
+                    "className": "remove",
+                    "link": lambda record: url_for(
+                        "confirm_delete_category", category=record[0]
+                    ),
+                    "name": "Remove",
+                },
             ),
             page_actions=(
                 {"title": "Insert Category", "link": url_for("ask_category")},
@@ -587,13 +586,13 @@ def confirm_delete_category(category):
 def delete_category():
     return exec_query(
         """
-        DELETE FROM has_other WHERE category = %s;
+        DELETE FROM has_other WHERE category = %s OR super_category = %s;
         DELETE FROM super_category WHERE name = %s;
         DELETE FROM simple_category WHERE name = %s;
         DELETE FROM category WHERE name = %s;
         """,
         lambda cursor: redirect(url_for("list_category")),
-        data_from_request(("category", "category", "category", "category")),
+        data_from_request(("category", "category", "category", "category", "category")),
     )
 
 
