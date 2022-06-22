@@ -34,6 +34,7 @@ FOR EACH ROW EXECUTE PROCEDURE self_contained_category_trigger();
 
 -- (RI-4) O número de unidades repostas num Evento de Reposição não pode exceder o número de
 -- unidades especificado no Planograma
+-- NOTE: this also solves RI-RE8 from the schema
 DROP TRIGGER IF EXISTS replenishment_event_units_lower_than_planogram_trigger ON replenishment_event;
 
 CREATE OR REPLACE FUNCTION replenishment_event_units_lower_than_planogram() RETURNS TRIGGER AS $$
@@ -135,8 +136,8 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER change_category_type_to_simple_trigger AFTER UPDATE OR DELETE ON has_other
 FOR EACH ROW EXECUTE PROCEDURE change_category_type_to_simple();
 
--- RI-RE1: A category must necessarily be a simple_category or a super_category
 
+-- RI-RE1: A category must necessarily be a simple_category or a super_category
 DROP TRIGGER IF EXISTS category_must_be_specialized_trigger ON category;
 
 CREATE OR REPLACE FUNCTION category_must_be_specialized() RETURNS TRIGGER AS $$
@@ -149,8 +150,8 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER category_must_be_specialized_trigger AFTER INSERT ON category
 FOR EACH ROW EXECUTE PROCEDURE category_must_be_specialized();
 
--- RI-RE2: A simple category's name cannot also exist in the super_category relation
 
+-- RI-RE2: A simple category's name cannot also exist in the super_category relation
 DROP TRIGGER IF EXISTS simple_category_name_already_in_super_category_trigger ON simple_category;
 
 CREATE OR REPLACE FUNCTION simple_category_name_already_in_super_category() RETURNS TRIGGER AS $$

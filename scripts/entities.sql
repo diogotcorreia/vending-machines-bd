@@ -38,15 +38,14 @@ CREATE TABLE has_other (
     CONSTRAINT fk_has_other_super_category FOREIGN KEY(super_category) REFERENCES super_category(name),
     CONSTRAINT pk_has_other PRIMARY KEY (category),
     CONSTRAINT fk_has_other_category FOREIGN KEY(category) REFERENCES category(name),
-    CHECK (super_category != category) -- RI_RE4(TRIGGER)
-    -- RI_RE5 (DONE)
+    CHECK (super_category != category)
 );
 CREATE TABLE product (
     ean VARCHAR(13),
     category VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     CONSTRAINT pk_product PRIMARY KEY (ean),
-    CONSTRAINT fk_product_category FOREIGN KEY(category) REFERENCES category(name) -- RI_RE6
+    CONSTRAINT fk_product_category FOREIGN KEY(category) REFERENCES category(name)
 );
 CREATE TABLE has_category (
     ean VARCHAR(13),
@@ -100,7 +99,7 @@ CREATE TABLE planogram(
 CREATE TABLE retailer(
     tin VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL UNIQUE,
-    CONSTRAINT pk_retailer PRIMARY KEY (tin) -- RI-RE7 (DONE)
+    CONSTRAINT pk_retailer PRIMARY KEY (tin)
 );
 CREATE TABLE responsible_for(
     cat_name VARCHAR(255) NOT NULL,
