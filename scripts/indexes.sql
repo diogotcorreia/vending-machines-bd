@@ -2,7 +2,7 @@
 -- First index
 ---------------------
 DROP INDEX IF EXISTS idx_responsible_for_tin;
-CREATE INDEX idx_responsible_for_tin ON responsible_for USING HASH(tin);
+CREATE INDEX idx_responsible_for_tin ON responsible_for USING BTREE(tin);
 DROP INDEX IF EXISTS idx_responsible_for_cat_name;
 CREATE INDEX idx_responsible_for_cat_name ON responsible_for USING HASH(cat_name);
 -- the retailer's tin is already indexed, since it is a primary key of that relation
@@ -17,13 +17,13 @@ WHERE R.tin = P.tin
 -- SECOND index
 ----------------------
 DROP INDEX IF EXISTS idx_product_category;
-CREATE INDEX idx_product_category ON product USING HASH(category);
+CREATE INDEX idx_product_category ON product USING BTREE(category);
 DROP INDEX IF EXISTS idx_product_desc;
 -- i'd say it's BTREE here, since we'd want a "range" from where we could choose all the descriptions that fit
 CREATE INDEX idx_product_desc ON product USING BTREE(description);
 DROP INDEX IF EXISTS idx_has_category_name;
 -- not sure on this one, since (ean, name) is already a composite PK of the relation
-CREATE INDEX idx_has_category_name ON has_category USING HASH(name);
+CREATE INDEX idx_has_category_name ON has_category USING BTREE(name);
 ----------------------
 EXPLAIN ANALYZE
 SELECT T.name,
