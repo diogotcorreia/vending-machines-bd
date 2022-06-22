@@ -34,17 +34,6 @@ def homepage():
         return render_template("error_page.html", error=e)
 
 
-@app.route("/user-query", methods=["POST"])
-def insert_query():
-    query = request.form["query"]
-    return exec_query(
-        query,
-        lambda cursor: render_template(
-            "query.html", cursor=cursor, title="User Query", query=query
-        ),
-    )
-
-
 @app.route("/category/insert", methods=["GET"])
 def ask_category():
     return exec_query(
