@@ -70,7 +70,6 @@ CREATE TABLE retail_point (
     name VARCHAR(255),
     district VARCHAR(255) NOT NULL,
     county VARCHAR(255) NOT NULL,
-    -- concelho (?)
     CONSTRAINT pk_retail_point PRIMARY KEY (name)
 );
 CREATE TABLE installed_on (
@@ -139,5 +138,5 @@ CREATE TABLE replenishment_event(
     CONSTRAINT fk_replenishment_event_planogram FOREIGN KEY (ean, number, serial_num, manuf)
         REFERENCES planogram(ean, number, serial_num, manuf),
     CONSTRAINT fk_replenishment_event_retailer FOREIGN KEY(tin)
-        REFERENCES retailer(tin) -- RI-RE8 
+        REFERENCES retailer(tin)
 );
