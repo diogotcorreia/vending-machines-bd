@@ -412,7 +412,22 @@ def list_product():
         """
         SELECT ean AS "EAN", category, description FROM product;
         """,
-        lambda cursor: render_template("query.html", cursor=cursor, title="Product"),
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="Product",
+            page_top_actions=(
+                {
+                    "title": "Product",
+                    "link": "#",
+                    "active": True,
+                },
+                {
+                    "title": "Has Category",
+                    "link": url_for("list_has_category"),
+                },
+            ),
+        ),
     )
 
 
@@ -423,7 +438,20 @@ def list_has_category():
         SELECT ean AS "EAN", name AS category_name FROM has_category;
         """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, title="Has Category"
+            "query.html",
+            cursor=cursor,
+            title="Has Category",
+            page_top_actions=(
+                {
+                    "title": "Product",
+                    "link": url_for("list_product"),
+                },
+                {
+                    "title": "Has Category",
+                    "link": "#",
+                    "active": True,
+                },
+            ),
         ),
     )
 
@@ -449,6 +477,21 @@ def list_ivm():
                     "name": "List Replenishment Events",
                 },
             ),
+            page_top_actions=(
+                {
+                    "title": "IVM",
+                    "link": "#",
+                    "active": True,
+                },
+                {
+                    "title": "Installed On",
+                    "link": url_for("list_installed_on"),
+                },
+                {
+                    "title": "Shelf",
+                    "link": url_for("list_shelf"),
+                },
+            ),
         ),
     )
 
@@ -472,7 +515,24 @@ def list_installed_on():
         SELECT serial_num AS serial_number, manuf AS manufacturer, local FROM installed_on;
         """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, title="Installed On"
+            "query.html",
+            cursor=cursor,
+            title="Installed On",
+            page_top_actions=(
+                {
+                    "title": "IVM",
+                    "link": url_for("list_ivm"),
+                },
+                {
+                    "title": "Installed On",
+                    "link": "#",
+                    "active": True,
+                },
+                {
+                    "title": "Shelf",
+                    "link": url_for("list_shelf"),
+                },
+            ),
         ),
     )
 
@@ -483,7 +543,26 @@ def list_shelf():
         """
         SELECT number, serial_num AS serial_number, manuf AS manufacturer, height, name FROM shelf;
         """,
-        lambda cursor: render_template("query.html", cursor=cursor, title="Shelf"),
+        lambda cursor: render_template(
+            "query.html",
+            cursor=cursor,
+            title="Shelf",
+            page_top_actions=(
+                {
+                    "title": "IVM",
+                    "link": url_for("list_ivm"),
+                },
+                {
+                    "title": "Installed On",
+                    "link": url_for("list_installed_on"),
+                },
+                {
+                    "title": "Shelf",
+                    "link": "#",
+                    "active": True,
+                },
+            ),
+        ),
     )
 
 
@@ -520,6 +599,21 @@ def list_retailer():
             page_actions=(
                 {"title": "Insert Retailer", "link": url_for("ask_retailer")},
             ),
+            page_top_actions=(
+                {
+                    "title": "Retailer",
+                    "link": "#",
+                    "active": True,
+                },
+                {
+                    "title": "Responsible For",
+                    "link": url_for("list_responsible_for"),
+                },
+                {
+                    "title": "Replenishment Event",
+                    "link": url_for("list_replenishment_event"),
+                },
+            ),
         ),
     )
 
@@ -532,7 +626,24 @@ def list_responsible_for():
         FROM responsible_for;
         """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, title="Responsible For"
+            "query.html",
+            cursor=cursor,
+            title="Responsible For",
+            page_top_actions=(
+                {
+                    "title": "Retailer",
+                    "link": url_for("list_retailer"),
+                },
+                {
+                    "title": "Responsible For",
+                    "link": "#",
+                    "active": True,
+                },
+                {
+                    "title": "Replenishment Event",
+                    "link": url_for("list_replenishment_event"),
+                },
+            ),
         ),
     )
 
@@ -545,7 +656,24 @@ def list_replenishment_event():
         FROM replenishment_event;
         """,
         lambda cursor: render_template(
-            "query.html", cursor=cursor, title="Replenishment Event"
+            "query.html",
+            cursor=cursor,
+            title="Replenishment Event",
+            page_top_actions=(
+                {
+                    "title": "Retailer",
+                    "link": url_for("list_retailer"),
+                },
+                {
+                    "title": "Responsible For",
+                    "link": url_for("list_responsible_for"),
+                },
+                {
+                    "title": "Replenishment Event",
+                    "link": "#",
+                    "active": True,
+                },
+            ),
         ),
     )
 
