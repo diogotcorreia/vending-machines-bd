@@ -364,9 +364,9 @@ O trecho de código correspondente à indexação pretendida encontra-se abaixo:
 
 \lstinputlisting[language=SQL]{sql/report3/indexes/index1.sql}
 
-Note-se que a criação dos índices está ordenada segundo a mesma tal e qual a
+Note-se que a criação dos índices está ordenada tal e qual a
 ordenação das condições no \textit{statement} \texttt{WHERE}, para otimizar o desempenho
-da \textit{query}. % justificar melhor
+da \textit{query}.
 
 \subsection*{Segunda \textit{query}:}
 
@@ -379,20 +379,25 @@ e outro na relação \texttt{has\_category} (em \texttt{name}).
 \vspace*{0.25cm}
 
 \begin{itemize}
-  \item a
-  \item b
-  \item c
-        % TODO: escrever coisas
+  \item Optou-se pela indexação de \texttt{description}, em \texttt{Product},
+        via \textbf{BTree}: a comparação pretendida irá englobar todo um intervalo
+        de descrições que comecem por \texttt{A}, pelo que aqui um \textbf{Hash}
+        não é particularmente inteligente (não se pretende algo específico).
+  \item Tanto \texttt{category}, em \texttt{Product}, como \texttt{name}, em \texttt{has\_category},
+        são indexadas via \textbf{BTree}: nenhum dos atributos é \texttt{UNIQUE},
+        pelo que fará sentido adicionar indexação a ambos os atributos. Mais, faz
+        sentido, claro, manter a indexação igual para ambos os atributos, visto que
+        estão ambos presentes na mesma comparação. Considerou-se,
+        aqui, que \textit{Merge Join} ajudaria mais a agilizar a \textit{query}
+        que \textit{Hash Join}.
 \end{itemize}
 
 O trecho de código correspondente à indexação pretendida encontra-se abaixo:
 
 \lstinputlisting[language=SQL]{sql/report3/indexes/index2.sql}
 
-Escolheu-se criar os índices pela ordem acima apresentada: primeiro os índice associado
+Escolheu-se criar os índices pela ordem acima apresentada: primeiro os índices associados
 aos atributos presentes em \texttt{WHERE}, e só de seguida o índice associado
 a \texttt{GROUP BY}, por forma a maximizar o desempenho da \textit{query}.
-
-% justificação melhor kek
 
 \end{document}
