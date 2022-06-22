@@ -76,12 +76,25 @@ VALUES ('ivm-1', 'fizz'),
     ('ivm-4', 'fizz'),
     ('ivm-5', 'fizz'),
     ('ivm-6', 'fizz'),
+    ('ivm-7', 'fizz'),
+    ('ivm-8', 'fizz'),
+    ('ivm-9', 'fizz'),
+    ('ivm-10', 'fizz'),
+    ('ivm-11', 'fizz'),
+    ('ivm-12', 'fizz'),
+    ('ivm-13', 'fizz'),
     ('ivm-1', 'buzz'),
     ('ivm-2', 'buzz'),
     ('ivm-3', 'buzz'),
     ('ivm-4', 'buzz'),
     ('ivm-5', 'buzz'),
-    ('ivm-6', 'buzz');
+    ('ivm-6', 'buzz'),
+    ('ivm-7', 'buzz'),
+    ('ivm-8', 'buzz'),
+    ('ivm-9', 'buzz'),
+    ('ivm-10', 'buzz'),
+    ('ivm-11', 'buzz'),
+    ('ivm-12', 'buzz');
 ----------------------
 -- Retail Point
 ----------------------
@@ -162,7 +175,8 @@ VALUES ('1', 'Diogo'),
     ('3', 'Tom'),
     ('4', 'Rafael'),
     ('5', 'Tiago'),
-    ('6', 'Jesus');
+    ('6', 'Jesus'),
+    ('7', 'One Man Army');
 ---------------------
 -- Responsible For
 ---------------------
@@ -178,7 +192,16 @@ VALUES ('Bolachas', '3', 'ivm-1', 'fizz'),
     ('Fruta', '5', 'ivm-4', 'buzz'),
     ('Sumo de Laranja Natural', '5', 'ivm-5', 'fizz'),
     ('Sumo de Laranja Natural', '5', 'ivm-6', 'buzz'),
-    ('Fruta', '1', 'ivm-5', 'buzz');
+    ('Fruta', '1', 'ivm-5', 'buzz'),
+    ('Bolachas de Chocolate', '7', 'ivm-7', 'fizz'),
+    ('Sumo de Laranja Natural', '7', 'ivm-7', 'buzz'),
+    ('Fruta', '7', 'ivm-8', 'fizz'),
+    ('Vinho', '7', 'ivm-8', 'buzz'),
+    ('Cerveja Artesanal', '7', 'ivm-9', 'fizz'),
+    ('Sagres', '7', 'ivm-9', 'buzz'),
+    ('Água', '7', 'ivm-10', 'fizz'),
+    ('Sumo de Manga', '7', 'ivm-10', 'buzz'),
+    ('Sumo que existe', '7', 'ivm-11', 'fizz');
 ----------------------
 -- Replenishment Event
 ----------------------
