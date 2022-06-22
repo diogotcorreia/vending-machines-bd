@@ -192,12 +192,6 @@ esta abordagem mais simples para a secção das categorias não permitia que
 super/sub categorias pudessem ser corretamente criadas, pelo que para essas secções
 optou-se por uma implementação \textit{"à mão"}, mais singular.
 
-Nas páginas referentes às consultas principais da aplicação,
-o utilizador pode optar por adicionar elementos à base de dados: tem total
-liberdade, por exemplo, para adicionar uma \textbf{IVM} à base de dados,
-havendo para tal um campo de \textit{input} que lhe permite adicionar todos os
-campos referentes à relação em questão.
-
 Note-se que toda esta simplicidade é atingida através da função \texttt{exec\_query},
 presente em \texttt{web/proj.cgi}: um \textit{wrapper} que recebe uma qualquer
 \textit{query} e a executa, retornando a página que a aplicação deve apresentar
