@@ -258,7 +258,7 @@ form {
 }
 
 .navbar {
-  background:#0d0e0e;
+  background: #0d0e0e;
   height: 50px;
   position: fixed;
   top: 0;
@@ -275,7 +275,7 @@ form {
   padding: 0.5em;
   border-radius: 0.5em;
 
-  transition: background-color 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: background-color 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .navbar a:hover {
@@ -305,8 +305,14 @@ form {
   text-align: center;
 }
 
-.tab-btn:hover, .tab-btn.active {
+.tab-btn:hover {
   border-bottom: 2px solid #4caf50;
   color: #4caf50;
+  margin-bottom: 0px;
+}
+
+.tab-btn.active {
+  border-bottom: 2px solid #4caf4fb5;
+  color: #4caf4fb5;
   margin-bottom: 0px;
 }
