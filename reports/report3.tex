@@ -130,8 +130,8 @@ Note-se que, ao ler o enunciado, foi entendido que as secções
 do arquivo submetido para avaliação, e não do relatório. Assim sendo, não serão aqui
 incluídos os trechos de código relativos a essas secções, encontrando-se nos
 respetivos ficheiros (nomeados conforme especificado pelo enunciado). Essas
-secções poderão, contudo, ser incluídas no presente relatório como esclarecimento
-de opções que foram tomadas ao elaborar o projeto.
+secções poderão, contudo, ser incluídas no presente relatório como espaço para
+esclarecimento de opções que foram tomadas ao elaborar o projeto.
 
 \section*{Base de Dados}
 
@@ -140,6 +140,12 @@ de opções que foram tomadas ao elaborar o projeto.
 % TODO: integrity constraints aren't done yet
 
 \lstinputlisting[language=SQL]{sql/report3/schema/entities.sql}
+
+Algumas das restrições de integridade, \texttt{RI-REn}, representadas no esquema
+e que requeriam mais que um \texttt{CHECK} (\textit{triggers}, por exemplo), foram
+incluídas no ficheiro \texttt{ICs.sql}, \textbf{abaixo} das restrições de integridade
+da segunda secção do enunciado. Restrições resolvidas via \texttt{CHECK} e
+\texttt{UNIQUE} foram, claro, incluídas no trecho acima (e em \texttt{schema.sql}).
 
 \section*{Restrições de Integridade}
 
@@ -159,7 +165,8 @@ em \texttt{view.sql}. O enunciado não foi excelente quanto a esta secção (por
 quantidade de produto da \textbf{IVM}, e que os \textit{instantes} da venda
 deviam ser obtidos a partir da relação \textbf{Evento de Reposição}. Assim sendo,
 foi assumido, apesar de não parecer fazer muito sentido, que os eventos de reposição
-se davam no mesmo instante da venda.
+se davam no mesmo instante da venda. O utilizador pode visualizar as vendas guardadas
+na base de dados, na aplicação, ao clicar no botão \texttt{Past Sales}, no menu principal.
 
 \section*{Aplicação}
 
@@ -185,9 +192,7 @@ esta abordagem mais simples para a secção das categorias não permitia que
 super/sub categorias pudessem ser corretamente criadas, pelo que para essas secções
 optou-se por uma implementação \textit{"à mão"}, mais singular.
 
-Encontra-se ainda, no fim da página, um campo onde o utilizador pode
-\textbf{introduzir a sua própria \textit{query}}.
-Mais, nas páginas referentes às consultas principais da aplicação,
+Nas páginas referentes às consultas principais da aplicação,
 o utilizador pode optar por adicionar elementos à base de dados: tem total
 liberdade, por exemplo, para adicionar uma \textbf{IVM} à base de dados,
 havendo para tal um campo de \textit{input} que lhe permite adicionar todos os
@@ -205,7 +210,7 @@ ação falhe durante o decorrer da \textit{query}.
 \vspace*{0.5cm}
 
 Pretendia-se, quanto à aplicação, que esta permitisse ao utilizador realizar um conjunto
-de ações pré-determinado (garantindo a atomicidade de todas elas):  de ações pré-determinado (garantindo a atomicidade de todas elas):
+de ações pré-determinado (garantindo a atomicidade de todas elas):
 
 
 \begin{enumerate}
@@ -302,9 +307,7 @@ em \texttt{analytics.sql}. Ao ler o enunciado, foi entendido por \textit{"escrev
   duas consultas SQL que (...)"} que as consultas OLAP em questão não precisariam
 de ter \textit{botões} ou mecanismos semelhantes presentes na aplicação por
 definição - precisariam apenas de estar \textit{escritas} em \texttt{analytics.sql} -
-pelo que tais mecanismos não foram incluídos. Note-se, contudo, que para efeitos de teste
-o utilizador pode recorrer ao campo de \textit{input} de \textit{queries} no fim do menu principal
-para testar ambas as consultas.
+pelo que tais mecanismos não foram incluídos.
 
 \section*{Índices}
 
