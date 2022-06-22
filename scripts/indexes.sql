@@ -22,7 +22,6 @@ DROP INDEX IF EXISTS idx_product_desc;
 -- i'd say it's BTREE here, since we'd want a "range" from where we could choose all the descriptions that fit
 CREATE INDEX idx_product_desc ON product USING BTREE(description);
 DROP INDEX IF EXISTS idx_has_category_name;
--- not sure on this one, since (ean, name) is already a composite PK of the relation
 CREATE INDEX idx_has_category_name ON has_category USING BTREE(name);
 ----------------------
 EXPLAIN ANALYZE
