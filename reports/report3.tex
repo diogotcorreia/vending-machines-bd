@@ -171,7 +171,7 @@ na base de dados, na aplicação, ao clicar no botão \texttt{Past Sales}, no me
 \section*{Aplicação}
 
 A aplicação \textit{web} desenvolvida no contexto do projeto pode ser encontrada
-em \url{https://ivm.diogotc.com}, apresentando uma arquitetura bastante sucinta.
+em \url{https://ivm.gaspa.pt}, apresentando uma arquitetura bastante sucinta.
 Abordando inicialmente pormenores mais \textit{low-level}, temos que todos os arquivos
 \texttt{Python} e \texttt{HTML} que compõem a aplicação estão na pasta \texttt{web}.
 O \textit{hub} principal da aplicação é o ficheiro \texttt{web/proj.cgi}, a partir do qual
@@ -344,16 +344,20 @@ Para a primeira \textit{query}, optou-se por criar índices em dois atributos da
 \vspace*{0.25cm}
 
 \begin{itemize}
-  \item Não criámos nenhum índice quanto ao atributo \texttt{name}, em \texttt{retailer},
+  \item Não se criou nenhum índice quanto ao atributo \texttt{name}, em \texttt{retailer},
         apesar de ser o atributo \textbf{selecionado} pela \textit{query} \textbf{e ser
           \texttt{DISTINCT}} - o atributo já é \texttt{UNIQUE}, pelo
         esquema relacional, pelo que esta indexação é feita por definição (com
         \textbf{BTree}), sem ser necessário adicionar outros índices;
 
-  \item Nos atributos \texttt{tin} e \texttt{cat\_name}, em \texttt{responsible\_for},
-        faz sentido criar índices \textbf{Hash}, por forma a evitar procuras sequenciais
-        (é pretendido, em ambas as situações, que o atributo corresponda a
-        \textbf{\textit{algo} concreto}).
+  \item No atributo \texttt{tin}, em \texttt{responsible\_for}, faz sentido adicionar um
+        índice \textbf{BTree}: vamos realizar comparações com a chave primária \texttt{tin},
+        de \texttt{Retailer}, indexada com índices \textbf{BTree}, pelo que para maximizar
+        o desempenho (via \textit{Merge Join}), é esta a indexação que faz sentido;
+
+  \item No atributo \texttt{cat\_name}, em \texttt{responsible\_for}, faz sentido adicionar
+        um índice \textbf{Hash}: quer-se comparar o atributo em questão com \textit{algo}
+        concreto, pelo que a comparação em $O(1)$ é ideal.
 \end{itemize}
 
 O trecho de código correspondente à indexação pretendida encontra-se abaixo:
