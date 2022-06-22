@@ -252,3 +252,36 @@ form {
   border-radius: 0.8em;
   font-weight: bold;
 }
+
+.navbar-spacing {
+  height: 50px;
+}
+
+.navbar {
+  background:#0d0e0e;
+  height: 50px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 1em;
+}
+
+.navbar a {
+  padding: 0.5em;
+  border-radius: 0.5em;
+
+  transition: background-color 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.navbar a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.flex-grow {
+  flex-grow: 1;
+}

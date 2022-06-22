@@ -12,6 +12,14 @@
 {% endblock %}
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block content %}
+  <nav class="navbar">
+    <a href="{{ url_for('homepage') }}">Main Menu</a>
+    <div class="flex-grow"></div>
+    {% for action in (page_actions|default([])) %}
+      <a href="{{ action.link }}">{{ action.title }}</a>
+    {% endfor %}
+  </nav>
+  <div class="navbar-spacing"></div>
   <div class="horizontal-center">
     {% for action in (page_top_actions|default([])) %}
       <a class="button" href="{{ action.link }}">{{ action.title }}</a>
@@ -59,12 +67,6 @@
     {% else %}
       <p>Query successful</p>
     {% endif %}
-    <div class="horizontal-center">
-      {% for action in (page_actions|default([])) %}
-        <a class="button" href="{{ action.link }}">{{ action.title }}</a>
-      {% endfor %}
-      <a class="button" href="{{ url_for('homepage') }}">Main Menu</a>
-    </div>
   {% else %}
     <p>Erro: ao obter dados da base de dados!</p>
   {% endif %}
