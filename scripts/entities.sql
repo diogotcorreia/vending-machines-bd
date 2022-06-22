@@ -15,23 +15,22 @@ DROP TABLE IF EXISTS replenishment_event CASCADE;
 ----------------------------------------
 -- Table Creation
 ----------------------------------------
--- Primary keys need NOT NULL ?
+-- NOTE: some of the integrity constraints mentioned in the schema are created,
+-- as triggers, in ICs.sql
+
 CREATE TABLE category (
     name VARCHAR(255),
-    CONSTRAINT pk_category PRIMARY KEY (name) -- RI_RE1
+    CONSTRAINT pk_category PRIMARY KEY (name)
 );
 CREATE TABLE simple_category (
     name VARCHAR(255),
     CONSTRAINT pk_simple_category PRIMARY KEY (name),
-    CONSTRAINT fk_simple_category_category FOREIGN KEY(name) REFERENCES category(name) -- RI_RE1
-    -- RI_RE2
+    CONSTRAINT fk_simple_category_category FOREIGN KEY(name) REFERENCES category(name)
 );
 CREATE TABLE super_category (
     name VARCHAR(255),
     CONSTRAINT pk_super_category PRIMARY KEY (name),
-    CONSTRAINT fk_super_category_category FOREIGN KEY(name) REFERENCES category(name) -- RI_RE1
-    -- RI_RE2
-    -- RI_RE3
+    CONSTRAINT fk_super_category_category FOREIGN KEY(name) REFERENCES category(name)
 );
 CREATE TABLE has_other (
     super_category VARCHAR(255) NOT NULL,

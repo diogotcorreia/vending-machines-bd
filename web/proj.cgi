@@ -77,7 +77,6 @@ def ask_category():
 def insert_category():
     query = """
         INSERT INTO category (name) VALUES (%s);
-        INSERT INTO simple_category (name) VALUES (%s);
         """
     fields = ("name", "name")
     if request.form["parent_category"]:
