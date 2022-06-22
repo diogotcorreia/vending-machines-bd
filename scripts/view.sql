@@ -38,4 +38,4 @@ EXTRACT(YEAR FROM instant) AS year,
 EXTRACT(QUARTER FROM instant) AS quarter,
 EXTRACT(MONTH FROM instant) AS month,
 EXTRACT(DAY FROM instant) AS day_month,
-EXTRACT(DOW FROM instant) AS day_week;
+TO_CHAR(instant, 'Day') AS day_week;
