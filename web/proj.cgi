@@ -615,11 +615,12 @@ def confirm_delete_retailer(tin):
 def delete_retailer():
     return exec_query(
         """
+        DELETE FROM replenishment_event WHERE tin = %s;
         DELETE FROM responsible_for WHERE tin = %s;
         DELETE FROM retailer WHERE tin = %s;
         """,
         lambda cursor: redirect(url_for("list_retailer")),
-        data_from_request(("tin", "tin")),
+        data_from_request(("tin", "tin", "tin")),
     )
 
 
