@@ -364,10 +364,6 @@ O trecho de código correspondente à indexação pretendida encontra-se abaixo:
 
 \lstinputlisting[language=SQL]{sql/report3/indexes/index1.sql}
 
-Note-se que a criação dos índices está ordenada tal e qual a
-ordenação das condições no \textit{statement} \texttt{WHERE}, para otimizar o desempenho
-da \textit{query}.
-
 \subsection*{Segunda \textit{query}:}
 
 \lstinputlisting[language=SQL]{sql/report3/queries/example2.sql}
@@ -384,20 +380,21 @@ e outro na relação \texttt{has\_category} (em \texttt{name}).
         de descrições que comecem por \texttt{A}, pelo que aqui um \textbf{Hash}
         não é particularmente inteligente (não se pretende algo específico).
   \item Tanto \texttt{category}, em \texttt{Product}, como \texttt{name}, em \texttt{has\_category},
-        são indexadas via \textbf{BTree}: nenhum dos atributos é \texttt{UNIQUE},
-        pelo que fará sentido adicionar indexação a ambos os atributos. Mais, faz
-        sentido, claro, manter a indexação igual para ambos os atributos, visto que
-        estão ambos presentes na mesma comparação. Considerou-se,
-        aqui, que \textit{Merge Join} ajudaria mais a agilizar a \textit{query}
-        que \textit{Hash Join}.
+        são indexadas via \textbf{BTree}: a razão pela qual esta indexação foi escolhida
+        não foi, contudo, devido à comparação que existe entre ambos em \texttt{WHERE},
+        mas sim devido à presença de \texttt{name} em \texttt{GROUP BY}. Note-se que
+        índices \textbf{BTree} já vêm, por natureza, ordenados, algo que não
+        acontece com índices \textbf{Hash} - visto que \texttt{GROUP BY} procura
+        também agrupar os dados sobre o atributo \texttt{name}, parece fazer todo
+        o sentido que a escolha recaia sobre índices \textbf{BTree}. Por conseguinte,
+        \texttt{category} é também indexada com índices \textbf{BTree}, já que, tal como referido na justificação
+        da indexação de \texttt{tin} na primeira \textit{query}, a consulta
+        vê a sua performance maximizada ao fazermos comparações entre atributos
+        indexados de igual forma.
 \end{itemize}
 
 O trecho de código correspondente à indexação pretendida encontra-se abaixo:
 
 \lstinputlisting[language=SQL]{sql/report3/indexes/index2.sql}
-
-Escolheu-se criar os índices pela ordem acima apresentada: primeiro os índices associados
-aos atributos presentes em \texttt{WHERE}, e só de seguida o índice associado
-a \texttt{GROUP BY}, por forma a maximizar o desempenho da \textit{query}.
 
 \end{document}
