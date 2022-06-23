@@ -26,15 +26,4 @@
     <a class="button" href="{{ url_for('list_replenishment_event') }}">Replenishment Event</a>
     <a class="button" href="{{ url_for('list_sales') }}">Past Sales</a>
   </div>
-  <div class="query-container">
-    <form action="{{ url_for('insert_query') }}" method="post">
-      <div class="query">
-        <p>Insert Query: (Prone to SQL Injection duh)</p>
-        <textarea rows="5" class="query" type="text" name="query"></textarea>
-      </div>
-      <p>
-        <input type="submit" value="Submit" />
-      </p>
-    </form>
-  </div>
 {% endblock %}
