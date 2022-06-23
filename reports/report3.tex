@@ -149,8 +149,10 @@ da segunda secção do enunciado. Restrições resolvidas via \texttt{CHECK} e
 
 Foi, ainda, incluída uma função no ficheiro em questão - \texttt{all\_subcategories} -
 que retorna todas as \textbf{Sub-Categorias} (recursivamente) de uma dada \textbf{Categoria}:
-a função é particularmente útil em secções futuras, devidamente identificadas
-neste relatório.
+é particularmente útil para a primeira restrição de integridade da próxima secção.
+Foi implementada via \textit{nested loops}, em \texttt{SQL}, em vez de utilizar
+o statement \texttt{WITH RECURSIVE}, por conselho dos docentes de laboratório
+(visto que este não faz parte do \textit{standard} de \texttt{PostgreSQL}).
 
 \section*{Restrições de Integridade}
 
@@ -174,10 +176,12 @@ de um produto possa "estar mais abaixo" na hierarquia de outra categoria permiti
 pela prateleira. A implementação que o permitiria teria um problema particularmente
 relevante, descrito (graficamente) abaixo:
 
-\begin{figure}
-  \centering
-  \includesvg[width=1.6\textwidth]{shelves}
-\end{figure}
+% TODO: FIX THIS
+
+% \begin{figure}
+  % \centering
+  % \includesvg[scale=0.3]{shelves}
+% \end{figure}
 
 Optou-se, portanto, por ignorar a possibilidade em questão.
 
@@ -316,6 +320,10 @@ de ações pré-determinado (garantindo a atomicidade de todas elas):
 
 \end{enumerate}
 
+Note-se que, para além das funcionalidades descritas acima (e requeridas pelo enunciado),
+o utilizador pode ainda adicionar \textbf{responsabilidades de reposição} a retalhistas
+pela aplicação, seguindo procedimentos semelhantes aos supra-mencionados.
+
 % TODO: verificar se está tudo atómico e SQL Injection proof
 
 \section*{Consultas OLAP}
@@ -326,6 +334,21 @@ em \texttt{analytics.sql}. Ao ler o enunciado, foi entendido por \textit{"escrev
 de ter \textit{botões} ou mecanismos semelhantes presentes na aplicação por
 definição - precisariam apenas de estar \textit{escritas} em \texttt{analytics.sql} -
 pelo que tais mecanismos não foram incluídos.
+
+Após discussão com os docentes de laboratório (e de uma leitura mais cuidada do enunciado),
+optou-se por agrupar a primeira consulta via \texttt{GROUPING SETS}, e a segunda via
+\texttt{CUBE}:
+
+\begin{itemize}
+  \item Na primeira consulta, tanto "dia da semana" como "concelho" são antecedidos
+  por "por" - entende-se, assim, que não se pretende as diferentes combinações
+  de concelhos e dias da semana, mas sim o total de artigos vendidos nos vários dias
+  da semana e, \textbf{em separado}, nos vários concelhos. Utilizou-se, portanto,
+  \texttt{GROUPING SETS} para este efeito.
+  \item Na segunda consulta, a interpretação é oposta: pretende-se exatamente as
+  várias combinações de artigos vendidos, consoante os vários atributos da venda,
+  pelo que faz mais sentido agrupar via \texttt{CUBE}.
+\end{itemize}
 
 \section*{Índices}
 
