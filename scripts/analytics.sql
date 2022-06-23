@@ -1,5 +1,5 @@
--- The total amount of sold products in a given period of time, by day of the week,
--- county or total
+-- The total amount of sold products in a given period of time,
+-- by day of the week, by county and in total
 SELECT day_week,
   county,
   SUM(units) AS total_units
@@ -12,8 +12,8 @@ WHERE MAKE_DATE(
 GROUP BY GROUPING SETS (day_week, county, ())
 ORDER BY day_week,
   county;
--- The total amount of sold products in a given district, by day of the week,
--- county, category or total
+-- The total amount of sold products in a given district,
+-- by county, category, day of the week and in total
 SELECT county,
   category_name,
   day_week,
