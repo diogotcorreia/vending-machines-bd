@@ -253,10 +253,12 @@ de ações pré-determinado (garantindo a atomicidade de todas elas):
                 de reposição de produtos associadas ao \textbf{Retalhista} são, claro, removidas.
         \end{enumerate}
 
-        Note-se que, na implementação atual, \textbf{não é permitida a remoção de Retalhistas
-          com Eventos de Reposição a eles associados}: se tal acontecesse, os \textbf{Eventos
-          de Reposição} seriam também removidos, e o histórico de eventos não seria, assim,
-        totalmente fidedigno.
+        Note-se que, na implementação atual, \textbf{os Eventos de Reposição associados
+        a retalhistas que são removidos são também eliminados}: parece ser uma falha
+        do enunciado (ou, pelo menos, algo que não faz todo o sentido), visto que
+        estamos efetivamente a \textbf{eliminar histórico} à aplicação. Faria
+        mais sentido, possivelmente, \textit{esconder} os retalhistas sempre que houver este problema
+        de "dependências" associado, mas optou-se por seguir o enunciado.
 
   \item \textbf{Listar todos os Eventos de Reposição de uma IVM, apresentando
           o número de unidades repostas por Categoria de Produto.}
