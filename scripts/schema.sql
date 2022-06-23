@@ -140,3 +140,21 @@ CREATE TABLE replenishment_event(
     CONSTRAINT fk_replenishment_event_retailer FOREIGN KEY(tin)
         REFERENCES retailer(tin)
 );
+
+CREATE OR REPLACE FUNCTION all_subcategories(name VARCHAR(255))
+RETURNS SETOF has_other AS
+$$
+    DECLARE direct_child has_other%ROWTYPE;
+    DECLARE indirect_child has_other%ROWTYPE;
+BEGIN
+    FOR direct_child IN SELECT * FROM has_other WHERE super_category = name LOOP
+        RETURN NEXT direct_child;
+        FOR indirect_child IN SELECT * FROM all_subcategories(direct_child.category) LOOP
+            RETURN NEXT indirect_child;
+        END LOOP;
+    END LOOP;
+
+    RETURN;
+END
+$$
+LANGUAGE plpgsql;
