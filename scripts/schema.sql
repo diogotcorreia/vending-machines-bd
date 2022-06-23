@@ -94,7 +94,7 @@ CREATE TABLE shelf (
     CONSTRAINT fk_shelf_category FOREIGN KEY(name)
         REFERENCES category(name)
 );
-CREATE TABLE planogram(
+CREATE TABLE planogram (
     ean VARCHAR(13),
     number VARCHAR(255),
     serial_num VARCHAR(255),
@@ -108,12 +108,12 @@ CREATE TABLE planogram(
     CONSTRAINT fk_planogram_shelf FOREIGN KEY(number, serial_num, manuf)
         REFERENCES shelf(number, serial_num, manuf)
 );
-CREATE TABLE retailer(
+CREATE TABLE retailer (
     tin VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL UNIQUE,
     CONSTRAINT pk_retailer PRIMARY KEY (tin)
 );
-CREATE TABLE responsible_for(
+CREATE TABLE responsible_for (
     cat_name VARCHAR(255) NOT NULL,
     tin VARCHAR(255) NOT NULL,
     serial_num VARCHAR(255),
@@ -126,7 +126,7 @@ CREATE TABLE responsible_for(
     CONSTRAINT fk_responsible_for_category FOREIGN KEY(cat_name)
         REFERENCES category(name)
 );
-CREATE TABLE replenishment_event(
+CREATE TABLE replenishment_event (
     ean VARCHAR(13),
     number VARCHAR(255),
     serial_num VARCHAR(255),

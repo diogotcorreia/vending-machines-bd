@@ -3,7 +3,7 @@
 from wsgiref.handlers import CGIHandler
 from flask import Flask
 from flask import render_template, request, redirect, url_for
-from urllib.parse import urlencode
+from urllib.parse import quote, unquote
 
 ## Libs postgres
 import psycopg2
@@ -78,7 +78,7 @@ def insert_category():
     query = """
         INSERT INTO category (name) VALUES (%s);
         """
-    fields = ("name", "name")
+    fields = ("name",)
     if request.form["parent_category"]:
         query += """
         INSERT INTO has_other (super_category, category) VALUES (%s, %s);
@@ -629,6 +629,12 @@ def list_responsible_for():
             "query.html",
             cursor=cursor,
             title="Responsible For",
+            page_actions=(
+                {
+                    "title": "Insert Responsibility",
+                    "link": url_for("ask_responsibility"),
+                },
+            ),
             page_top_actions=(
                 {
                     "title": "Retailer",
@@ -644,6 +650,76 @@ def list_responsible_for():
                     "link": url_for("list_replenishment_event"),
                 },
             ),
+        ),
+    )
+
+
+@app.route("/responsible_for/insert", methods=["GET"])
+def ask_responsibility():
+
+    return exec_queries(
+        (
+            """
+            SELECT name FROM category
+            ORDER BY name;
+            """,
+            """
+            SELECT tin FROM retailer;
+            """,
+            """
+            SELECT serial_num, manuf FROM ivm EXCEPT (SELECT serial_num, manuf FROM responsible_for)
+            ORDER BY manuf, serial_num;
+            """,
+        ),
+        lambda cursors: render_template(
+            "ask_input.html",
+            action_url=url_for("insert_responsibility"),
+            title="Insert Responsibility",
+            fields=(
+                {
+                    "label": "Category Name:",
+                    "name": "cat_name",
+                    "type": "select",
+                    "required": True,
+                    "options": ((record[0], record[0]) for record in cursors[0]),
+                },
+                {
+                    "label": "Retailer TIN:",
+                    "name": "tin",
+                    "type": "select",
+                    "required": True,
+                    "options": ((record[0], record[0]) for record in cursors[1]),
+                },
+                {
+                    "label": "IVM:",
+                    "name": "ivm",
+                    "type": "select",
+                    "required": True,
+                    "options": (
+                        (
+                            str(quote(record[0]) + "&" + quote(record[1])),
+                            str(f"{record[0]} | {record[1]}"),
+                        )
+                        for record in cursors[2]
+                    ),
+                },
+            ),
+        ),
+        ((), (), ()),
+    )
+
+
+@app.route("/responsible_for/insert", methods=["POST"])
+def insert_responsibility():
+    return exec_query(
+        """
+        INSERT INTO responsible_for (cat_name, tin, serial_num, manuf) VALUES (%s, %s, %s, %s);
+        """,
+        lambda cursor: redirect(url_for("list_responsible_for")),
+        (
+            request.form["cat_name"],
+            request.form["tin"],
+            *map(unquote, request.form["ivm"].split("&")),
         ),
     )
 
@@ -734,13 +810,26 @@ def confirm_delete_category(category):
 def delete_category():
     return exec_query(
         """
+        DELETE FROM replenishment_event
+            WHERE (ean, number, serial_num, manuf) IN (
+                SELECT ean, number, serial_num, manuf FROM planogram
+                    WHERE ean IN (SELECT ean FROM product WHERE category = %s)
+                    OR (number, serial_num, manuf) IN (SELECT number, serial_num, manuf FROM shelf WHERE name = %s)
+            );
+        DELETE FROM planogram
+            WHERE ean IN (SELECT ean FROM product WHERE category = %s)
+            OR (number, serial_num, manuf) IN (SELECT number, serial_num, manuf FROM shelf WHERE name = %s);
+        DELETE FROM responsible_for WHERE cat_name = %s;
+        DELETE FROM has_category WHERE name = %s;
+        DELETE FROM product WHERE category = %s;
+        DELETE FROM shelf WHERE name = %s;
         DELETE FROM has_other WHERE category = %s OR super_category = %s;
         DELETE FROM super_category WHERE name = %s;
         DELETE FROM simple_category WHERE name = %s;
         DELETE FROM category WHERE name = %s;
         """,
         lambda cursor: redirect(url_for("list_category")),
-        data_from_request(("category", "category", "category", "category", "category")),
+        data_from_request(("category",) * 13),
     )
 
 
@@ -791,7 +880,21 @@ def exec_queries(queries, outcome, data):
             cursors.append(cursor)
         return outcome(cursors)
     except Exception as e:
-        return render_template("error_page.html", error=e)
+        error_messages = {
+            "pk_category": "There can't be two categories with the same name.",
+            "pk_retailer": "There can't be two retailers with the same TIN.",
+            "retailer_name_key": "There can't be two retailers with the same name.", 
+            "pk_responsible_for": "An IVM can only be replenished by a single retailer.",
+        }
+
+        displayed_error = next(
+            (error_messages[key] for key in error_messages.keys() if key in e.pgerror),
+            "Something wrong occurred."
+        )
+        return render_template(
+            "error_page.html",
+            error=displayed_error + " Please try again."
+        )
     finally:
         dbConn.commit()
         for cursor in cursors:
