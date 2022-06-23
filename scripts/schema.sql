@@ -25,12 +25,14 @@ CREATE TABLE category (
 CREATE TABLE simple_category (
     name VARCHAR(255),
     CONSTRAINT pk_simple_category PRIMARY KEY (name),
-    CONSTRAINT fk_simple_category_category FOREIGN KEY(name) REFERENCES category(name)
+    CONSTRAINT fk_simple_category_category FOREIGN KEY(name)
+        REFERENCES category(name)
 );
 CREATE TABLE super_category (
     name VARCHAR(255),
     CONSTRAINT pk_super_category PRIMARY KEY (name),
-    CONSTRAINT fk_super_category_category FOREIGN KEY(name) REFERENCES category(name)
+    CONSTRAINT fk_super_category_category FOREIGN KEY(name)
+        REFERENCES category(name)
 );
 CREATE TABLE has_other (
     super_category VARCHAR(255) NOT NULL,
@@ -38,7 +40,8 @@ CREATE TABLE has_other (
     CONSTRAINT fk_has_other_super_category FOREIGN KEY(super_category)
         REFERENCES super_category(name),
     CONSTRAINT pk_has_other PRIMARY KEY (category),
-    CONSTRAINT fk_has_other_category FOREIGN KEY(category) REFERENCES category(name),
+    CONSTRAINT fk_has_other_category FOREIGN KEY(category)
+        REFERENCES category(name),
     CHECK (super_category != category)
 );
 CREATE TABLE product (
@@ -46,7 +49,8 @@ CREATE TABLE product (
     category VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     CONSTRAINT pk_product PRIMARY KEY (ean),
-    CONSTRAINT fk_product_category FOREIGN KEY(category) REFERENCES category(name)
+    CONSTRAINT fk_product_category FOREIGN KEY(category)
+        REFERENCES category(name)
 );
 CREATE TABLE has_category (
     ean VARCHAR(13),
@@ -105,7 +109,7 @@ CREATE TABLE planogram(
         REFERENCES shelf(number, serial_num, manuf)
 );
 CREATE TABLE retailer(
-    tin VARCHAR(255),
+    tin VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL UNIQUE,
     CONSTRAINT pk_retailer PRIMARY KEY (tin)
 );
@@ -134,5 +138,23 @@ CREATE TABLE replenishment_event(
     CONSTRAINT fk_replenishment_event_planogram FOREIGN KEY (ean, number, serial_num, manuf)
         REFERENCES planogram(ean, number, serial_num, manuf),
     CONSTRAINT fk_replenishment_event_retailer FOREIGN KEY(tin)
-        REFERENCES retailer(tin) -- RI-RE8
+        REFERENCES retailer(tin)
 );
+
+CREATE OR REPLACE FUNCTION all_subcategories(name VARCHAR(255))
+RETURNS SETOF has_other AS
+$$
+    DECLARE direct_child has_other%ROWTYPE;
+    DECLARE indirect_child has_other%ROWTYPE;
+BEGIN
+    FOR direct_child IN SELECT * FROM has_other WHERE super_category = name LOOP
+        RETURN NEXT direct_child;
+        FOR indirect_child IN SELECT * FROM all_subcategories(direct_child.category) LOOP
+            RETURN NEXT indirect_child;
+        END LOOP;
+    END LOOP;
+
+    RETURN;
+END
+$$
+LANGUAGE plpgsql;
