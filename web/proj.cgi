@@ -734,13 +734,26 @@ def confirm_delete_category(category):
 def delete_category():
     return exec_query(
         """
+        DELETE FROM replenishment_event
+            WHERE (ean, number, serial_num, manuf) IN (
+                SELECT ean, number, serial_num, manuf FROM planogram
+                    WHERE ean IN (SELECT ean FROM product WHERE category = %s)
+                    OR (number, serial_num, manuf) IN (SELECT number, serial_num, manuf FROM shelf WHERE name = %s)
+            );
+        DELETE FROM planogram
+            WHERE ean IN (SELECT ean FROM product WHERE category = %s)
+            OR (number, serial_num, manuf) IN (SELECT number, serial_num, manuf FROM shelf WHERE name = %s);
+        DELETE FROM responsible_for WHERE cat_name = %s;
+        DELETE FROM has_category WHERE name = %s;
+        DELETE FROM product WHERE category = %s;
+        DELETE FROM shelf WHERE name = %s;
         DELETE FROM has_other WHERE category = %s OR super_category = %s;
         DELETE FROM super_category WHERE name = %s;
         DELETE FROM simple_category WHERE name = %s;
         DELETE FROM category WHERE name = %s;
         """,
         lambda cursor: redirect(url_for("list_category")),
-        data_from_request(("category", "category", "category", "category", "category")),
+        data_from_request(("category",) * 13),
     )
 
 
