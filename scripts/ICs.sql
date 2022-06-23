@@ -5,20 +5,10 @@ CREATE OR REPLACE FUNCTION self_contained_category_trigger() RETURNS trigger AS 
 BEGIN
   -- Tries to find NEW.super_category in the sub-categories of NEW.category.
   -- If it does, throws exception
-  IF EXISTS (
-    WITH RECURSIVE list_recurs(super_category, category) AS (
-      SELECT super_category,
-        category
-      FROM has_other
-      WHERE super_category = NEW.category
-      UNION ALL
-      SELECT child.super_category,
-        child.category
-      FROM has_other AS child
-        INNER JOIN list_recurs AS parent ON child.super_category = parent.category
-    )
-    SELECT category AS sub_categories
-    FROM list_recurs
+  IF NEW.category = NEW.super_category OR
+  EXISTS (
+    SELECT *
+    FROM all_subcategories(NEW.category)
     WHERE category = NEW.super_category
   )
   THEN
@@ -73,36 +63,13 @@ BEGIN
     WHERE number = NEW.number AND
           serial_num = NEW.serial_num AND
           manuf = NEW.manuf;
-
+  
   IF NOT EXISTS (
-    (
-      SELECT name FROM has_category
-      WHERE name = shelf_category_name AND ean = NEW.ean
-      UNION
-      SELECT category AS name FROM product
-      WHERE ean = NEW.ean
-    )
-    INTERSECT
-    (
-      (
-        WITH RECURSIVE list_recurs(super_category, category) AS (
-          SELECT super_category, category
-          FROM has_other
-          WHERE super_category = shelf_category_name
-          UNION ALL
-          SELECT child.super_category, child.category
-          FROM has_other AS child
-            INNER JOIN list_recurs AS parent ON child.super_category = parent.category
-        ) SELECT category AS name FROM list_recurs
-      )
-      UNION
-      (
-        SELECT shelf_category_name AS name
-      )
-    )
+    SELECT * from has_category
+    WHERE name = shelf_category_name AND ean = NEW.ean
   )
   THEN
-    RAISE EXCEPTION 'At least one of the Product''s (%) categories must match (or be a sub-category of) the shelf''s (%, %, %) category (%)',
+    RAISE EXCEPTION 'At least one of the Product''s (%) categories must match the shelf''s (%, %, %) category (%)',
       NEW.ean, NEW.number, NEW.serial_num, NEW.manuf, shelf_category_name;
   END IF;
   RETURN NEW;
@@ -185,7 +152,7 @@ BEGIN
     WHERE name = NEW.name
   )
   THEN
-    RAISE EXCEPTION 'A simple category''s name cannot also exist in the super_category relation as a name';
+    RAISE EXCEPTION 'A Simple Category (%) cannot also be a Super Category', NEW.name;
   END IF;
   RETURN NEW;
 END;

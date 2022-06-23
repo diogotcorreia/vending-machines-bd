@@ -464,7 +464,19 @@ VALUES ('ivm-1', 'fizz'),
     ('ivm-9', 'streak'),
     ('ivm-10', 'streak'),
     ('ivm-11', 'streak'),
-    ('ivm-12', 'streak');
+    ('ivm-12', 'streak'),
+    ('ivm-1', 'pop'),
+    ('ivm-2', 'pop'),
+    ('ivm-3', 'pop'),
+    ('ivm-4', 'pop'),
+    ('ivm-5', 'pop'),
+    ('ivm-6', 'pop'),
+    ('ivm-7', 'pop'),
+    ('ivm-8', 'pop'),
+    ('ivm-9', 'pop'),
+    ('ivm-10', 'pop'),
+    ('ivm-11', 'pop'),
+    ('ivm-12', 'pop');
 ----------------------
 -- Retail Point
 ----------------------
@@ -529,7 +541,13 @@ VALUES ('ivm-1', 'fizz', 'Frigu'),
 -- Shelf
 ----------------------
 INSERT INTO shelf
-VALUES ('1', 'ivm-1', 'fizz', '2', 'Bolachas'),
+VALUES (
+        '1',
+        'ivm-1',
+        'fizz',
+        '2',
+        'Bolachas de Chocolate'
+    ),
     ('3', 'ivm-1', 'fizz', '2', 'Fruta'),
     ('2', 'ivm-2', 'buzz', '3', 'Fruta'),
     ('3', 'ivm-2', 'fizz', '3', 'Bolachas'),
