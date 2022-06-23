@@ -162,7 +162,9 @@ entendida por \textit{"uma categoria não pode estar contida em si própria"}, p
 a primeira restrição de integridade, foi que \textbf{não podem haver ciclos na
   hierarquia da categoria}, e o respetivo \textit{trigger} foi criado de acordo
 com essa interpretação. É, portanto, uma restrição que abrange mais do que
-a \textit{"inclusão direta"} de categorias.
+a \textit{"inclusão direta"} de categorias. De qualquer maneira, a restrição
+implementada (via \textit{trigger}) engloba também a funcionalidade "mais simples"
+requerida.
 
 Note-se que a restrição de integridade em questão podia ser verificada recorrendo
 a um único \texttt{CHECK}, caso se considerasse a "versão mais simples" da mesma (tal
@@ -178,9 +180,9 @@ relevante, descrito (graficamente) abaixo:
 
 % TODO: FIX THIS
 
-\begin{center}
-  \includesvg[scale=0.9]{shelves}
-\end{center}
+% \begin{center}
+%   \includesvg[scale=0.9]{shelves}
+% \end{center}
 
 Optou-se, portanto, por ignorar a possibilidade em questão.
 
@@ -257,6 +259,11 @@ de ações pré-determinado (garantindo a atomicidade de todas elas):
                 o processo é ligeiramente diferente. É apresentada uma tabela ao utilizador,
                 tanto na secção \texttt{Category} como em \texttt{Simple Category} e \texttt{Super Category}, onde o utilizador
                 pode decidir remover a categoria em questão da base de dados.
+                \textbf{Esta operação é bastante destrutiva}: ao apagar uma categoria,
+                todas as entradas de tabelas que possuam a respetiva chave primária
+                como atributo são também apagadas. Este conjunto de entradas inclui
+                relações desde \textbf{Eventos de Reposição} e \textbf{Planograma}
+                até às relações mais "triviais", como \textbf{Sub e Super-Categorias}.
         \end{enumerate}
 
   \item \textbf{Inserir e remover um Retalhista, com todas as suas responsabilidades
