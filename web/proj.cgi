@@ -629,6 +629,12 @@ def list_responsible_for():
             "query.html",
             cursor=cursor,
             title="Responsible For",
+            page_actions=(
+                {
+                    "title": "Insert Responsability",
+                    "link": url_for("ask_responsability"),
+                },
+            ),
             page_top_actions=(
                 {
                     "title": "Retailer",
@@ -644,6 +650,77 @@ def list_responsible_for():
                     "link": url_for("list_replenishment_event"),
                 },
             ),
+        ),
+    )
+
+
+@app.route("/responsible_for/insert", methods=["GET"])
+def ask_responsability():
+
+    return exec_queries(
+        (
+            """
+            SELECT name FROM category
+            ORDER BY name;
+            """,
+            """
+            SELECT tin FROM retailer;
+            """,
+            """
+            SELECT serial_num, manuf FROM ivm EXCEPT (SELECT serial_num, manuf FROM responsible_for)
+            ORDER BY manuf;
+            """,
+        ),
+        lambda cursors: render_template(
+            "ask_input.html",
+            action_url=url_for("insert_responsability"),
+            title="Insert Responsability",
+            fields=(
+                {
+                    "label": "Category Name:",
+                    "name": "cat_name",
+                    "type": "select",
+                    "required": True,
+                    "options": ((record[0], record[0]) for record in cursors[0]),
+                },
+                {
+                    "label": "Retailer TIN:",
+                    "name": "tin",
+                    "type": "select",
+                    "required": True,
+                    "options": ((record[0], record[0]) for record in cursors[1]),
+                },
+                {
+                    "label": "IVM:",
+                    "name": "ivm",
+                    "type": "select",
+                    "required": True,
+                    "options": (
+                        (
+                            str(record[0] + "&" + record[1]),
+                            str(record[0] + "|" + record[1]),
+                        )
+                        for record in cursors[2]
+                    ),
+                },
+            ),
+        ),
+        ((), (), ()),
+    )
+
+
+@app.route("/responsible_for/insert", methods=["POST"])
+def insert_responsability():
+    return exec_query(
+        """
+        INSERT INTO responsible_for (cat_name, tin, serial_num, manuf) VALUES (%s, %s, %s, %s);
+        """,
+        lambda cursor: redirect(url_for("list_responsible_for")),
+        (
+            request.form["cat_name"],
+            request.form["tin"],
+            request.form["ivm"].split("&")[0],
+            request.form["ivm"].split("&")[1],
         ),
     )
 
