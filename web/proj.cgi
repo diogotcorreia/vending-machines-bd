@@ -3,7 +3,7 @@
 from wsgiref.handlers import CGIHandler
 from flask import Flask
 from flask import render_template, request, redirect, url_for
-from urllib.parse import urlencode
+from urllib.parse import quote, unquote
 
 ## Libs postgres
 import psycopg2
@@ -629,6 +629,12 @@ def list_responsible_for():
             "query.html",
             cursor=cursor,
             title="Responsible For",
+            page_actions=(
+                {
+                    "title": "Insert Responsibility",
+                    "link": url_for("ask_responsibility"),
+                },
+            ),
             page_top_actions=(
                 {
                     "title": "Retailer",
@@ -644,6 +650,76 @@ def list_responsible_for():
                     "link": url_for("list_replenishment_event"),
                 },
             ),
+        ),
+    )
+
+
+@app.route("/responsible_for/insert", methods=["GET"])
+def ask_responsibility():
+
+    return exec_queries(
+        (
+            """
+            SELECT name FROM category
+            ORDER BY name;
+            """,
+            """
+            SELECT tin FROM retailer;
+            """,
+            """
+            SELECT serial_num, manuf FROM ivm EXCEPT (SELECT serial_num, manuf FROM responsible_for)
+            ORDER BY manuf, serial_num;
+            """,
+        ),
+        lambda cursors: render_template(
+            "ask_input.html",
+            action_url=url_for("insert_responsibility"),
+            title="Insert Responsibility",
+            fields=(
+                {
+                    "label": "Category Name:",
+                    "name": "cat_name",
+                    "type": "select",
+                    "required": True,
+                    "options": ((record[0], record[0]) for record in cursors[0]),
+                },
+                {
+                    "label": "Retailer TIN:",
+                    "name": "tin",
+                    "type": "select",
+                    "required": True,
+                    "options": ((record[0], record[0]) for record in cursors[1]),
+                },
+                {
+                    "label": "IVM:",
+                    "name": "ivm",
+                    "type": "select",
+                    "required": True,
+                    "options": (
+                        (
+                            str(quote(record[0]) + "&" + quote(record[1])),
+                            str(f"{record[0]} | {record[1]}"),
+                        )
+                        for record in cursors[2]
+                    ),
+                },
+            ),
+        ),
+        ((), (), ()),
+    )
+
+
+@app.route("/responsible_for/insert", methods=["POST"])
+def insert_responsibility():
+    return exec_query(
+        """
+        INSERT INTO responsible_for (cat_name, tin, serial_num, manuf) VALUES (%s, %s, %s, %s);
+        """,
+        lambda cursor: redirect(url_for("list_responsible_for")),
+        (
+            request.form["cat_name"],
+            request.form["tin"],
+            *map(unquote, request.form["ivm"].split("&")),
         ),
     )
 
