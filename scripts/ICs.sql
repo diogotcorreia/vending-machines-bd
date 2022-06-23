@@ -5,7 +5,8 @@ CREATE OR REPLACE FUNCTION self_contained_category_trigger() RETURNS trigger AS 
 BEGIN
   -- Tries to find NEW.super_category in the sub-categories of NEW.category.
   -- If it does, throws exception
-  IF EXISTS (
+  IF NEW.category = NEW.super_category OR
+  EXISTS (
     WITH RECURSIVE list_recurs(super_category, category) AS (
       SELECT super_category,
         category
