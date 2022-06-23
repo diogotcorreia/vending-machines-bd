@@ -139,13 +139,18 @@ esclarecimento de opções que foram tomadas ao elaborar o projeto.
 
 % TODO: integrity constraints aren't done yet
 
-\lstinputlisting[language=SQL]{../scripts/entities.sql}
+\lstinputlisting[language=SQL]{../scripts/schema.sql}
 
 Algumas das restrições de integridade, \texttt{RI-REn}, representadas no esquema
 e que requeriam mais que um \texttt{CHECK} (\textit{triggers}, por exemplo), foram
 incluídas no ficheiro \texttt{ICs.sql}, \textbf{abaixo} das restrições de integridade
 da segunda secção do enunciado. Restrições resolvidas via \texttt{CHECK} e
 \texttt{UNIQUE} foram, claro, incluídas no trecho acima (e em \texttt{schema.sql}).
+
+Foi, ainda, incluída uma função no ficheiro em questão - \texttt{all\_subcategories} -
+que retorna todas as \textbf{Sub-Categorias} (recursivamente) de uma dada \textbf{Categoria}:
+a função é particularmente útil em secções futuras, devidamente identificadas
+neste relatório.
 
 \section*{Restrições de Integridade}
 
@@ -156,6 +161,25 @@ a primeira restrição de integridade, foi que \textbf{não podem haver ciclos n
   hierarquia da categoria}, e o respetivo \textit{trigger} foi criado de acordo
 com essa interpretação. É, portanto, uma restrição que abrange mais do que
 a \textit{"inclusão direta"} de categorias.
+
+Note-se que a restrição de integridade em questão podia ser verificada recorrendo
+a um único \texttt{CHECK}, caso se considerasse a "versão mais simples" da mesma (tal
+como foi implementado em \texttt{schema.sql} para a relação \texttt{has\_other},
+por exemplo).
+
+A terceira restrição de integridade apresentada, \textbf{RI-5}, foi implementada
+por forma a que um produto apenas possa ser colocado em prateleiras que permitam
+a sua \textbf{Categoria específica}, ignorando casos em que, por exemplo, a categoria
+de um produto possa "estar mais abaixo" na hierarquia de outra categoria permitida
+pela prateleira. A implementação que o permitiria teria um problema particularmente
+relevante, descrito (graficamente) abaixo:
+
+\begin{figure}
+  \centering
+  \includesvg[width=1.6\textwidth]{shelves}
+\end{figure}
+
+Optou-se, portanto, por ignorar a possibilidade em questão.
 
 \section*{Vistas}
 
