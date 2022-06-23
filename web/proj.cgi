@@ -78,7 +78,7 @@ def insert_category():
     query = """
         INSERT INTO category (name) VALUES (%s);
         """
-    fields = ("name", "name")
+    fields = ("name",)
     if request.form["parent_category"]:
         query += """
         INSERT INTO has_other (super_category, category) VALUES (%s, %s);
@@ -791,7 +791,21 @@ def exec_queries(queries, outcome, data):
             cursors.append(cursor)
         return outcome(cursors)
     except Exception as e:
-        return render_template("error_page.html", error=e)
+        error_messages = {
+            "pk_category": "There can't be two categories with the same name.",
+            "pk_retailer": "There can't be two retailers with the same TIN.",
+            "retailer_name_key": "There can't be two retailers with the same name.", 
+            "pk_responsible_for": "An IVM can only be replenished by a single retailer.",
+        }
+
+        displayed_error = next(
+            (error_messages[key] for key in error_messages.keys() if key in e.pgerror),
+            "Something wrong occurred."
+        )
+        return render_template(
+            "error_page.html",
+            error=displayed_error + " Please try again."
+        )
     finally:
         dbConn.commit()
         for cursor in cursors:
