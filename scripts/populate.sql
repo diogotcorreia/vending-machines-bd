@@ -113,8 +113,8 @@ VALUES ('Bolachas', 'Bolachas de Chocolate'),
     ('Snacks', 'Cachorros Quentes'),
     ('Snacks', 'Salgados'),
     ('Salgados', 'Batatas Fritas'),
-    ('Batatas Fritas', 'Batatas Pala-Pala'),
-    ('Batatas Fritas', 'Batatas Palha'),
+    ('Salgados', 'Batatas Pala-Pala'),
+    ('Salgados', 'Batatas Palha'),
     ('Batatas Pala-Pala', 'Lays'),
     ('Batatas Pala-Pala', 'Ruffles'),
     ('Batatas Pala-Pala', 'Sun Chips'),
@@ -944,3 +944,4 @@ VALUES (
         '8',
         '2'
     );
+    

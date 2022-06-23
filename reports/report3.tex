@@ -1,0 +1,481 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[legalpaper, portrait, margin=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{blindtext}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{pdflscape}
+\usepackage{svg}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\graphicspath{ {./} }
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,
+  urlcolor=blue,
+  citecolor=blue,
+  pdftitle={Relatório BD - Entrega 3 - 2021/2022},
+  pdfpagemode=FullScreen,
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Grupo \textbf{8}}
+\lhead{Relatório Entrega 3 BD 2021/2022 LEIC-A}
+\cfoot{Diogo Gaspar (99207), Diogo Correia (99211) e Tomás Esteves (99341)}
+
+\renewcommand{\footrulewidth}{0.2pt}
+
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\labelitemiii}{$\diamond$}
+\newcommand{\op}{\text}
+
+\newlist{constraintsList}{itemize}{4}
+\setlist[constraintsList]{itemsep=1pt, topsep=1pt, label=\protect\mpbullet}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+% https://stackoverflow.com/questions/1116266/listings-in-latex-with-utf-8-or-at-least-german-umlauts
+\lstset{%
+        inputencoding=utf8,
+        extendedchars=true,
+        literate=%
+        {é}{{\'{e}}}1
+        {è}{{\`{e}}}1
+        {ê}{{\^{e}}}1
+        {ë}{{\¨{e}}}1
+        {É}{{\'{E}}}1
+        {Ê}{{\^{E}}}1
+        {û}{{\^{u}}}1
+        {ù}{{\`{u}}}1
+        {ú}{{\'{u}}}1
+        {â}{{\^{a}}}1
+        {à}{{\`{a}}}1
+        {á}{{\'{a}}}1
+        {ã}{{\~{a}}}1
+        {Á}{{\'{A}}}1
+        {Â}{{\^{A}}}1
+        {Ã}{{\~{A}}}1
+        {ç}{{\c{c}}}1
+        {Ç}{{\c{C}}}1
+        {õ}{{\~{o}}}1
+        {ó}{{\'{o}}}1
+        {ô}{{\^{o}}}1
+        {Õ}{{\~{O}}}1
+        {Ó}{{\'{O}}}1
+        {Ô}{{\^{O}}}1
+        {î}{{\^{i}}}1
+        {Î}{{\^{I}}}1
+        {í}{{\'{i}}}1
+        {Í}{{\~{Í}}}1
+}
+
+\begin{document}
+\begin{titlepage}
+  \begin{center}
+    \vspace*{5cm}
+
+    \Huge
+    \textbf{Projeto BD - Parte 3}
+
+    \vspace{0.5cm}
+    \LARGE
+    Grupo 008 | Turno L20 | LEIC-A
+
+    \vspace{0.5cm}
+    \large
+    Prof. João Aparício | Prof. Leonardo Alexandre
+
+    \vfill
+  \end{center}
+  \large
+  \begin{itemize}
+    \item[] \textbf{Diogo Gaspar} (99207) - 33\% - Xh
+    \item[] \textbf{Diogo Correia} (99211) - 34\% - Xh
+    \item[] \textbf{Tomás Esteves} (99341) - 33\% - Xh
+  \end{itemize}
+\end{titlepage}
+
+Note-se que, ao ler o enunciado, foi entendido que as secções
+\textbf{Base de Dados - Carregamento}, \textbf{Restrições de Integridade},
+\textbf{SQL}, \textbf{Vistas} e \textbf{Consultas OLAP} fazem parte da estrutura
+do arquivo submetido para avaliação, e não do relatório. Assim sendo, não serão aqui
+incluídos os trechos de código relativos a essas secções, encontrando-se nos
+respetivos ficheiros (nomeados conforme especificado pelo enunciado). Essas
+secções poderão, contudo, ser incluídas no presente relatório como espaço para
+esclarecimento de opções que foram tomadas ao elaborar o projeto.
+
+A ordem pela qual cada um dos \textit{scripts} \texttt{.sql}
+presentes no arquivo devem ser \textit{corridos}, por forma a todas as
+restrições serem verificadas, é a seguinte:
+
+\begin{enumerate}
+  \item \texttt{schema.sql}, correspondente à implementação do \textbf{esquema relacional}.
+  \item \texttt{ICs.sql}, onde se encontram as restrições de integridade relativas
+        ao esquema.
+  \item \texttt{view.sql}, onde se encontra o código que cria a vista \textbf{Vendas}.
+  \item \texttt{populate.sql}, que popula a base de dados.
+\end{enumerate}
+
+\section*{Base de Dados}
+
+\subsection*{Esquema}
+
+O enunciado não foi particularmente claro quanto ao local onde o código correspondente
+a esta secção se devia encontrar no arquivo submetido para avaliação. Assim sendo,
+e após discussão com os docentes de laboratório, decidiu-se incluir o respetivo
+trecho nesta secção do relatório \textbf{e} no ficheiro \texttt{schema.sql}.
+
+\lstinputlisting[language=SQL]{../scripts/schema.sql}
+
+Algumas das restrições de integridade, \texttt{RI-REn}, representadas no esquema
+e que requeriam mais que um \texttt{CHECK} (\textit{triggers}, por exemplo), foram
+incluídas no ficheiro \texttt{ICs.sql}, \textbf{abaixo} das restrições de integridade
+da segunda secção do enunciado. Restrições resolvidas via \texttt{CHECK} e
+\texttt{UNIQUE} foram, claro, incluídas no trecho acima (e em \texttt{schema.sql}).
+
+Foi, ainda, incluída uma função no ficheiro em questão - \texttt{all\_subcategories} -
+que retorna todas as \textbf{Sub-Categorias} (recursivamente) de uma dada \textbf{Categoria}:
+é particularmente útil para a primeira restrição de integridade da próxima secção.
+Foi implementada via \textit{nested loops}, em \texttt{SQL}, em vez de utilizar
+o statement \texttt{WITH RECURSIVE}, por conselho dos docentes de laboratório
+(visto que este não faz parte do \textit{standard} de \texttt{PostgreSQL}).
+
+\section*{Restrições de Integridade}
+
+O trecho de código correspondente a esta secção encontra-se, no arquivo submetido,
+em \texttt{ICs.sql}. Pretende-se realçar que, ao ler o enunciado, a interpretação
+entendida por \textit{"uma categoria não pode estar contida em si própria"}, para
+a primeira restrição de integridade, foi que \textbf{não podem haver ciclos na
+  hierarquia da categoria}, e o respetivo \textit{trigger} foi criado de acordo
+com essa interpretação. É, portanto, uma restrição que abrange mais do que
+a \textit{"inclusão direta"} de categorias. De qualquer maneira, a restrição
+implementada (via \textit{trigger}) engloba também a funcionalidade "mais simples"
+requerida.
+
+Note-se que a restrição de integridade em questão podia ser verificada recorrendo
+a um único \texttt{CHECK}, caso se considerasse a "versão mais simples" da mesma (tal
+como foi implementado em \texttt{schema.sql} para a relação \texttt{has\_other},
+por exemplo).
+
+A terceira restrição de integridade apresentada, \textbf{RI-5}, foi implementada
+por forma a que um produto apenas possa ser colocado em prateleiras que permitam
+a sua \textbf{Categoria específica}, ignorando casos em que, por exemplo, a categoria
+de um produto possa "estar mais abaixo" na hierarquia de outra categoria permitida
+pela prateleira. A implementação que o permitiria teria um problema particularmente
+relevante, descrito (graficamente) abaixo:
+
+\begin{center}
+  \includesvg[scale=0.9]{shelves}
+\end{center}
+
+Optou-se, portanto, por ignorar a possibilidade em questão.
+
+\section*{Vistas}
+
+O trecho de código correspondente a esta secção encontra-se, no arquivo submetido,
+em \texttt{view.sql}. O enunciado não foi excelente quanto a esta secção (por vários motivos).
+É referido que todos os eventos de reposição correspondem a saídas de \textit{stock} de uma
+quantidade de produto da \textbf{IVM}, e que os \textit{instantes} da venda
+deviam ser obtidos a partir da relação \textbf{Evento de Reposição}. Assim sendo,
+foi assumido, apesar de não parecer fazer muito sentido, que os eventos de reposição
+se davam no mesmo instante da venda. O utilizador pode visualizar as vendas guardadas
+na base de dados, na aplicação, ao clicar no botão \texttt{Past Sales}, no menu principal.
+
+\section*{Aplicação}
+
+A aplicação \textit{web} desenvolvida no contexto do projeto pode ser encontrada
+em \url{https://ivm.gaspa.pt}. Por forma a prevenir quaisquer imprevistos,
+encontrar-se-á também alojada em \url{https://ivm.diogotc.com} e \url{http://web2.ist.utl.pt/ist199341/proj/proj.cgi/}.
+Abordando inicialmente pormenores mais \textit{low-level}, temos que todos os arquivos
+\texttt{Python} e \texttt{HTML} que compõem a aplicação estão na pasta \texttt{web}.
+O \textit{hub} principal da aplicação é o ficheiro \texttt{web/proj.cgi}, a partir do qual
+é feito o \textit{routing} entre as diversas páginas da aplicação.
+
+Optámos por uma abordagem \textbf{"em \textit{runtime}"}, ao invés de ter várias \textit{templates}
+pré-feitas: visto que a vasta maioria das páginas que se pretende que a aplicação
+apresente correspondem a \textit{queries}, tomou-se a liberdade de criar uma
+\textbf{\textit{template} base} para qualquer \textit{query}, \texttt{web/templates/query.html}.
+
+A \textit{template} tem vários componentes que são dinamicamente substituídos
+pelos dados referentes ao pedido feito pelo utilizador. O \textbf{menu principal},
+igualmente simples, encontra-se em \texttt{web/templates/index.html}. Possui um
+leque de botões correspondentes às consultas mais básicas da aplicação que um
+utilizador poderá tentar realizar: \texttt{SELECT * FROM x}, onde \texttt{x} corresponde a qualquer
+uma das relações mencionadas no esquema relacional. Existe, contudo, uma \textbf{exceção}:
+esta abordagem mais simples para a secção das categorias não permitia que
+super/sub categorias pudessem ser corretamente criadas, pelo que para essas secções
+optou-se por uma implementação \textit{"à mão"}, mais singular.
+
+Note-se que toda esta simplicidade é atingida através da função \texttt{exec\_query},
+presente em \texttt{web/proj.cgi}: um \textit{wrapper} que recebe uma qualquer
+\textit{query} e a executa, retornando a página que a aplicação deve apresentar
+ao utilizador. \textbf{Todas as \textit{queries} que passam por \texttt{exec\_query} são,
+  por definição, atómicas}, já que o \textit{commit} (\texttt{dbConn.commit()}, do \texttt{psycopg})
+da \textit{transaction} só ocorre depois do \textit{outcome} da \textit{query}
+ser retornado. Desta forma, é garantido o \textit{rollback} das ações caso alguma
+ação falhe durante o decorrer da \textit{query}.
+
+\vspace*{0.5cm}
+
+Pretendia-se, quanto à aplicação, que esta permitisse ao utilizador realizar um conjunto
+de ações pré-determinado (garantindo a atomicidade de todas elas):
+
+
+\begin{enumerate}
+  \item \textbf{Inserir e remover Categorias e Sub-Categorias.}
+
+        \textbf{Inserir} ou \textbf{remover} uma \textbf{Categoria} ou \textbf{Sub-Categoria}
+        da base de dados é bastante simples:
+
+        \begin{enumerate}
+          \item O utilizador consegue inserir uma nova \textbf{Categoria} ou \textbf{Sub-Categoria}, partindo
+                do menu principal, ao clicar em qualquer um dos botões entre \texttt{Category},
+                \texttt{Simple Category} ou \texttt{Super Category} - cada uma destas secções
+                tem, no canto superior direito da respetiva página, um botão \texttt{Insert Category}, onde se pode
+                introduzir o \textbf{nome} da categoria a inserir na base de dados. Note-se que,
+                pela natureza da relação \textbf{Categoria}, todas as categorias são consideradas
+                \textbf{Simples} aquando da sua inserção inicial na base de dados. Pode ainda, caso deseje,
+                escolher uma das categorias existentes na base de dados para ser a sua
+                \textit{\texttt{Parent Category}}.
+
+          \item Caso pretenda remover uma \textbf{Categoria} ou \textbf{Sub-Categoria},
+                o processo é ligeiramente diferente. É apresentada uma tabela ao utilizador,
+                tanto na secção \texttt{Category} como em \texttt{Simple Category} e \texttt{Super Category}, onde o utilizador
+                pode decidir remover a categoria em questão da base de dados.
+                \textbf{Esta operação é bastante destrutiva}: ao apagar uma categoria,
+                todas as entradas de tabelas que possuam a respetiva chave primária
+                como atributo são também apagadas. Este conjunto de entradas inclui
+                relações desde \textbf{Eventos de Reposição} e \textbf{Planograma}
+                até às relações mais "triviais", como \textbf{Sub e Super-Categorias}.
+        \end{enumerate}
+
+  \item \textbf{Inserir e remover um Retalhista, com todas as suas responsabilidades
+          de reposição de produtos.}
+
+        \textbf{Inserir} e \textbf{remover} um \textbf{Retalhista} é em tudo semelhante ao processo
+        descrito acima para as \textbf{Categorias}: o utilizador deve navegar,
+        partindo do menu principal, para a secção \texttt{Retailer}, onde lhe é
+        apresentada uma tabela, contendo todos os \textbf{Retalhistas} presentes na
+        base de dados, e um botão para adicionar um novo \textbf{Retalhista}:
+
+        \begin{enumerate}
+          \item Caso pretenda inserir um novo \textbf{Retalhista}, o utilizador
+                deve clicar no botão \texttt{Insert Retailer}, inserindo de seguida os respetivos
+                \texttt{name} e \texttt{tin}.
+
+          \item Caso pretenda remover um \textbf{Retalhista}, o utilizador deve, tal
+                como nas secções referentes às \textbf{Categorias}, escolher a entrada na
+                tabela correspondente ao \textbf{Retalhista} que pretende remover e clicar
+                no botão \texttt{Remove} que lhe corresponde. Todas as responsabilidades
+                de reposição de produtos associadas ao \textbf{Retalhista} são, claro, removidas.
+        \end{enumerate}
+
+        Note-se que, na implementação atual, \textbf{os Eventos de Reposição associados
+          a retalhistas que são removidos são também eliminados}: parece ser uma falha
+        do enunciado (ou, pelo menos, algo que não faz todo o sentido), visto que
+        estamos efetivamente a \textbf{eliminar histórico} à aplicação. Faria
+        mais sentido, possivelmente, \textit{esconder} os retalhistas sempre que houver este problema
+        de "dependências" associado, mas optou-se por seguir o enunciado.
+
+  \item \textbf{Listar todos os Eventos de Reposição de uma IVM, apresentando
+          o número de unidades repostas por Categoria de Produto.}
+
+        O utilizador deve, nesta situação, navegar até à secção \texttt{IVM},
+        partindo do menu principal. É-lhe apresentada uma tabela contendo todas as
+        \textbf{IVM} presentes na base de dados, e cada entrada tem um botão
+        associado, \texttt{List Replenishment Events}, que permite ao utilizador
+        visualizar todos os eventos de reposição associados à \textbf{IVM} em questão
+        sob a forma de uma tabela.
+
+        O utilizador pode, ainda, visualizar o número
+        de unidades por \textbf{Categoria} de \textbf{Produto}: ao longo da tabela,
+        vão ocorrendo entradas com apenas duas colunas preenchidas, o \textbf{nome
+          da Categoria} e o \textbf{número de unidades repostas (total)}.
+
+        Como \textit{footnote}, adiciona-se que as \textbf{IVMs} cuja listagem
+        de eventos de reposição é não nula são as \textbf{primeiras duas}, pela
+        ordem que aparecem listadas: \texttt{('ivm-1', 'fizz')} e \texttt{('ivm-2', 'fizz')},
+        respetivamente. Popular a relação \textbf{Eventos de Reposição} com todas
+        as \textbf{IVMs} existentes seria um processo bastante extenso (e pouco
+        frutífero, a abono da verdade), pelo que, para demonstração da funcionalidade
+        em questão, optou-se por fazê-lo apenas para as duas máquinas em questão.
+
+  \item \textbf{Listar todas as Sub-Categorias de uma Super-Categoria, a todos
+          os níveis de profundidade.}
+
+        O utilizador deve, aqui, navegar até à secção \texttt{Super Category},
+        partindo do menu principal. É-lhe apresentada uma tabela contendo todas as
+        \textbf{Super-Categorias} presentes na base de dados, e cada entrada tem um
+        botão associado, \texttt{List Sub-Categories}, que permite ao utilizador
+        visualizar todas as \textbf{Sub-Categorias} associadas à \textbf{Super-Categoria}
+        em questão sob a forma de uma tabela.
+
+        Note-se que, por simplicidade, tomou-se a liberdade de não introduzir indentação
+        à hierarquia das categorias: todas as categorias apresentadas são
+        \textbf{Sub-Categorias} da \textbf{Super-Categoria} pretendida, não havendo diferenciação
+        entre o \textit{"nível"} de profundidade a que cada \textbf{Sub-Categoria} se encontra.
+
+\end{enumerate}
+
+Note-se que, para além das funcionalidades descritas acima (e requeridas pelo enunciado),
+o utilizador pode ainda adicionar \textbf{responsabilidades de reposição} a retalhistas
+pela aplicação, seguindo procedimentos semelhantes aos supra-mencionados.
+
+\section*{Consultas OLAP}
+
+O trecho de código correspondente a esta secção encontra-se, no arquivo submetido,
+em \texttt{analytics.sql}. Ao ler o enunciado, foi entendido por \textit{"escreva
+  duas consultas SQL que (...)"} que as consultas OLAP em questão não precisariam
+de ter \textit{botões} ou mecanismos semelhantes presentes na aplicação por
+definição - precisariam apenas de estar \textit{escritas} em \texttt{analytics.sql} -
+pelo que tais mecanismos não foram incluídos.
+
+Após discussão com os docentes de laboratório (e de uma leitura mais cuidada do enunciado),
+optou-se por agrupar a primeira consulta via \texttt{GROUPING SETS}, e a segunda via
+\texttt{CUBE}:
+
+\begin{itemize}
+  \item Na primeira consulta, tanto "dia da semana" como "concelho" são antecedidos
+        por "por" - entende-se, assim, que não se pretende as diferentes combinações
+        de concelhos e dias da semana, mas sim o total de artigos vendidos nos vários dias
+        da semana e, \textbf{em separado}, nos vários concelhos. Utilizou-se, portanto,
+        \texttt{GROUPING SETS} para este efeito.
+  \item Na segunda consulta, a interpretação é oposta: pretende-se exatamente as
+        várias combinações de artigos vendidos, consoante os vários atributos da venda,
+        pelo que faz mais sentido agrupar via \texttt{CUBE}.
+\end{itemize}
+
+\section*{Índices}
+
+Foi pedido, ainda, que se indicasse (justificando) os índices que faria sentido
+criar, por forma a \textit{agilizar} a execução de cada uma das \textit{queries}
+apresentadas de seguida. Note-se que o enunciado é particularmente confuso nesta
+secção: é referido que os alunos devem supor que não existem índices nas tabelas,
+"além daqueles implícitos ao declarar chaves primárias e estrangeiras". Ora, \textbf{a
+  criação de chaves estrangeiras não implica indexação automática} (sem declaração
+direta do programador, portanto), tal como referido na
+\href{https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-FK}
+{documentação do PostgreSQL}:
+
+\begin{quote}
+  \textit{"A foreign key must reference columns that either are a primary key or form a unique
+    constraint. This means that the referenced columns always have an index (the one
+    underlying the primary key or unique constraint); so checks on whether a referencing
+    row has a match will be efficient. Since a DELETE of a row from the referenced
+    table or an UPDATE of a referenced column will require a scan of the referencing
+    table for rows matching the old value, it is often a good idea to index the referencing
+    columns too. Because this is not always needed, and there are many choices available
+    on how to index, declaration of a foreign key constraint does not automatically
+    create an index on the referencing columns."}
+\end{quote}
+
+Considerou-se, assim, que se tratava de um lapso do enunciado (ou porventura de uma
+frase construída de forma infeliz), e a respetiva indexação foi adicionada quando necessário.
+
+\subsection*{Primeira \textit{query}:}
+
+\lstinputlisting[language=SQL]{sql/report3/queries/example1.sql}
+
+Para a primeira \textit{query}, optou-se por criar índices em dois atributos da relação \texttt{responsible\_for}:
+\texttt{tin} e \texttt{cat\_name}.
+
+\vspace*{0.25cm}
+
+\begin{itemize}
+  \item Não se criou nenhum índice quanto ao atributo \texttt{name}, em \texttt{retailer},
+        apesar de ser o atributo \textbf{selecionado} pela \textit{query} \textbf{e ser
+          \texttt{DISTINCT}} - o atributo já é \texttt{UNIQUE}, pelo
+        esquema relacional, pelo que esta indexação é feita por definição (com
+        \textbf{BTree}), sem ser necessário adicionar outros índices;
+
+  \item No atributo \texttt{tin}, em \texttt{responsible\_for}, faz sentido adicionar um
+        índice \textbf{BTree}: vamos realizar comparações com a chave primária \texttt{tin},
+        de \texttt{Retailer}, indexada com índices \textbf{BTree}, pelo que para maximizar
+        o desempenho (via \textit{Merge Join}), é esta a indexação que faz sentido;
+
+  \item No atributo \texttt{cat\_name}, em \texttt{responsible\_for}, faz sentido adicionar
+        um índice \textbf{Hash}: quer-se comparar o atributo em questão com \textit{algo}
+        concreto, pelo que a comparação em $O(1)$ é ideal.
+\end{itemize}
+
+O trecho de código correspondente à indexação pretendida encontra-se abaixo:
+
+\lstinputlisting[language=SQL]{sql/report3/indexes/index1.sql}
+
+\subsection*{Segunda \textit{query}:}
+
+\lstinputlisting[language=SQL]{sql/report3/queries/example2.sql}
+
+Para a segunda \textit{query}, optou-se por criar três índices: dois na relação
+\texttt{product}, nos seus atributos \texttt{category} e \texttt{description},
+e outro na relação \texttt{has\_category} (em \texttt{name}).
+
+\vspace*{0.25cm}
+
+\begin{itemize}
+  \item Optou-se pela indexação de \texttt{description}, em \texttt{Product},
+        via \textbf{BTree}: a comparação pretendida irá englobar todo um intervalo
+        de descrições que comecem por \texttt{A}, pelo que aqui um \textbf{Hash}
+        não é particularmente inteligente (não se pretende algo específico).
+  \item Tanto \texttt{category}, em \texttt{Product}, como \texttt{name}, em \texttt{has\_category},
+        são indexadas via \textbf{BTree}: a razão pela qual esta indexação foi escolhida
+        não foi, contudo, devido à comparação que existe entre ambos em \texttt{WHERE},
+        mas sim devido à presença de \texttt{name} em \texttt{GROUP BY}. Note-se que
+        índices \textbf{BTree} já vêm, por natureza, ordenados, algo que não
+        acontece com índices \textbf{Hash} - visto que \texttt{GROUP BY} procura
+        também agrupar os dados sobre o atributo \texttt{name}, parece fazer todo
+        o sentido que a escolha recaia sobre índices \textbf{BTree}. Por conseguinte,
+        \texttt{category} é também indexada com índices \textbf{BTree}, já que, tal como referido na justificação
+        da indexação de \texttt{tin} na primeira \textit{query}, a consulta
+        vê a sua performance maximizada ao fazermos comparações entre atributos
+        indexados de igual forma.
+\end{itemize}
+
+O trecho de código correspondente à indexação pretendida encontra-se abaixo:
+
+\lstinputlisting[language=SQL]{sql/report3/indexes/index2.sql}
+
+Como nota final, adiciona-se que foram realizados testes relativamente exaustivos
+com vista a testar a indexação ideal para cada uma das consultas acima (com cerca de cem mil
+entradas para cada relação presente nas mesmas), através de um \textit{script}.
+Verificou-se, contudo, que qualquer introdução de indexação, fazendo ou não sentido
+no contexto do problema, piorava (de forma drástica, em certos casos) a performance
+da consulta, em comparação com a versão da consulta sem indexação. A causa
+mais provável é o facto dos dados serem sintéticos, não reais: relações
+que seriam "lógicas" entre dados são mais difíceis de reproduzir através de um
+\textit{script} deste género.
+
+Optou-se, no fim, por seguir as considerações teóricas obtidas (e que
+iam de encontro ao lecionado nas aulas teóricas e na bibliografia da cadeira),
+apesar dos testes produzirem resultados inesperados.
+
+\end{document}
