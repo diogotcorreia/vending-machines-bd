@@ -185,7 +185,7 @@ BEGIN
     WHERE name = NEW.name
   )
   THEN
-    RAISE EXCEPTION 'A simple category''s name cannot also exist in the super_category relation as a name';
+    RAISE EXCEPTION 'A Simple Category (%) cannot also be a Super Category', NEW.name;
   END IF;
   RETURN NEW;
 END;
