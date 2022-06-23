@@ -631,8 +631,8 @@ def list_responsible_for():
             title="Responsible For",
             page_actions=(
                 {
-                    "title": "Insert Responsability",
-                    "link": url_for("ask_responsability"),
+                    "title": "Insert Responsibility",
+                    "link": url_for("ask_responsibility"),
                 },
             ),
             page_top_actions=(
@@ -655,7 +655,7 @@ def list_responsible_for():
 
 
 @app.route("/responsible_for/insert", methods=["GET"])
-def ask_responsability():
+def ask_responsibility():
 
     return exec_queries(
         (
@@ -673,8 +673,8 @@ def ask_responsability():
         ),
         lambda cursors: render_template(
             "ask_input.html",
-            action_url=url_for("insert_responsability"),
-            title="Insert Responsability",
+            action_url=url_for("insert_responsibility"),
+            title="Insert Responsibility",
             fields=(
                 {
                     "label": "Category Name:",
@@ -710,7 +710,7 @@ def ask_responsability():
 
 
 @app.route("/responsible_for/insert", methods=["POST"])
-def insert_responsability():
+def insert_responsibility():
     return exec_query(
         """
         INSERT INTO responsible_for (cat_name, tin, serial_num, manuf) VALUES (%s, %s, %s, %s);
