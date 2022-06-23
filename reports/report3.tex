@@ -242,9 +242,9 @@ de ações pré-determinado (garantindo a atomicidade de todas elas):
   \item \textbf{Inserir e remover Categorias e Sub-Categorias.}
 
         Para \textbf{inserir} ou \textbf{remover} uma \textbf{Categoria} ou \textbf{Sub-Categoria}
-        da base de dados, o utilizador, partindo do menu principal, deve selecionar
-        uma das opções (\texttt{Category} ou \texttt{Simple Category}), conforme o tipo
-        que pretenda inserir ou remover. De seguida:
+        da base de dados, o utilizador, partindo do menu principal, pode selecionar qualquer
+        uma das opções entre \texttt{Category}, \texttt{Simple Category} e \texttt{Super Category}.
+        De seguida:
 
         \begin{enumerate}
           \item O utilizador consegue inserir uma nova \textbf{Categoria} ou \textbf{Sub-Categoria}, partindo
@@ -451,7 +451,11 @@ com vista a testar a indexação ideal para cada uma das consultas acima (com ce
 entradas para cada relação presente nas mesmas), através de um \textit{script}.
 Verificou-se, contudo, que qualquer introdução de indexação, fazendo ou não sentido
 no contexto do problema, piorava (de forma drástica, em certos casos) a performance
-da consulta, em comparação com a versão da consulta sem indexação.
+da consulta, em comparação com a versão da consulta sem indexação. A causa
+mais provável é o facto dos dados serem sintéticos, não reais: relações
+que seriam "lógicas" entre dados são mais difíceis de reproduzir através de um
+\textit{script} deste género.
+
 Optou-se, no fim, por seguir as considerações teóricas obtidas (e que
 iam de encontro ao lecionado nas aulas teóricas e na bibliografia da cadeira),
 apesar dos testes produzirem resultados inesperados.
