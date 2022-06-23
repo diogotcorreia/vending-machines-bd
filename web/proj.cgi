@@ -3,7 +3,7 @@
 from wsgiref.handlers import CGIHandler
 from flask import Flask
 from flask import render_template, request, redirect, url_for
-from urllib.parse import urlencode
+from urllib.parse import quote, unquote
 
 ## Libs postgres
 import psycopg2
@@ -668,7 +668,7 @@ def ask_responsability():
             """,
             """
             SELECT serial_num, manuf FROM ivm EXCEPT (SELECT serial_num, manuf FROM responsible_for)
-            ORDER BY manuf;
+            ORDER BY manuf, serial_num;
             """,
         ),
         lambda cursors: render_template(
@@ -697,8 +697,8 @@ def ask_responsability():
                     "required": True,
                     "options": (
                         (
-                            str(record[0] + "&" + record[1]),
-                            str(record[0] + "|" + record[1]),
+                            str(quote(record[0]) + "&" + quote(record[1])),
+                            str(f"{record[0]} | {record[1]}"),
                         )
                         for record in cursors[2]
                     ),
@@ -719,7 +719,7 @@ def insert_responsability():
         (
             request.form["cat_name"],
             request.form["tin"],
-            *request.form["ivm"].split("&"),
+            *map(unquote, request.form["ivm"].split("&")),
         ),
     )
 
