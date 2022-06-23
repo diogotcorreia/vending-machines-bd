@@ -446,4 +446,14 @@ O trecho de código correspondente à indexação pretendida encontra-se abaixo:
 
 \lstinputlisting[language=SQL]{sql/report3/indexes/index2.sql}
 
+Como nota final, adiciona-se que foram realizados testes relativamente exaustivos
+com vista a testar a indexação ideal para cada uma das consultas acima (com cerca de cem mil
+entradas para cada relação presente nas mesmas), através de um \textit{script}.
+Verificou-se, contudo, que qualquer introdução de indexação, fazendo ou não sentido
+no contexto do problema, piorava (de forma drástica, em certos casos) a performance
+da consulta, em comparação com a versão da consulta sem indexação.
+Optou-se, no fim, por seguir as considerações teóricas obtidas (e que
+iam de encontro ao lecionado nas aulas teóricas e na bibliografia da cadeira),
+apesar dos testes produzirem resultados inesperados.
+
 \end{document}
