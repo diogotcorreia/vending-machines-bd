@@ -137,8 +137,6 @@ esclarecimento de opções que foram tomadas ao elaborar o projeto.
 
 \subsection*{Esquema}
 
-% TODO: integrity constraints aren't done yet
-
 \lstinputlisting[language=SQL]{../scripts/schema.sql}
 
 Algumas das restrições de integridade, \texttt{RI-REn}, representadas no esquema
@@ -178,11 +176,9 @@ de um produto possa "estar mais abaixo" na hierarquia de outra categoria permiti
 pela prateleira. A implementação que o permitiria teria um problema particularmente
 relevante, descrito (graficamente) abaixo:
 
-% TODO: FIX THIS
-
-% \begin{center}
-%   \includesvg[scale=0.9]{shelves}
-% \end{center}
+\begin{center}
+  \includesvg[scale=0.9]{shelves}
+\end{center}
 
 Optou-se, portanto, por ignorar a possibilidade em questão.
 
@@ -288,7 +284,7 @@ de ações pré-determinado (garantindo a atomicidade de todas elas):
         \end{enumerate}
 
         Note-se que, na implementação atual, \textbf{os Eventos de Reposição associados
-        a retalhistas que são removidos são também eliminados}: parece ser uma falha
+          a retalhistas que são removidos são também eliminados}: parece ser uma falha
         do enunciado (ou, pelo menos, algo que não faz todo o sentido), visto que
         estamos efetivamente a \textbf{eliminar histórico} à aplicação. Faria
         mais sentido, possivelmente, \textit{esconder} os retalhistas sempre que houver este problema
@@ -330,8 +326,6 @@ Note-se que, para além das funcionalidades descritas acima (e requeridas pelo e
 o utilizador pode ainda adicionar \textbf{responsabilidades de reposição} a retalhistas
 pela aplicação, seguindo procedimentos semelhantes aos supra-mencionados.
 
-% TODO: verificar se está tudo atómico e SQL Injection proof
-
 \section*{Consultas OLAP}
 
 O trecho de código correspondente a esta secção encontra-se, no arquivo submetido,
@@ -347,13 +341,13 @@ optou-se por agrupar a primeira consulta via \texttt{GROUPING SETS}, e a segunda
 
 \begin{itemize}
   \item Na primeira consulta, tanto "dia da semana" como "concelho" são antecedidos
-  por "por" - entende-se, assim, que não se pretende as diferentes combinações
-  de concelhos e dias da semana, mas sim o total de artigos vendidos nos vários dias
-  da semana e, \textbf{em separado}, nos vários concelhos. Utilizou-se, portanto,
-  \texttt{GROUPING SETS} para este efeito.
+        por "por" - entende-se, assim, que não se pretende as diferentes combinações
+        de concelhos e dias da semana, mas sim o total de artigos vendidos nos vários dias
+        da semana e, \textbf{em separado}, nos vários concelhos. Utilizou-se, portanto,
+        \texttt{GROUPING SETS} para este efeito.
   \item Na segunda consulta, a interpretação é oposta: pretende-se exatamente as
-  várias combinações de artigos vendidos, consoante os vários atributos da venda,
-  pelo que faz mais sentido agrupar via \texttt{CUBE}.
+        várias combinações de artigos vendidos, consoante os vários atributos da venda,
+        pelo que faz mais sentido agrupar via \texttt{CUBE}.
 \end{itemize}
 
 \section*{Índices}
