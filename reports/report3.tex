@@ -133,6 +133,18 @@ respetivos ficheiros (nomeados conforme especificado pelo enunciado). Essas
 secções poderão, contudo, ser incluídas no presente relatório como espaço para
 esclarecimento de opções que foram tomadas ao elaborar o projeto.
 
+A ordem pela qual cada um dos \textit{scripts} \texttt{.sql}
+presentes no arquivo devem ser \textit{corridos}, por forma a todas as
+restrições serem verificadas, é a seguinte:
+
+\begin{enumerate}
+  \item \texttt{schema.sql}, correspondente à implementação do \textbf{esquema relacional}.
+  \item \texttt{ICs.sql}, onde se encontram as restrições de integridade relativas
+        ao esquema.
+  \item \texttt{view.sql}, onde se encontra o código que cria a vista \textbf{Vendas}.
+  \item \texttt{populate.sql}, que popula a base de dados.
+\end{enumerate}
+
 \section*{Base de Dados}
 
 \subsection*{Esquema}
