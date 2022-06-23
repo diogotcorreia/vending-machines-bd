@@ -719,8 +719,7 @@ def insert_responsability():
         (
             request.form["cat_name"],
             request.form["tin"],
-            request.form["ivm"].split("&")[0],
-            request.form["ivm"].split("&")[1],
+            *request.form["ivm"].split("&"),
         ),
     )
 
