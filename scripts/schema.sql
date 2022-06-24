@@ -147,9 +147,11 @@ $$
     DECLARE direct_child has_other%ROWTYPE;
     DECLARE indirect_child has_other%ROWTYPE;
 BEGIN
-    FOR direct_child IN SELECT * FROM has_other WHERE super_category = name LOOP
+    FOR direct_child IN SELECT *
+        FROM has_other WHERE super_category = name LOOP
         RETURN NEXT direct_child;
-        FOR indirect_child IN SELECT * FROM all_subcategories(direct_child.category) LOOP
+        FOR indirect_child IN SELECT *
+            FROM all_subcategories(direct_child.category) LOOP
             RETURN NEXT indirect_child;
         END LOOP;
     END LOOP;
