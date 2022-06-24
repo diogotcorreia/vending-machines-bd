@@ -1,7 +1,7 @@
 {% extends 'partial/base.html' %}
 {% block title %}<title>{{ title }}</title>{% endblock %}
 {% block content %}
-  <h1>{{ title }}</h1>
+  <h1 class="text-center">{{ title }}</h1>
   <form action="{{ action_url|default('') }}" method="post">
     {% for key, value in data.items() %}
       <input type="hidden" name="{{ key }}" value="{{ value|e }}" />
