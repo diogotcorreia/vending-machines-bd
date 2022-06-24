@@ -5,9 +5,9 @@ SELECT day_week,
   SUM(units) AS total_units
 FROM sales
 WHERE MAKE_DATE(
-    CAST(year AS INT),
-    CAST(month AS INT),
-    CAST(day_month AS INT)
+    year,
+    month,
+    day_month 
   ) BETWEEN '2022-01-01' AND '2022-12-31'
 GROUP BY GROUPING SETS (day_week, county, ())
 ORDER BY day_week,
