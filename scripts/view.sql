@@ -18,7 +18,7 @@ DROP VIEW IF EXISTS sales;
 CREATE VIEW sales AS
 SELECT
   product.ean,
-  category.name AS category_name,
+  product.category AS category_name,
   CAST(year AS INT),
   CAST(quarter AS INT),
   CAST(month AS INT),
@@ -30,7 +30,6 @@ SELECT
 FROM
   replenishment_event
   INNER JOIN product ON replenishment_event.ean = product.ean
-  INNER JOIN category ON product.category = category.name
   INNER JOIN installed_on ON replenishment_event.serial_num = installed_on.serial_num
     AND replenishment_event.manuf = installed_on.manuf
   INNER JOIN retail_point ON installed_on.local = retail_point.name,
