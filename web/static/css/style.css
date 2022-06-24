@@ -104,6 +104,11 @@ a:active {
   flex: 1 0 20%;
 }
 
+.table-container {
+  overflow-x: auto;
+  max-width: 95vw;
+}
+
 table {
   border-collapse: collapse;
 }
@@ -315,4 +320,8 @@ form {
   border-bottom: 2px solid #4caf4fb5;
   color: #4caf4fb5;
   margin-bottom: 0px;
+}
+
+.text-center {
+  text-align: center;
 }
