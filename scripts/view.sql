@@ -33,8 +33,8 @@ FROM
   INNER JOIN installed_on ON replenishment_event.serial_num = installed_on.serial_num
     AND replenishment_event.manuf = installed_on.manuf
   INNER JOIN retail_point ON installed_on.local = retail_point.name,
-EXTRACT(YEAR FROM instant) AS year,
-EXTRACT(QUARTER FROM instant) AS quarter,
-EXTRACT(MONTH FROM instant) AS month,
-EXTRACT(DAY FROM instant) AS day_month,
+CAST(EXTRACT(YEAR FROM instant) AS INT) AS year,
+CAST(EXTRACT(QUARTER FROM instant) AS INT) AS quarter,
+CAST(EXTRACT(MONTH FROM instant) AS INT) AS month,
+CAST(EXTRACT(DAY FROM instant) AS INT) AS day_month,
 TO_CHAR(instant, 'Day') AS day_week;
